@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi Tiết Hồ Sơ Tài Xế - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="driver-detail.css">
+</head>
+<body class="driver-detail-page">
+
+  <div class="driver-detail-card">
+    
+    <!-- Header -->
+    <header class="driver-detail-card__header">
+      <div class="driver-detail-card__header-left">
+        <a href="drivers.html" class="driver-detail-card__back-btn" title="Quay lại danh sách">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <div>
+          <h1 class="driver-detail-card__title">
+            Hồ Sơ: <span id="header-driver-name">--</span>
+            <span id="header-driver-id" class="driver-detail-card__badge-id">--</span>
+          </h1>
+          <p class="driver-detail-card__subtitle">Kiểm tra thông tin định danh, IoT giám sát và lịch sử vi phạm</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Nội dung Form -->
+    <form id="form-driver-detail" class="driver-detail-form">
+
+      <!-- Khối 1: Thẻ định danh & Trạng thái -->
+      <section class="driver-identity">
+        <div class="driver-identity__profile">
+          <img id="img-avatar" src="" alt="Avatar" class="driver-identity__avatar">
+          <div>
+            <h2 id="view-fullname" class="driver-identity__name">--</h2>
+            <p class="driver-identity__meta">
+              Mã tài xế: <strong id="view-id" class="driver-identity__meta-val">--</strong> • 
+              Username: <strong id="view-username">--</strong>
+            </p>
+            <p class="driver-identity__meta">
+              Phương tiện phụ trách: <span id="view-current-vehicle" class="driver-identity__vehicle-tag">--</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="driver-identity__status-box">
+          <label class="driver-identity__status-label">Trạng thái vận hành</label>
+          <select id="inp-suspended" class="driver-identity__status-select">
+            <option value="0">Hoạt động bình thường</option>
+            <option value="1">Đình chỉ (Khóa ca chạy)</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Khối 2: Thông tin sửa (mỗi ô 1 hàng) -->
+      <section class="driver-edit-card">
+        <h3 class="driver-edit-card__header">
+          <i class="fa-solid fa-pen-to-square driver-edit-card__icon"></i> Thông Tin Cho Phép Sửa
+        </h3>
+        <div class="driver-edit-card__fields">
+          <div class="driver-edit-card__group">
+            <label class="driver-edit-card__label">Họ và tên</label>
+            <input type="text" id="inp-fullname" class="driver-edit-card__control">
+          </div>
+          <div class="driver-edit-card__group">
+            <label class="driver-edit-card__label">Số điện thoại</label>
+            <input type="tel" id="inp-phone" class="driver-edit-card__control">
+          </div>
+          <div class="driver-edit-card__group">
+            <label class="driver-edit-card__label">Hạng bằng lái</label>
+            <select id="inp-license" class="driver-edit-card__control">
+              <option value="Hạng B2">Hạng B2</option>
+              <option value="Hạng C">Hạng C</option>
+              <option value="Hạng D">Hạng D</option>
+              <option value="Hạng E">Hạng E</option>
+            </select>
+          </div>
+          <div class="driver-edit-card__group">
+            <label class="driver-edit-card__label">Ngày sinh</label>
+            <input type="date" id="inp-dob" class="driver-edit-card__control">
+          </div>
+          <div class="driver-edit-card__group">
+            <label class="driver-edit-card__label">Địa chỉ</label>
+            <textarea id="inp-address" rows="2" class="driver-edit-card__control"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Khối 3: IoT Camera & GPS ở dưới -->
+      <section class="driver-iot-grid">
+        <!-- ESP32-CAM -->
+        <div class="driver-iot-box">
+          <div>
+            <div class="driver-iot-box__header">
+              <span class="driver-iot-box__label">
+                <span class="driver-iot-box__pulse-dot"></span> Camera ESP32-CAM
+              </span>
+              <span class="driver-iot-box__badge driver-iot-box__badge--live" id="cam-status">LIVE</span>
+            </div>
+            <div class="driver-iot-box__screen">
+              <i class="fa-solid fa-video driver-iot-box__cam-icon"></i>
+              <span id="cam-url" class="driver-iot-box__cam-url">Stream: --</span>
+              <span style="font-size: 0.625rem; color: #475569; margin-top: 0.25rem;">720p • 30 FPS Live Feed</span>
+            </div>
+          </div>
+          <div class="driver-iot-box__footer">
+            <span id="cam-device-name">Thiết bị cabin</span>
+            <span style="color: #34d399; font-weight: 600;">Tín hiệu ổn định</span>
+          </div>
+        </div>
+
+        <!-- GPS Frame -->
+        <div class="driver-iot-box">
+          <div>
+            <div class="driver-iot-box__header">
+              <span class="driver-iot-box__label">
+                <i class="fa-solid fa-satellite" style="color: #60a5fa;"></i> Định Vị GPS NEO-6M
+              </span>
+              <span class="driver-iot-box__badge driver-iot-box__badge--gps">GPS LOCK</span>
+            </div>
+            <div class="driver-iot-box__screen driver-iot-box__screen--gps">
+              <div style="line-height: 1.6;">
+                <p style="margin: 0; color: #94a3b8;">Tọa độ: <span id="gps-coords" style="color: #ffffff; font-weight: 700;">--</span></p>
+                <p style="margin: 0; color: #94a3b8;">Vị trí: <span id="gps-address" style="color: #34d399;">--</span></p>
+                <p style="margin: 0; color: #94a3b8;">Tuyến: <span id="gps-route" style="color: #60a5fa;">--</span></p>
+              </div>
+              <p style="margin: 0; border-top: 1px solid #1e293b; width: 100%; padding-top: 0.5rem; color: #94a3b8;">
+                Vận tốc: <span id="gps-speed" style="color: #ffffff; font-weight: 700; font-size: 0.875rem;">-- km/h</span>
+              </p>
+            </div>
+          </div>
+          <div class="driver-iot-box__footer">
+            <span>GPS NEO-6M</span>
+            <span style="color: #60a5fa; font-weight: 600;">Sai số: ±2m</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Khối 4: Bảng Vi Phạm Kỷ Luật -->
+      <section class="driver-history-card">
+        <div class="driver-history-card__header">
+          <h3 class="driver-history-card__title">
+            <i class="fa-solid fa-triangle-exclamation" style="color: #f43f5e;"></i> Lịch Sử Vi Phạm Kỷ Luật (DemeritPoints)
+          </h3>
+          <span id="demerit-total-badge" class="driver-history-card__badge">
+            Tổng điểm trừ: 0 Điểm
+          </span>
+        </div>
+        <table class="driver-history-table">
+          <thead class="driver-history-table__head">
+            <tr>
+              <th class="driver-history-table__th">Mã Biên Bản</th>
+              <th class="driver-history-table__th">Lỗi Vi Phạm Quy Chuẩn</th>
+              <th class="driver-history-table__th driver-history-table__th--center">Điểm Trừ</th>
+              <th class="driver-history-table__th">Thời Gian Vi Phạm</th>
+            </tr>
+          </thead>
+          <tbody id="demerits-table-body" class="driver-history-table__body">
+            <!-- Render động bằng JS -->
+          </tbody>
+        </table>
+      </section>
+
+    </form>
+
+    <!-- Footer -->
+    <footer class="driver-detail-card__footer">
+      <button type="button" onclick="if(confirm('Bạn có chắc chắn muốn xóa tài xế này khỏi hệ thống?')) { window.location.href='drivers.html'; }" class="driver-detail-card__btn driver-detail-card__btn--delete">
+        <i class="fa-solid fa-trash-can"></i> Xóa Tài Xế
+      </button>
+      <button type="submit" form="form-driver-detail" class="driver-detail-card__btn driver-detail-card__btn--save">
+        <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi Hồ Sơ
+      </button>
+    </footer>
+
+  </div>
+
+</body>
+</html>

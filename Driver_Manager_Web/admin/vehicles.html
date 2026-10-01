@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Điều Phối Xe - DriverWebDb</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { brand: { dark: '#0b1120', card: '#1e293b', border: '#e2e8f0', surface: '#f8fafc' } } } }
+    }
+  </script>
+</head>
+<body class="bg-brand-surface font-sans text-slate-800 p-6 md:p-8">
+
+  <div class="space-y-6">
+    <!-- Header cục bộ của trang con -->
+    <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200">
+      <div>
+        <h1 class="text-xl font-bold text-brand-dark">Quản Lý & Điều Phối Phương Tiện</h1>
+        <p class="text-xs text-slate-400 mt-0.5">Kiểm soát danh sách phương tiện, phân bổ tuyến và trạng thái vận hành từ bảng <code>Vehicles</code></p>
+      </div>
+      <button onclick="window.location.href='add-vehicle.html'" 
+              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-colors">
+        <i class="fa-solid fa-plus text-xs"></i> Khai Báo Phương Tiện Mới
+      </button>
+    </div>
+
+    <!-- Bảng Điều Phối Xe -->
+    <div class="bg-white rounded-xl border border-brand-border shadow-sm overflow-hidden">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-slate-50 border-b border-brand-border text-xs text-slate-500 uppercase font-semibold">
+          <tr>
+            <th class="py-3.5 px-4">Biển Số Xe</th>
+            <th class="py-3.5 px-4">Dòng Xe</th>
+            <th class="py-3.5 px-4">Tuyến Hoạt Động (Route)</th>
+            <th class="py-3.5 px-4">Tài Xế Phụ Trách</th>
+            <th class="py-3.5 px-4">Trạng Thái</th>
+            <th class="py-3.5 px-4 text-center">Hành Động</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 text-xs">
+          <!-- Xe 1: Đang chạy -->
+          <tr class="hover:bg-slate-50/80">
+            <td class="py-3.5 px-4 font-mono font-bold text-brand-dark">43B-012.34</td>
+            <td class="py-3.5 px-4 text-slate-700 font-medium">Thaco Mobihome 2024</td>
+            <td class="py-3.5 px-4 font-semibold text-blue-600">Đà Nẵng - Huế</td>
+            <td class="py-3.5 px-4 text-slate-800 font-medium">TX-101 (Nguyễn Văn An)</td>
+            <td class="py-3.5 px-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">Đang vận hành</span></td>
+            <td class="py-3.5 px-4 text-center space-x-2">
+              <button class="text-slate-500 hover:text-blue-600 p-1" title="Chỉnh sửa tuyến"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="text-slate-400 hover:text-rose-600 p-1" title="Xóa xe"><i class="fa-solid fa-trash-can"></i></button>
+            </td>
+          </tr>
+          <!-- Xe 2: Chờ tài xế tự chọn -->
+          <tr class="hover:bg-slate-50/80">
+            <td class="py-3.5 px-4 font-mono font-bold text-brand-dark">43B-099.11</td>
+            <td class="py-3.5 px-4 text-slate-700 font-medium">Hyundai Universe</td>
+            <td class="py-3.5 px-4 font-semibold text-blue-600">Đà Nẵng - Kon Tum</td>
+            <td class="py-3.5 px-4 text-amber-600 italic">Chờ tài xế tự nhận trên App</td>
+            <td class="py-3.5 px-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">Chờ tài xế</span></td>
+            <td class="py-3.5 px-4 text-center space-x-2">
+              <button class="text-slate-500 hover:text-blue-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="text-slate-400 hover:text-rose-600 p-1"><i class="fa-solid fa-trash-can"></i></button>
+            </td>
+          </tr>
+          <!-- Xe 3: Bảo trì -->
+          <tr class="hover:bg-slate-50/80 bg-rose-50/20">
+            <td class="py-3.5 px-4 font-mono font-bold text-brand-dark">43B-077.22</td>
+            <td class="py-3.5 px-4 text-slate-700 font-medium">Tracomeco Global</td>
+            <td class="py-3.5 px-4 text-slate-400 italic">Tạm dừng (Đang bảo dưỡng)</td>
+            <td class="py-3.5 px-4 text-slate-400 italic">--</td>
+            <td class="py-3.5 px-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-800"><i class="fa-solid fa-screwdriver-wrench mr-1"></i> Bảo trì</span></td>
+            <td class="py-3.5 px-4 text-center space-x-2">
+              <button class="text-slate-500 hover:text-blue-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="text-slate-400 hover:text-rose-600 p-1"><i class="fa-solid fa-trash-can"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>

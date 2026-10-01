@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tổng Quan - DriverWebDb</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { dark: '#0b1120', card: '#1e293b', border: '#e2e8f0', surface: '#f8fafc' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-brand-surface font-sans text-slate-800 p-6 md:p-8">
+
+  <div class="space-y-6">
+    <!-- Header cục bộ của trang con -->
+    <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200">
+      <div>
+        <h1 class="text-xl font-bold text-brand-dark">Trung Tâm Điều Hành & Giám Sát Đội Xe</h1>
+        <p class="text-xs text-slate-400 mt-0.5">Tổng hợp thời gian thực trạng thái vận hành, tài xế và cảnh báo an toàn</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span> IoT Gateway: Trực Tuyến
+        </span>
+      </div>
+    </div>
+
+    <!-- 4 KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <a href="drivers.html" class="bg-white p-5 rounded-xl border border-brand-border shadow-sm flex items-center justify-between hover:border-blue-500 hover:shadow-md transition-all group">
+        <div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tổng Tài Xế</p>
+          <h3 class="text-2xl font-black text-brand-dark mt-1">48</h3>
+          <p class="text-xs text-blue-600 font-semibold mt-1 group-hover:underline flex items-center gap-1">
+            Xem hồ sơ <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </p>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+          <i class="fa-solid fa-users"></i>
+        </div>
+      </a>
+
+      <a href="vehicles.html" class="bg-white p-5 rounded-xl border border-brand-border shadow-sm flex items-center justify-between hover:border-emerald-500 hover:shadow-md transition-all group">
+        <div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Xe Đang Chạy</p>
+          <h3 class="text-2xl font-black text-brand-dark mt-1">32 / 40</h3>
+          <p class="text-xs text-emerald-600 font-semibold mt-1 group-hover:underline flex items-center gap-1">
+            Điều phối đội xe <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </p>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+          <i class="fa-solid fa-bus"></i>
+        </div>
+      </a>
+
+      <a href="finance.html" class="bg-white p-5 rounded-xl border border-brand-border shadow-sm flex items-center justify-between hover:border-indigo-500 hover:shadow-md transition-all group">
+        <div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Quỹ Lương Kỳ Này</p>
+          <h3 class="text-2xl font-black text-brand-dark mt-1">745.2M ₫</h3>
+          <p class="text-xs text-indigo-600 font-semibold mt-1 group-hover:underline flex items-center gap-1">
+            Báo cáo tài chính <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </p>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+          <i class="fa-solid fa-vault"></i>
+        </div>
+      </a>
+
+      <a href="demerits.html" class="bg-white p-5 rounded-xl border border-brand-border shadow-sm flex items-center justify-between hover:border-rose-500 hover:shadow-md transition-all group">
+        <div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Vi Phạm Chờ Duyệt</p>
+          <h3 class="text-2xl font-black text-rose-600 mt-1">2 Ca</h3>
+          <p class="text-xs text-rose-500 font-semibold mt-1 group-hover:underline flex items-center gap-1">
+            Kiểm duyệt ngay <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </p>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+      </a>
+    </div>
+
+    <!-- Khối Radar IoT Giám Sát Buồng Lái & Định Vị Hành Trình -->
+    <div class="bg-brand-dark text-white rounded-2xl p-6 shadow-xl border border-slate-800 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            Radar Giám Sát Hành Trình & Cảnh Báo Buồng Lái Trực Tuyến
+          </h3>
+          <p class="text-xs text-slate-400">Kết nối máy chủ thu thập qua ESP32-CAM (AI Buồng lái) và GPS NEO-6M</p>
+        </div>
+        <a href="vehicles.html" class="text-xs px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm transition-colors">
+          Xem Bản Đồ Toàn Tuyến →
+        </a>
+      </div>
+
+      <!-- Khung mô phỏng radar hiển thị -->
+      <div class="bg-slate-950/90 rounded-xl border border-slate-800 p-5 flex flex-col items-center justify-center min-h-[320px] md:min-h-[480px] text-center space-y-3">
+        <div class="flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-emerald-400">
+          <span><i class="fa-solid fa-satellite mr-1"></i> Tín hiệu GPS: Khóa 32/32 xe</span>
+          <span class="hidden md:inline text-slate-600">|</span>
+          <span><i class="fa-solid fa-video mr-1"></i> ESP32-CAM: 32 Luồng hoạt động</span>
+          <span class="hidden md:inline text-slate-600">|</span>
+          <span class="text-blue-400"><i class="fa-solid fa-microchip mr-1"></i> Tốc độ trung bình: 58.4 km/h</span>
+        </div>
+        <p class="text-xs text-slate-500 font-mono max-w-xl">
+          [IoT Map Telemetry: Đội xe đang vận hành ổn định trên trục Quốc lộ 1A, Cao tốc La Sơn - Túy Loan và Đà Nẵng - Kon Tum]
+        </p>
+      </div>
+  </div>
+
+</body>
+</html>

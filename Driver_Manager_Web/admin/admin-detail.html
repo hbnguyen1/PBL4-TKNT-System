@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cài Đặt Tài Khoản Quản Trị - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin-detail.css">
+</head>
+<body style="background-color: rgba(15, 23, 42, 0.6); font-family: system-ui, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; margin: 0; box-sizing: border-box;">
+
+  <div class="admin-modal">
+    <!-- Header -->
+    <header class="admin-modal__header">
+      <div class="admin-modal__header-left">
+        <a href="index.html" class="admin-modal__back-btn" title="Thoát về trang Tổng Quan">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <div>
+          <h1 class="admin-modal__title">Hồ Sơ Quản Trị Viên (Admin Detail)</h1>
+          <p class="admin-modal__subtitle">Cập nhật tài khoản quản lý hệ thống DriverWebDb</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Form Content -->
+    <form action="index.html" method="GET" class="admin-modal__form">
+      <!-- Section 1: Accounts -->
+      <section class="admin-modal__section">
+        <div class="admin-modal__section-header">
+          <i class="fa-solid fa-user-shield admin-modal__section-icon"></i>
+          <h2 class="admin-modal__section-title">1. Thông Tin Định Danh Quản Trị (Bảng Accounts)</h2>
+        </div>
+
+        <div class="admin-modal__grid admin-modal__grid--cols-2">
+          <div class="admin-modal__group">
+            <label class="admin-modal__label">Mã Quản Trị (Accounts.id)</label>
+            <div class="admin-modal__input-wrapper">
+              <input type="text" name="admin_id" value="AD-01" readonly class="admin-modal__control admin-modal__control--readonly">
+              <i class="fa-solid fa-lock admin-modal__input-icon admin-modal__input-icon--right"></i>
+            </div>
+          </div>
+
+          <div class="admin-modal__group">
+            <label class="admin-modal__label">Tên Đăng Nhập (Username) <span class="admin-modal__required">*</span></label>
+            <div class="admin-modal__input-wrapper">
+              <i class="fa-regular fa-user admin-modal__input-icon admin-modal__input-icon--left"></i>
+              <input type="text" name="username" value="admin_danang" required class="admin-modal__control admin-modal__control--with-left-icon">
+            </div>
+            <span class="admin-modal__hint">Tên dùng để đăng nhập vào trang điều hành</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Password -->
+      <section class="admin-modal__section admin-modal__section--boxed">
+        <div class="admin-modal__section-header">
+          <i class="fa-solid fa-key admin-modal__section-icon"></i>
+          <h2 class="admin-modal__section-title">2. Thiết Lập Mật Khẩu (Đổi Mật Khẩu)</h2>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.875rem;">
+          <div class="admin-modal__group">
+            <label class="admin-modal__label">Mật khẩu hiện tại</label>
+            <div class="admin-modal__input-wrapper">
+              <i class="fa-solid fa-shield-halved admin-modal__input-icon admin-modal__input-icon--left"></i>
+              <input type="password" name="current_password" placeholder="Nhập mật khẩu hiện tại..." class="admin-modal__control admin-modal__control--with-left-icon">
+            </div>
+          </div>
+
+          <div class="admin-modal__grid admin-modal__grid--cols-2">
+            <div class="admin-modal__group">
+              <label class="admin-modal__label">Mật khẩu mới</label>
+              <div class="admin-modal__input-wrapper">
+                <i class="fa-solid fa-lock admin-modal__input-icon admin-modal__input-icon--left"></i>
+                <input type="password" name="new_password" placeholder="Nhập mật khẩu mới..." class="admin-modal__control admin-modal__control--with-left-icon">
+              </div>
+            </div>
+
+            <div class="admin-modal__group">
+              <label class="admin-modal__label">Xác nhận mật khẩu</label>
+              <div class="admin-modal__input-wrapper">
+                <i class="fa-solid fa-check-double admin-modal__input-icon admin-modal__input-icon--left"></i>
+                <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu..." class="admin-modal__control admin-modal__control--with-left-icon">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer Buttons -->
+      <div class="admin-modal__footer">
+        <button type="submit" class="admin-modal__submit-btn">
+          <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi
+        </button>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

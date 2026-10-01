@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hệ Thống Điều Hành Xe - DriverWebDb</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { dark: '#0b1120', card: '#1e293b', border: '#e2e8f0', surface: '#f8fafc' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-brand-surface font-sans text-slate-800 flex h-screen overflow-hidden">
+
+  <!-- SIDEBAR CỐ ĐỊNH DUY NHẤT TRÊN HỆ THỐNG -->
+  <aside class="w-64 bg-brand-dark text-slate-300 flex flex-col justify-between flex-shrink-0 shadow-2xl border-r border-slate-800 z-20">
+    <div>
+      <div class="h-16 flex items-center px-6 gap-3 border-b border-slate-800/80 bg-slate-950/40">
+        <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-lg">
+          <i class="fa-solid fa-truck-fast"></i>
+        </div>
+        <div>
+          <span class="text-white font-bold tracking-wide text-base block">DriverWebDb</span>
+          <span class="text-[11px] text-blue-400 font-medium">Trung Tâm Điều Hành</span>
+        </div>
+      </div>
+
+      <!-- MỤC LỤC ĐIỀU HƯỚNG: TẤT CẢ ĐỀU LOAD VÀO target="content-frame" -->
+      <nav class="mt-5 px-3 space-y-1.5">
+        <a href="overview.html" target="content-frame" 
+           class="w-full flex items-center gap-3.5 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-brand-card transition-all">
+          <i class="fa-solid fa-chart-pie w-5 text-center"></i><span>Tổng Quan</span>
+        </a>
+        <a href="drivers.html" target="content-frame" 
+           class="w-full flex items-center gap-3.5 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-brand-card transition-all">
+          <i class="fa-solid fa-id-card w-5 text-center"></i><span>Hồ Sơ Tài Xế</span>
+        </a>
+        <a href="vehicles.html" target="content-frame" 
+           class="w-full flex items-center gap-3.5 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-brand-card transition-all">
+          <i class="fa-solid fa-bus w-5 text-center"></i><span>Điều Phối Xe</span>
+        </a>
+        <a href="finance.html" target="content-frame" 
+           class="w-full flex items-center gap-3.5 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-brand-card transition-all">
+          <i class="fa-solid fa-chart-column w-5 text-center"></i><span>Thống Kê Tài Chính</span>
+        </a>
+        <a href="demerits.html" target="content-frame" 
+           class="w-full flex items-center gap-3.5 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-brand-card transition-all">
+          <i class="fa-solid fa-triangle-exclamation w-5 text-center"></i><span>Điểm Trừ Vi Phạm</span>
+        </a>
+        <a href="payroll.html" target="content-frame" 
+           class="w-full flex items-center gap-3.5 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-brand-card transition-all">
+          <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i><span>Quản Lý Bảng Lương</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Nút Đăng Xuất -->
+    <div class="p-3 border-t border-slate-800 bg-slate-950/60">
+      <a href="../login.html" 
+        target="_top"
+        class="w-full flex items-center justify-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-all">
+        <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+        <span>Đăng Xuất</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- VÙNG NỘI DUNG CHÍNH (KHÔNG GIAN TRỐNG LOAD CÁC TRANG CON) -->
+  <main class="flex-1 flex flex-col min-w-0 h-full bg-slate-50">
+    <iframe name="content-frame" id="content-frame" src="overview.html" class="w-full h-full border-none"></iframe>
+  </main>
+
+</body>
+</html>
