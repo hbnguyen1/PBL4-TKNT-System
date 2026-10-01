@@ -1,0 +1,267 @@
+:root {
+  --brand-dark: #0b1120;
+  --brand-card: #1e293b;
+  --brand-border: #e2e8f0;
+  --brand-surface: #f8fafc;
+}
+
+body {
+  background-color: var(--brand-surface);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: #1e293b;
+  padding: 1.5rem;
+}
+@media (min-width: 768px) {
+  body { padding: 2rem; }
+}
+
+/* Layout & Khối */
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.page-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--brand-dark);
+}
+
+.page-desc {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.125rem;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 0.75rem;
+  border: 1px solid var(--brand-border);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Form & Input */
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.input-box {
+  font-size: 0.75rem;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.625rem;
+  outline: none;
+}
+.input-box:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.search-wrap {
+  position: relative;
+}
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+.input-search {
+  padding-left: 2rem;
+  padding-right: 0.75rem;
+  width: 14rem;
+}
+
+/* Nút bấm */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn-secondary {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #334155;
+  text-decoration: none;
+}
+.btn-secondary:hover { background-color: #e2e8f0; }
+
+.btn-success {
+  background-color: #059669;
+  color: #fff;
+  border: none;
+}
+.btn-success:hover { background-color: #047857; }
+
+.btn-action {
+  padding: 0.375rem 0.5rem;
+  border-color: #e2e8f0;
+  color: #475569;
+  background: transparent;
+}
+.btn-action:hover { background-color: #f1f5f9; }
+
+/* Bảng */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.payroll-tbl {
+  width: 100%;
+  text-align: left;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  border-collapse: collapse;
+}
+
+.payroll-tbl thead {
+  background-color: #f8fafc;
+  border-bottom: 1px solid var(--brand-border);
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.payroll-tbl th,
+.payroll-tbl td {
+  padding: 0.875rem 1rem;
+}
+
+.payroll-tbl tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+}
+.payroll-tbl tbody tr:hover {
+  background-color: rgba(248, 250, 252, 0.7);
+}
+
+.driver-name {
+  font-weight: 700;
+  color: #1e293b;
+  display: block;
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+.driver-name:hover { color: #2563eb; }
+
+.driver-code {
+  font-size: 10px;
+  color: #2563eb;
+  font-family: monospace;
+  font-weight: 600;
+}
+
+.total-cell {
+  background-color: rgba(239, 246, 255, 0.3);
+  font-weight: 700;
+  color: #2563eb;
+  font-size: 0.875rem;
+}
+
+/* Badge Trạng thái */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.badge-success { background-color: #d1fae5; color: #065f46; }
+.badge-success .badge-dot { background-color: #059669; }
+
+.badge-warning { background-color: #fef3c7; color: #92400e; }
+.badge-warning .badge-dot { background-color: #d97706; }
+
+.badge-info { background-color: #dbeafe; color: #1e40af; }
+.badge-info .badge-dot { background-color: #2563eb; }
+
+/* Menu thả xuống (Dropdown) */
+.action-box {
+  position: relative;
+  display: inline-block;
+}
+
+.action-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  width: 11rem;
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+  padding: 0.25rem 0;
+  text-align: left;
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  color: #334155;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  text-align: left;
+}
+.dropdown-item:hover { background-color: #eff6ff; color: #2563eb; }
+.dropdown-item.success:hover { background-color: #ecfdf5; color: #059669; }
+
+/* Tiện ích canh lề & Font số */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.font-mono { font-family: monospace; }
+.text-green { color: #059669; }
+.text-red { color: #e11d48; }
+.hidden { display: none !important; }

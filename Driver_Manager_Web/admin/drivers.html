@@ -2,43 +2,46 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ Sơ Tài Xế - DriverWebDb</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="drivers.css">
 </head>
-<body class="bg-slate-50 p-6 md:p-8 font-sans text-slate-800">
+<body>
 
   <!-- Header của riêng trang Hồ sơ tài xế -->
-  <div class="flex items-center justify-between pb-6 mb-6 border-b border-slate-200">
+  <div class="page-header">
     <div>
-      <h1 class="text-xl font-bold text-slate-900">Hồ Sơ Tài Xế</h1>
-      <p class="text-xs text-slate-500">Quản lý danh sách và quyền hoạt động của tài xế</p>
+      <h1 class="page-title">Hồ Sơ Tài Xế</h1>
+      <p class="page-desc">Quản lý danh sách và quyền hoạt động của tài xế</p>
     </div>
-    <a href="add-driver.html" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg shadow-sm flex items-center gap-1.5">
-      <i class="fa-solid fa-user-plus"></i> Thêm Tài Xế Mới
+    <a href="add-driver.html" class="btn btn-dark">
+      <i class="fa-solid fa-user-plus"></i>
+      <span>Thêm Tài Xế Mới</span>
     </a>
   </div>
 
   <!-- Bảng dữ liệu tài xế -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <table class="w-full text-left text-sm border-collapse">
-      <thead class="bg-slate-100 text-xs text-slate-500 uppercase font-semibold border-b border-slate-200">
+  <div class="card">
+    <table class="data-tbl">
+      <thead>
         <tr>
-          <th class="py-3 px-4">Mã ID</th>
-          <th class="py-3 px-4">Họ và Tên</th>
-          <th class="py-3 px-4">Số Điện Thoại</th>
-          <th class="py-3 px-4">Hạng Bằng</th>
-          <th class="py-3 px-4">Trạng Thái</th>
+          <th>Mã ID</th>
+          <th>Họ và Tên</th>
+          <th>Số Điện Thoại</th>
+          <th>Hạng Bằng</th>
+          <th>Trạng Thái</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-slate-100 text-xs">
-        <tr class="hover:bg-slate-50">
-          <td class="py-3 px-4 font-mono font-bold text-blue-600">TX-101</td>
-          <td class="py-3 px-4 font-semibold text-slate-800">
-            <a href="driver-detail.html" class="hover:text-blue-600 hover:underline">Nguyễn Văn An</a>
+      <tbody>
+        <tr>
+          <td class="driver-code">TX-101</td>
+          <td>
+            <a href="driver-detail.html" class="driver-name">Nguyễn Văn An</a>
           </td>
-          <td class="py-3 px-4 text-slate-600">0905 123 456</td>
-          <td class="py-3 px-4"><span class="px-2 py-0.5 bg-slate-100 font-semibold rounded">Hạng E</span></td>
-          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-semibold">Hoạt động</span></td>
+          <td class="text-muted">0905 123 456</td>
+          <td><span class="badge badge-gray">Hạng E</span></td>
+          <td><span class="badge badge-success">Hoạt động</span></td>
         </tr>
       </tbody>
     </table>

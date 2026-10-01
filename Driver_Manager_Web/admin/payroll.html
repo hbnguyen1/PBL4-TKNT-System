@@ -4,163 +4,153 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quản Lý Bảng Lương - DriverWebDb</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script>
-    tailwind.config = {
-      theme: { extend: { colors: { brand: { dark: '#0b1120', card: '#1e293b', border: '#e2e8f0', surface: '#f8fafc' } } } }
-    }
-  </script>
+  <link rel="stylesheet" href="payroll.css">
 </head>
-<body class="bg-brand-surface font-sans text-slate-800 p-6 md:p-8">
+<body>
 
-  <div class="space-y-6">
-    <!-- Tiêu đề trang con cục bộ -->
-    <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200">
-      <div>
-        <h1 class="text-xl font-bold text-brand-dark">Quản Lý & Chi Trả Bảng Lương</h1>
-        <p class="text-xs text-slate-400 mt-0.5">Tính toán thu nhập ròng từ bảng <code>SalaryStructures</code> (Lương cơ bản + Phụ cấp + Thưởng - Phạt)</p>
+  <!-- Tiêu đề trang con -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Quản Lý & Chi Trả Bảng Lương</h1>
+      <p class="page-desc">Tính toán thu nhập ròng từ bảng <code>SalaryStructures</code> (Lương cơ bản + Phụ cấp + Thưởng - Phạt)</p>
+    </div>
+    <a href="finance.html" class="btn btn-secondary">
+      <i class="fa-solid fa-chart-column text-blue"></i>
+      <span>Xem Báo Cáo Tài Chính</span>
+    </a>
+  </div>
+
+  <!-- Bộ lọc Tháng (1-12) & Năm -->
+  <div class="card filter-bar" style="margin: 1.5rem 0;">
+    <div class="filter-group">
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input id="searchPayrollInput" type="text" placeholder="Tìm tên hoặc mã TX..." class="input-box input-search">
       </div>
-      <a href="finance.html" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-colors flex items-center gap-1.5">
-        <i class="fa-solid fa-chart-column text-blue-600"></i>
-        <span>Xem Báo Cáo Tài Chính</span>
-      </a>
+      
+      <div class="filter-item">
+        <span>Tháng:</span>
+        <select class="input-box">
+          <option value="1">Tháng 01</option>
+          <option value="2">Tháng 02</option>
+          <option value="3">Tháng 03</option>
+          <option value="4">Tháng 04</option>
+          <option value="5">Tháng 05</option>
+          <option value="6">Tháng 06</option>
+          <option value="7">Tháng 07</option>
+          <option value="8">Tháng 08</option>
+          <option value="9" selected>Tháng 09</option>
+          <option value="10">Tháng 10</option>
+          <option value="11">Tháng 11</option>
+          <option value="12">Tháng 12</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <span>Năm:</span>
+        <input type="number" value="2026" class="input-box font-mono" style="width: 5rem;">
+      </div>
     </div>
 
-    <!-- Bộ lọc Tháng (1-12) & Năm -->
-    <div class="flex flex-wrap items-center justify-between bg-white p-4 rounded-xl border border-brand-border gap-4 shadow-sm">
-      <div class="flex flex-wrap items-center gap-3">
-        <div class="relative">
-          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-          <input id="searchPayrollInput" type="text" placeholder="Tìm tên hoặc mã TX..." class="pl-8 pr-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg w-56 focus:outline-none focus:ring-1 focus:ring-blue-500">
-        </div>
+    <button class="btn btn-success">
+      <i class="fa-solid fa-calculator"></i> Tính Lương Toàn Bộ
+    </button>
+  </div>
+
+  <!-- Bảng Lương -->
+  <div class="card table-wrap">
+    <table class="payroll-tbl">
+      <thead>
+        <tr>
+          <th>Tài Xế</th>
+          <th class="text-center">Kỳ Hạn</th>
+          <th class="text-right">Lương Cơ Bản</th>
+          <th class="text-right">Phụ Cấp Tuyến</th>
+          <th class="text-right text-green">Thưởng</th>
+          <th class="text-right text-red">Phạt</th>
+          <th class="text-right">Thực Lĩnh</th>
+          <th class="text-center">Trạng Thái</th>
+          <th class="text-center">Thao Tác</th>
+        </tr>
+      </thead>
+      <tbody id="payrollTableBody">
         
-        <div class="flex items-center gap-1.5">
-          <span class="text-xs font-semibold text-slate-600">Tháng:</span>
-          <select class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 font-medium text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500">
-            <option value="1">Tháng 01</option>
-            <option value="2">Tháng 02</option>
-            <option value="3">Tháng 03</option>
-            <option value="4">Tháng 04</option>
-            <option value="5">Tháng 05</option>
-            <option value="6">Tháng 06</option>
-            <option value="7">Tháng 07</option>
-            <option value="8">Tháng 08</option>
-            <option value="9" selected>Tháng 09</option>
-            <option value="10">Tháng 10</option>
-            <option value="11">Tháng 11</option>
-            <option value="12">Tháng 12</option>
-          </select>
-        </div>
+        <!-- Dòng 1: Đã thanh toán -->
+        <tr class="payroll-row">
+          <td>
+            <a href="drivers.html" class="driver-name">Nguyễn Văn An</a>
+            <span class="driver-code">TX-101</span>
+          </td>
+          <td class="text-center font-mono period-text">09/2026</td>
+          <td class="text-right font-mono">8,000,000 ₫</td>
+          <td class="text-right font-mono">4,500,000 ₫</td>
+          <td class="text-right font-mono text-green">+1,000,000 ₫</td>
+          <td class="text-right font-mono text-red">-0 ₫</td>
+          <td class="text-right font-mono total-cell">13,500,000 ₫</td>
+          <td class="text-center status-badge">
+            <span class="badge badge-success">
+              <span class="badge-dot"></span> Đã thanh toán
+            </span>
+          </td>
+          <td class="text-center">
+            <div class="action-box">
+              <button onclick="toggleActionMenu(this)" class="btn btn-action">
+                <span>Thao tác</span> <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+              </button>
+              <div class="action-dropdown hidden">
+                <button onclick="updateStatus(this, 'confirm')" class="dropdown-item">
+                  <i class="fa-solid fa-check" style="width: 1rem;"></i> Xác nhận trả
+                </button>
+                <button onclick="updateStatus(this, 'paid')" class="dropdown-item success">
+                  <i class="fa-solid fa-circle-check" style="width: 1rem;"></i> Đã trả
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
 
-        <div class="flex items-center gap-1.5">
-          <span class="text-xs font-semibold text-slate-600">Năm:</span>
-          <input type="number" value="2026" class="w-20 text-xs font-mono font-medium bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500">
-        </div>
-      </div>
+        <!-- Dòng 2: Chờ thanh toán -->
+        <tr class="payroll-row">
+          <td>
+            <a href="drivers.html" class="driver-name">Trần Đình Trọng</a>
+            <span class="driver-code">TX-102</span>
+          </td>
+          <td class="text-center font-mono period-text">09/2026</td>
+          <td class="text-right font-mono">7,500,000 ₫</td>
+          <td class="text-right font-mono">3,800,000 ₫</td>
+          <td class="text-right font-mono text-green">+500,000 ₫</td>
+          <td class="text-right font-mono text-red">-200,000 ₫</td>
+          <td class="text-right font-mono total-cell">11,600,000 ₫</td>
+          <td class="text-center status-badge">
+            <span class="badge badge-warning">
+              <span class="badge-dot"></span> Chờ chi trả
+            </span>
+          </td>
+          <td class="text-center">
+            <div class="action-box">
+              <button onclick="toggleActionMenu(this)" class="btn btn-action">
+                <span>Thao tác</span> <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+              </button>
+              <div class="action-dropdown hidden">
+                <button onclick="updateStatus(this, 'confirm')" class="dropdown-item">
+                  <i class="fa-solid fa-check" style="width: 1rem;"></i> Xác nhận trả
+                </button>
+                <button onclick="updateStatus(this, 'paid')" class="dropdown-item success">
+                  <i class="fa-solid fa-circle-check" style="width: 1rem;"></i> Đã trả
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
 
-      <button class="bg-emerald-600 hover:bg-emerald-700 transition-colors text-white px-4 py-2 rounded-lg text-xs font-semibold shadow-sm flex items-center gap-1.5">
-        <i class="fa-solid fa-calculator"></i> Tính Lương Toàn Bộ
-      </button>
-    </div>
-
-    <!-- Bảng Lương -->
-    <div class="bg-white rounded-xl border border-brand-border shadow-sm">
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs whitespace-nowrap">
-          <thead class="bg-slate-50 border-b border-brand-border text-slate-500 font-semibold tracking-wider uppercase text-[11px]">
-            <tr>
-              <th class="py-3.5 px-4">Tài Xế</th>
-              <th class="py-3.5 px-4 text-center">Kỳ Hạn</th>
-              <th class="py-3.5 px-4 text-right">Lương Cơ Bản</th>
-              <th class="py-3.5 px-4 text-right">Phụ Cấp Tuyến</th>
-              <th class="py-3.5 px-4 text-right text-emerald-600">Thưởng</th>
-              <th class="py-3.5 px-4 text-right text-rose-600">Phạt</th>
-              <th class="py-3.5 px-4 text-right font-bold text-slate-900">Thực Lĩnh</th>
-              <th class="py-3.5 px-4 text-center">Trạng Thái</th>
-              <th class="py-3.5 px-4 text-center">Thao Tác</th>
-            </tr>
-          </thead>
-          <tbody id="payrollTableBody" class="divide-y divide-slate-100 font-normal">
-            
-            <!-- Dòng 1: Đã thanh toán -->
-            <tr class="payroll-row hover:bg-slate-50/70 transition-colors">
-              <td class="py-3.5 px-4">
-                <a href="drivers.html" class="font-bold text-slate-800 hover:text-blue-600 block text-sm driver-name">Nguyễn Văn An</a>
-                <span class="text-[10px] text-blue-600 font-mono font-semibold driver-code">TX-101</span>
-              </td>
-              <td class="py-3.5 px-4 text-center font-mono font-medium text-slate-600 period-text">09/2026</td>
-              <td class="py-3.5 px-4 text-right font-mono text-slate-700">8,000,000 ₫</td>
-              <td class="py-3.5 px-4 text-right font-mono text-slate-700">4,500,000 ₫</td>
-              <td class="py-3.5 px-4 text-right font-mono text-emerald-600">+1,000,000 ₫</td>
-              <td class="py-3.5 px-4 text-right font-mono text-rose-600">-0 ₫</td>
-              <td class="py-3.5 px-4 text-right font-mono font-bold text-blue-600 text-sm bg-blue-50/30">13,500,000 ₫</td>
-              <td class="py-3.5 px-4 text-center status-badge">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Đã thanh toán
-                </span>
-              </td>
-              <td class="py-3.5 px-4 text-center">
-                <div class="relative inline-block text-left">
-                  <button onclick="toggleActionMenu(this)" class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs flex items-center gap-1">
-                    <span>Thao tác</span> <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                  </button>
-                  <!-- Dropdown menu -->
-                  <div class="action-dropdown hidden absolute right-0 mt-1 w-44 bg-white border border-slate-200 rounded-lg shadow-lg z-20 py-1 text-left">
-                    <button onclick="updateStatus(this, 'confirm')" class="w-full px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2">
-                      <i class="fa-solid fa-check text-blue-600 w-4"></i> Xác nhận trả
-                    </button>
-                    <button onclick="updateStatus(this, 'paid')" class="w-full px-3 py-2 text-xs text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 flex items-center gap-2">
-                      <i class="fa-solid fa-circle-check text-emerald-600 w-4"></i> Đã trả
-                    </button>
-                  </div>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Dòng 2: Chờ thanh toán -->
-            <tr class="payroll-row hover:bg-slate-50/70 transition-colors">
-              <td class="py-3.5 px-4">
-                <a href="drivers.html" class="font-bold text-slate-800 hover:text-blue-600 block text-sm driver-name">Trần Đình Trọng</a>
-                <span class="text-[10px] text-blue-600 font-mono font-semibold driver-code">TX-102</span>
-              </td>
-              <td class="py-3.5 px-4 text-center font-mono font-medium text-slate-600 period-text">09/2026</td>
-              <td class="py-3.5 px-4 text-right font-mono text-slate-700">7,500,000 ₫</td>
-              <td class="py-3.5 px-4 text-right font-mono text-slate-700">3,800,000 ₫</td>
-              <td class="py-3.5 px-4 text-right font-mono text-emerald-600">+500,000 ₫</td>
-              <td class="py-3.5 px-4 text-right font-mono text-rose-600">-200,000 ₫</td>
-              <td class="py-3.5 px-4 text-right font-mono font-bold text-blue-600 text-sm bg-blue-50/30">11,600,000 ₫</td>
-              <td class="py-3.5 px-4 text-center status-badge">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800">
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span> Chờ chi trả
-                </span>
-              </td>
-              <td class="py-3.5 px-4 text-center">
-                <div class="relative inline-block text-left">
-                  <button onclick="toggleActionMenu(this)" class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs flex items-center gap-1">
-                    <span>Thao tác</span> <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                  </button>
-                  <!-- Dropdown menu -->
-                  <div class="action-dropdown hidden absolute right-0 mt-1 w-44 bg-white border border-slate-200 rounded-lg shadow-lg z-20 py-1 text-left">
-                    <button onclick="updateStatus(this, 'confirm')" class="w-full px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2">
-                      <i class="fa-solid fa-check text-blue-600 w-4"></i> Xác nhận trả
-                    </button>
-                    <button onclick="updateStatus(this, 'paid')" class="w-full px-3 py-2 text-xs text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 flex items-center gap-2">
-                      <i class="fa-solid fa-circle-check text-emerald-600 w-4"></i> Đã trả
-                    </button>
-                  </div>
-                </div>
-              </td>
-            </tr>
-
-          </tbody>
-        </table>
-      </div>
-    </div>
+      </tbody>
+    </table>
   </div>
 
   <script>
-    // 1. Chức năng tìm kiếm theo Tên hoặc Mã tài xế
+    // 1. Tìm kiếm theo Tên hoặc Mã tài xế
     document.getElementById('searchPayrollInput').addEventListener('input', function() {
       const keyword = this.value.toLowerCase().trim();
       const rows = document.querySelectorAll('.payroll-row');
@@ -170,11 +160,7 @@
         const code = row.querySelector('.driver-code')?.textContent.toLowerCase() || '';
         const period = row.querySelector('.period-text')?.textContent.toLowerCase() || '';
 
-        if (name.includes(keyword) || code.includes(keyword) || period.includes(keyword)) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
+        row.style.display = (name.includes(keyword) || code.includes(keyword) || period.includes(keyword)) ? '' : 'none';
       });
     });
 
@@ -192,12 +178,12 @@
 
     // 3. Đóng dropdown khi nhấn ra ngoài
     document.addEventListener('click', (e) => {
-      if (!e.target.closest('.relative')) {
+      if (!e.target.closest('.action-box')) {
         document.querySelectorAll('.action-dropdown').forEach(d => d.classList.add('hidden'));
       }
     });
 
-    // 4. Cập nhật trạng thái trực tiếp khi bấm vào Thao tác
+    // 4. Cập nhật trạng thái trực tiếp
     function updateStatus(btn, action) {
       const row = btn.closest('.payroll-row');
       const badgeContainer = row.querySelector('.status-badge');
@@ -205,14 +191,14 @@
 
       if (action === 'paid') {
         badgeContainer.innerHTML = `
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Đã thanh toán
+          <span class="badge badge-success">
+            <span class="badge-dot"></span> Đã thanh toán
           </span>
         `;
       } else if (action === 'confirm') {
         badgeContainer.innerHTML = `
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-100 text-blue-800">
-            <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Đã xác nhận
+          <span class="badge badge-info">
+            <span class="badge-dot"></span> Đã xác nhận
           </span>
         `;
       }

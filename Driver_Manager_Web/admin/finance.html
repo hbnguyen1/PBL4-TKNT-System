@@ -4,152 +4,141 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thống Kê Tài Chính - DriverWebDb</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="finance.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    tailwind.config = {
-      theme: { extend: { colors: { brand: { dark: '#0b1120', card: '#1e293b', border: '#e2e8f0', surface: '#f8fafc' } } } }
-    }
-  </script>
 </head>
-<body class="bg-brand-surface font-sans text-slate-800 p-6 md:p-8">
+<body>
 
-  <div class="space-y-6">
+  <div class="container-space">
     <!-- Tiêu đề trang cục bộ -->
-    <div class="flex items-center justify-between pb-4 border-b border-slate-200">
-      <h1 class="text-xl font-bold text-brand-dark">Báo Cáo Tài Chính & Chi Phí Vận Hành</h1>
-      <a href="payroll.html" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors flex items-center gap-1.5">
-        <span>Xem Bảng Lương Chi Tiết</span> <i class="fa-solid fa-arrow-right"></i>
+    <div class="page-header">
+      <h1 class="page-title">Báo Cáo Tài Chính & Chi Phí Vận Hành</h1>
+      <a href="payroll.html" class="btn btn-primary">
+        <span>Xem Bảng Lương Chi Tiết</span>
+        <i class="fa-solid fa-arrow-right"></i>
       </a>
     </div>
 
-    <!-- Bộ lọc Dropdown Thống Kê Theo Tháng / Quý / Năm -->
-    <div class="flex flex-wrap items-center justify-between bg-white p-4 rounded-xl border border-brand-border gap-4 shadow-sm">
-      <div class="flex flex-wrap items-center gap-3">
-        <!-- Dropdown Chế độ xem -->
-        <div class="flex items-center gap-1.5">
-          <span class="text-xs font-semibold text-slate-600">Xem theo:</span>
-          <select id="viewTypeSelect" onchange="onViewTypeChange()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500">
+    <!-- Bộ lọc Theo Tháng / Quý / Năm -->
+    <div class="card filter-bar">
+      <div class="filter-group">
+        <div class="filter-item">
+          <span>Xem theo:</span>
+          <select id="viewTypeSelect" onchange="onViewTypeChange()" class="input-box font-bold">
             <option value="month" selected>Theo Tháng</option>
             <option value="quarter">Theo Quý</option>
             <option value="year">Theo Năm</option>
           </select>
         </div>
 
-        <!-- Dropdown Kỳ (Thay đổi động theo Chế độ xem) -->
-        <div class="flex items-center gap-1.5" id="periodWrapper">
-          <span class="text-xs font-semibold text-slate-600" id="periodLabel">Tháng:</span>
-          <select id="periodSelect" onchange="applyFilter()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 font-medium text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500">
-            <!-- Nội dung sẽ tự tạo động qua JS -->
+        <div class="filter-item" id="periodWrapper">
+          <span id="periodLabel">Tháng:</span>
+          <select id="periodSelect" onchange="applyFilter()" class="input-box">
+            <!-- Nội dung nạp động bằng JS -->
           </select>
         </div>
 
-        <!-- Nhập Năm -->
-        <div class="flex items-center gap-1.5" id="yearWrapper">
-          <span class="text-xs font-semibold text-slate-600">Năm:</span>
-          <input id="yearInput" onchange="applyFilter()" type="number" value="2026" class="w-20 text-xs font-mono font-bold bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500">
+        <div class="filter-item" id="yearWrapper">
+          <span>Năm:</span>
+          <input id="yearInput" onchange="applyFilter()" type="number" value="2026" class="input-box font-mono font-bold" style="width: 5rem;">
         </div>
       </div>
 
-      <span class="text-xs text-slate-500 italic">* Số liệu tự động đối soát từ biên bản vi phạm và bảng lương</span>
+      <span class="note-text">* Số liệu tự động đối soát từ biên bản vi phạm và bảng lương</span>
     </div>
 
     <!-- 4 Cards Tài Chính -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="bg-white p-5 rounded-xl border border-brand-border shadow-sm flex flex-col justify-between">
-        <div class="flex items-center justify-between text-slate-500">
-          <span class="text-xs font-bold uppercase tracking-wider">Tổng Thực Chi Lương</span>
-          <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm"><i class="fa-solid fa-money-bill-wave"></i></div>
+    <div class="stats-grid">
+      <div class="card stat-card">
+        <div class="stat-head">
+          <span class="stat-label">Tổng Thực Chi Lương</span>
+          <div class="stat-icon blue"><i class="fa-solid fa-money-bill-wave"></i></div>
         </div>
-        <div class="mt-3">
-          <div id="statTotalPay" class="text-2xl font-black text-brand-dark tracking-tight">745,200,000 ₫</div>
-          <div class="text-xs text-slate-500 mt-1">Đã khấu trừ các khoản phạt</div>
-        </div>
-      </div>
-
-      <div class="bg-white p-5 rounded-xl border border-brand-border shadow-sm flex flex-col justify-between">
-        <div class="flex items-center justify-between text-slate-500">
-          <span class="text-xs font-bold uppercase tracking-wider">Lương Cơ Bản</span>
-          <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-sm"><i class="fa-solid fa-wallet"></i></div>
-        </div>
-        <div class="mt-3">
-          <div id="statBaseSalary" class="text-2xl font-black text-slate-800 tracking-tight">384,000,000 ₫</div>
-          <div class="text-xs text-slate-500 mt-1">Định mức theo hợp đồng</div>
+        <div>
+          <div id="statTotalPay" class="stat-val text-blue">745,200,000 ₫</div>
+          <div class="stat-sub">Đã khấu trừ các khoản phạt</div>
         </div>
       </div>
 
-      <div class="bg-white p-5 rounded-xl border border-brand-border shadow-sm flex flex-col justify-between">
-        <div class="flex items-center justify-between text-slate-500">
-          <span class="text-xs font-bold uppercase tracking-wider">Phụ Cấp & Thưởng</span>
-          <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm"><i class="fa-solid fa-route"></i></div>
+      <div class="card stat-card">
+        <div class="stat-head">
+          <span class="stat-label">Lương Cơ Bản</span>
+          <div class="stat-icon slate"><i class="fa-solid fa-wallet"></i></div>
         </div>
-        <div class="mt-3">
-          <div id="statBonus" class="text-2xl font-black text-emerald-600 tracking-tight">+379,700,000 ₫</div>
-          <div class="text-xs text-slate-500 mt-1">Hỗ trợ tuyến + Thưởng chuyến</div>
+        <div>
+          <div id="statBaseSalary" class="stat-val text-slate">384,000,000 ₫</div>
+          <div class="stat-sub">Định mức theo hợp đồng</div>
         </div>
       </div>
 
-      <div class="bg-white p-5 rounded-xl border border-brand-border shadow-sm flex flex-col justify-between">
-        <div class="flex items-center justify-between text-slate-500">
-          <span class="text-xs font-bold uppercase tracking-wider">Khấu Trừ Vi Phạm</span>
-          <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-sm"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="card stat-card">
+        <div class="stat-head">
+          <span class="stat-label">Phụ Cấp & Thưởng</span>
+          <div class="stat-icon green"><i class="fa-solid fa-route"></i></div>
         </div>
-        <div class="mt-3">
-          <div id="statPenalty" class="text-2xl font-black text-rose-600 tracking-tight">-18,500,000 ₫</div>
-          <div id="statPenaltyRatio" class="text-xs text-slate-500 mt-1">Tỷ lệ: 2.48% (Trong ngưỡng)</div>
+        <div>
+          <div id="statBonus" class="stat-val text-green">+379,700,000 ₫</div>
+          <div class="stat-sub">Hỗ trợ tuyến + Thưởng chuyến</div>
+        </div>
+      </div>
+
+      <div class="card stat-card">
+        <div class="stat-head">
+          <span class="stat-label">Khấu Trừ Vi Phạm</span>
+          <div class="stat-icon rose"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        </div>
+        <div>
+          <div id="statPenalty" class="stat-val text-rose">-18,500,000 ₫</div>
+          <div id="statPenaltyRatio" class="stat-sub">Tỷ lệ: 2.48% (Trong ngưỡng)</div>
         </div>
       </div>
     </div>
 
-    <!-- Biểu Đồ Cột So Sánh Thu Nhập / Phạt -->
-    <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm">
-      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-        <div>
-          <h3 class="font-bold text-base text-brand-dark">Biểu Đồ So Sánh Thu Nhập Tài Xế & Tiền Phạt Vi Phạm</h3>
-          <p class="text-xs text-slate-500 mt-0.5" id="chartSubTitle">Dữ liệu đối soát thực tế</p>
-        </div>
+    <!-- Biểu Đồ Cột So Sánh -->
+    <div class="card card-round chart-card">
+      <div class="chart-head">
+        <h3 class="chart-title">Biểu Đồ So Sánh Thu Nhập Tài Xế & Tiền Phạt Vi Phạm</h3>
+        <p class="chart-sub" id="chartSubTitle">Dữ liệu đối soát thực tế</p>
       </div>
 
-      <div class="mt-6 relative h-80">
+      <div class="chart-body">
         <canvas id="financeBarChart"></canvas>
-        <!-- Khung hiện ra khi chưa có số liệu -->
-        <div id="chartNoData" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-white/95 rounded-xl">
-          <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-xl mb-2">
+        <div id="chartNoData" class="no-data-overlay hidden">
+          <div class="no-data-icon">
             <i class="fa-solid fa-chart-simple"></i>
           </div>
-          <p class="text-sm font-semibold text-slate-600">Chưa có số liệu ghi nhận</p>
-          <p class="text-xs text-slate-400 mt-0.5">Kỳ này hiện chưa phát sinh dữ liệu lương và vi phạm</p>
+          <p style="font-size: 0.875rem; font-weight: 600; color: #475569;">Chưa có số liệu ghi nhận</p>
+          <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.125rem;">Kỳ này hiện chưa phát sinh dữ liệu lương và vi phạm</p>
         </div>
       </div>
     </div>
 
     <!-- Bảng Thống Kê Chi Tiết -->
-    <div class="bg-white rounded-2xl border border-brand-border shadow-sm overflow-hidden">
-      <div class="p-5 border-b border-brand-border bg-slate-50/50 flex justify-between items-center">
-        <div>
-          <h3 class="font-bold text-base text-brand-dark">Chi Tiết Thống Kê Đội Xe</h3>
-          <p class="text-xs text-slate-500 mt-0.5">Bảng hạch toán lương và các khoản giảm trừ vi phạm</p>
-        </div>
+    <div class="card card-round tbl-card">
+      <div class="tbl-head-box">
+        <h3 class="chart-title">Chi Tiết Thống Kê Đội Xe</h3>
+        <p class="chart-sub">Bảng hạch toán lương và các khoản giảm trừ vi phạm</p>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs whitespace-nowrap">
-          <thead class="bg-slate-50 border-b border-brand-border text-slate-500 uppercase font-semibold text-[11px] tracking-wider">
+      <div class="table-wrap">
+        <table class="finance-tbl">
+          <thead>
             <tr>
-              <th class="py-3.5 px-5">Kỳ Hoạt Động</th>
-              <th class="py-3.5 px-5 text-center">Tài Xế Hoạt Động</th>
-              <th class="py-3.5 px-5 text-center">Số Chuyến Xe</th>
-              <th class="py-3.5 px-5 text-right">Lương Cơ Bản</th>
-              <th class="py-3.5 px-5 text-right">Phụ Cấp Tuyến</th>
-              <th class="py-3.5 px-5 text-right text-emerald-600">Thưởng Năng Suất</th>
-              <th class="py-3.5 px-5 text-right text-rose-600">Khấu Trừ Phạt</th>
-              <th class="py-3.5 px-5 text-right font-bold text-slate-900">Tổng Thực Chi</th>
-              <th class="py-3.5 px-5 text-center">Tỷ Lệ Phạt</th>
+              <th>Kỳ Hoạt Động</th>
+              <th class="text-center">Tài Xế Hoạt Động</th>
+              <th class="text-center">Số Chuyến Xe</th>
+              <th class="text-right">Lương Cơ Bản</th>
+              <th class="text-right">Phụ Cấp Tuyến</th>
+              <th class="text-right text-green">Thưởng Năng Suất</th>
+              <th class="text-right text-rose">Khấu Trừ Phạt</th>
+              <th class="text-right">Tổng Thực Chi</th>
+              <th class="text-center">Tỷ Lệ Phạt</th>
             </tr>
           </thead>
-          <tbody id="tableBody" class="divide-y divide-slate-100 font-normal">
-            <!-- Sẽ render động qua JavaScript -->
+          <tbody id="tableBody">
+            <!-- Nạp động qua JavaScript -->
           </tbody>
         </table>
       </div>
@@ -157,9 +146,8 @@
   </div>
 
   <script>
-    // Dữ liệu mẫu (Các kỳ khác không khai báo sẽ tự động báo "Chưa có số liệu")
     const DB = {
-      // Theo Tháng (Format: month_YYYY_M)
+      // Theo Tháng (month_YYYY_M)
       "month_2026_9": {
         periodName: "Tháng 09/2026",
         drivers: "48 Tài xế",
@@ -202,7 +190,7 @@
         incomeData: [165, 172, 170, 176.4],
         penaltyData: [5.5, 6.0, 4.8, 5.8]
       },
-      // Theo Quý (Format: quarter_YYYY_Q)
+      // Theo Quý (quarter_YYYY_Q)
       "quarter_2026_3": {
         periodName: "Quý 3/2026",
         drivers: "48 Tài xế",
@@ -231,7 +219,7 @@
         incomeData: [650, 675, 680],
         penaltyData: [15, 16, 14]
       },
-      // Theo Năm (Format: year_YYYY)
+      // Theo Năm (year_YYYY)
       "year_2026": {
         periodName: "Năm 2026",
         drivers: "48 Tài xế",
@@ -264,7 +252,6 @@
 
     let financeChart = null;
 
-    // Chuyển đổi danh mục Dropdown
     function onViewTypeChange() {
       const type = document.getElementById('viewTypeSelect').value;
       const periodWrapper = document.getElementById('periodWrapper');
@@ -304,7 +291,6 @@
       applyFilter();
     }
 
-    // Áp dụng bộ lọc & Cập nhật UI
     function applyFilter() {
       const type = document.getElementById('viewTypeSelect').value;
       const year = document.getElementById('yearInput').value;
@@ -329,19 +315,18 @@
         document.getElementById('statPenalty').textContent = '-' + record.penalty.toLocaleString('vi-VN') + ' ₫';
         document.getElementById('statPenaltyRatio').textContent = `Tỷ lệ: ${record.penaltyRate}`;
 
-        // Render Table
         document.getElementById('tableBody').innerHTML = `
-          <tr class="hover:bg-slate-50/80 transition-colors">
-            <td class="py-3.5 px-5 font-bold text-blue-600">${record.periodName}</td>
-            <td class="py-3.5 px-5 text-center font-medium text-slate-700">${record.drivers}</td>
-            <td class="py-3.5 px-5 text-center font-mono font-medium text-slate-700">${record.trips}</td>
-            <td class="py-3.5 px-5 text-right font-mono text-slate-700">${record.base.toLocaleString('vi-VN')} ₫</td>
-            <td class="py-3.5 px-5 text-right font-mono text-slate-700">${record.allowance.toLocaleString('vi-VN')} ₫</td>
-            <td class="py-3.5 px-5 text-right font-mono text-emerald-600">+${record.bonus.toLocaleString('vi-VN')} ₫</td>
-            <td class="py-3.5 px-5 text-right font-mono text-rose-600">-${record.penalty.toLocaleString('vi-VN')} ₫</td>
-            <td class="py-3.5 px-5 text-right font-mono font-bold text-blue-600 text-sm bg-blue-50/30">${record.total.toLocaleString('vi-VN')} ₫</td>
-            <td class="py-3.5 px-5 text-center">
-              <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-700">${record.penaltyRate}</span>
+          <tr>
+            <td class="font-bold text-blue">${record.periodName}</td>
+            <td class="text-center" style="font-weight: 500;">${record.drivers}</td>
+            <td class="text-center font-mono" style="font-weight: 500;">${record.trips}</td>
+            <td class="text-right font-mono">${record.base.toLocaleString('vi-VN')} ₫</td>
+            <td class="text-right font-mono">${record.allowance.toLocaleString('vi-VN')} ₫</td>
+            <td class="text-right font-mono text-green">+${record.bonus.toLocaleString('vi-VN')} ₫</td>
+            <td class="text-right font-mono text-rose">-${record.penalty.toLocaleString('vi-VN')} ₫</td>
+            <td class="text-right font-mono highlight-cell">${record.total.toLocaleString('vi-VN')} ₫</td>
+            <td class="text-center">
+              <span class="badge-tag">${record.penaltyRate}</span>
             </td>
           </tr>
         `;
@@ -356,9 +341,9 @@
 
         document.getElementById('tableBody').innerHTML = `
           <tr>
-            <td colspan="9" class="py-8 px-5 text-center text-slate-400 bg-slate-50/50">
-              <i class="fa-solid fa-folder-open text-2xl mb-2 block"></i>
-              <span class="text-xs font-medium">Chưa có số liệu thống kê cho kỳ này</span>
+            <td colspan="9" class="text-center" style="padding: 2rem 1.25rem; color: #94a3b8; background-color: rgba(248, 250, 252, 0.5);">
+              <i class="fa-solid fa-folder-open" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+              <span style="font-size: 0.75rem; font-weight: 500;">Chưa có số liệu thống kê cho kỳ này</span>
             </td>
           </tr>
         `;
@@ -367,7 +352,6 @@
       }
     }
 
-    // Vẽ biểu đồ
     function renderChart(labels, income, penalty) {
       document.getElementById('chartNoData').classList.add('hidden');
       const ctx = document.getElementById('financeBarChart').getContext('2d');
@@ -430,7 +414,6 @@
       document.getElementById('chartNoData').classList.remove('hidden');
     }
 
-    // Khởi chạy khi nạp trang
     window.addEventListener('DOMContentLoaded', () => {
       onViewTypeChange();
     });
