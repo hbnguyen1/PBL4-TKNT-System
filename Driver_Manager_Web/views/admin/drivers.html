@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -8,13 +9,17 @@
   <link rel="stylesheet" href="../../assets/base.css">
   <link rel="stylesheet" href="../../assets/pages/drivers.css">
 </head>
+
 <body class="drivers-page">
 
   <div class="page-header">
     <div>
       <h1 class="page-header__title">Danh Sách Hồ Sơ Tài Xế (Drivers)</h1>
-      <p class="page-header__subtitle">Quản lý thông tin định danh, bằng lái và quyền vận hành ca xe</p>
+      <p class="page-header__subtitle">
+        Quản lý thông tin định danh, bằng lái và quyền vận hành ca xe
+      </p>
     </div>
+
     <a href="add-driver.html" class="btn btn--primary">
       <i class="fa-solid fa-user-plus"></i>
       <span>Khai Báo Tài Xế Mới</span>
@@ -22,28 +27,39 @@
   </div>
 
   <section class="drivers-filter">
+
     <div class="drivers-filter__search">
       <i class="fa-solid fa-magnifying-glass drivers-filter__icon"></i>
-      <input type="text" placeholder="Tìm kiếm theo tên, mã TX, số điện thoại..." class="form-control drivers-filter__input">
+      <input
+        type="text"
+        id="searchDriver"
+        placeholder="Tìm kiếm theo tên, mã TX, số điện thoại..."
+        class="form-control drivers-filter__input"
+      >
     </div>
+
     <div class="drivers-filter__group">
-      <select class="form-control" style="width: 10rem;">
+
+      <select id="filterLicense" class="form-control" style="width: 10rem;">
         <option value="">Tất cả hạng bằng</option>
-        <option value="Hạng E">Hạng E</option>
-        <option value="Hạng D">Hạng D</option>
-        <option value="Hạng C">Hạng C</option>
+        <option value="E">Hạng E</option>
+        <option value="D">Hạng D</option>
+        <option value="C">Hạng C</option>
       </select>
-      <select class="form-control" style="width: 10rem;">
+
+      <select id="filterStatus" class="form-control" style="width: 10rem;">
         <option value="">Tất cả trạng thái</option>
         <option value="0">Đang hoạt động</option>
         <option value="1">Đình chỉ</option>
       </select>
+
     </div>
   </section>
 
   <div class="data-card">
     <div class="table-wrapper">
       <table class="data-table">
+
         <thead class="data-table__head">
           <tr>
             <th class="data-table__th">Mã ID</th>
@@ -53,31 +69,167 @@
             <th class="data-table__th">Trạng Thái</th>
           </tr>
         </thead>
-        <tbody class="data-table__body">
+
+        <tbody class="data-table__body" id="driverTableBody">
           <tr>
-            <td class="data-table__td" style="font-family: monospace; font-weight: 700; color: var(--color-primary);">TX-101</td>
-            <td class="data-table__td">
-              <a href="driver-detail.html?id=TX-101" class="drivers-list__link">Nguyễn Văn An</a>
-              <span class="drivers-list__username">username: vana_tx101</span>
+            <td colspan="5" class="data-table__td" style="text-align:center;">
+              Đang tải danh sách tài xế...
             </td>
-            <td class="data-table__td" style="font-family: monospace;">0905 123 456</td>
-            <td class="data-table__td"><span class="badge badge--info">Hạng E</span></td>
-            <td class="data-table__td"><span class="badge badge--success">Đang hoạt động</span></td>
-          </tr>
-          <tr>
-            <td class="data-table__td" style="font-family: monospace; font-weight: 700; color: var(--color-primary);">TX-102</td>
-            <td class="data-table__td">
-              <a href="driver-detail.html?id=TX-102" class="drivers-list__link">Trần Văn Bình</a>
-              <span class="drivers-list__username">username: binhtv_tx102</span>
-            </td>
-            <td class="data-table__td" style="font-family: monospace;">0914 987 654</td>
-            <td class="data-table__td"><span class="badge badge--info">Hạng D</span></td>
-            <td class="data-table__td"><span class="badge badge--danger">Đình chỉ</span></td>
           </tr>
         </tbody>
+
       </table>
     </div>
   </div>
+
+  <script>
+    const API_URL = "http://localhost:5005/api/drivers";
+
+    const searchInput = document.getElementById("searchDriver");
+    const licenseFilter = document.getElementById("filterLicense");
+    const statusFilter = document.getElementById("filterStatus");
+    const tableBody = document.getElementById("driverTableBody");
+
+    let drivers = [];
+
+    // Chuyển dữ liệu thành text an toàn trước khi hiển thị
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    // Lấy danh sách tài xế từ backend C#
+    async function loadDrivers() {
+      try {
+        const response = await fetch(API_URL, {
+          headers: {
+            "Accept": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error("Dữ liệu API không đúng định dạng");
+        }
+
+        drivers = data;
+        renderDrivers();
+
+      } catch (error) {
+        console.error("Lỗi tải tài xế:", error);
+
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="data-table__td"
+                style="text-align:center;color:#dc2626;">
+              Không thể tải danh sách tài xế.
+              Vui lòng kiểm tra backend và kết nối MySQL.
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    // Hiển thị dữ liệu lên bảng
+    function renderDrivers() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      const license = licenseFilter.value;
+      const status = statusFilter.value;
+
+      const filteredDrivers = drivers.filter(driver => {
+        const searchableText = [
+          driver.id,
+          driver.fullName,
+          driver.phone
+        ].join(" ").toLowerCase();
+
+        const matchSearch = searchableText.includes(keyword);
+
+        const licenseType = String(driver.licenseType ?? "")
+          .replace(/^Hạng\s+/i, "")
+          .trim()
+          .toUpperCase();
+
+        const matchLicense = !license || licenseType === license;
+
+        const matchStatus = status === "" ||
+          String(Number(driver.isSuspended === true)) === status;
+
+        return matchSearch && matchLicense && matchStatus;
+      });
+
+      if (filteredDrivers.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="data-table__td"
+                style="text-align:center;">
+              Không tìm thấy tài xế phù hợp.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tableBody.innerHTML = filteredDrivers.map(driver => {
+        const id = escapeHTML(driver.id);
+        const name = escapeHTML(driver.fullName);
+        const phone = escapeHTML(driver.phone || "Chưa cập nhật");
+        const license = escapeHTML(driver.licenseType || "Chưa có");
+
+        const statusBadge = driver.isSuspended
+          ? '<span class="badge badge--danger">Đình chỉ</span>'
+          : '<span class="badge badge--success">Đang hoạt động</span>';
+
+        return `
+          <tr>
+            <td class="data-table__td"
+                style="font-family:monospace;font-weight:700;color:var(--color-primary);">
+              ${id}
+            </td>
+
+            <td class="data-table__td">
+              <a href="driver-detail.html?id=${encodeURIComponent(driver.id)}"
+                 class="drivers-list__link">
+                ${name}
+              </a>
+            </td>
+
+            <td class="data-table__td" style="font-family:monospace;">
+              ${phone}
+            </td>
+
+            <td class="data-table__td">
+              <span class="badge badge--info">
+                ${license}
+              </span>
+            </td>
+
+            <td class="data-table__td">
+              ${statusBadge}
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // Tìm kiếm và lọc ngay khi người dùng thao tác
+    searchInput.addEventListener("input", renderDrivers);
+    licenseFilter.addEventListener("change", renderDrivers);
+    statusFilter.addEventListener("change", renderDrivers);
+
+    // Tải dữ liệu khi mở trang
+    loadDrivers();
+  </script>
 
 </body>
 </html>

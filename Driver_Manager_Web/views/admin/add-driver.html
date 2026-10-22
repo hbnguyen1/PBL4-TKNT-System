@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -8,62 +9,217 @@
   <link rel="stylesheet" href="../../assets/base.css">
   <link rel="stylesheet" href="../../assets/pages/add-driver.css">
 </head>
+
 <body class="add-driver-page">
 
   <div class="page-header" style="max-width: 48rem; margin: 0 auto 1.5rem auto;">
     <div>
       <h1 class="page-header__title">Khai Báo Hồ Sơ Tài Xế Mới</h1>
-      <p class="page-header__subtitle">Tạo đồng thời dữ liệu trong bảng Accounts và Drivers</p>
+      <p class="page-header__subtitle">
+        Tạo đồng thời dữ liệu trong bảng Accounts và Drivers
+      </p>
     </div>
   </div>
 
-  <form action="drivers.html" method="GET" class="add-driver-card">
+  <form id="addDriverForm" class="add-driver-card">
+
     <div class="add-driver-card__body">
       <div class="add-driver-card__grid">
+
         <div class="add-driver-card__group">
-          <label class="add-driver-card__label">Mã Tài Xế (id)</label>
-          <input type="text" placeholder="VD: TX-103" required class="form-control">
+          <label class="add-driver-card__label" for="driverId">
+            Mã Tài Xế (id)
+          </label>
+          <input
+            id="driverId"
+            type="text"
+            placeholder="VD: TX-103"
+            maxlength="20"
+            required
+            class="form-control"
+          >
         </div>
 
         <div class="add-driver-card__group">
-          <label class="add-driver-card__label">Tên Đăng Nhập (username)</label>
-          <input type="text" placeholder="VD: vanb_tx103" required class="form-control">
+          <label class="add-driver-card__label" for="username">
+            Tên Đăng Nhập (username)
+          </label>
+          <input
+            id="username"
+            type="text"
+            placeholder="VD: vanb_tx103"
+            maxlength="50"
+            required
+            class="form-control"
+          >
         </div>
 
         <div class="add-driver-card__group">
-          <label class="add-driver-card__label">Mật Khẩu Ban Đầu</label>
-          <input type="password" required class="form-control">
+          <label class="add-driver-card__label" for="password">
+            Mật Khẩu Ban Đầu
+          </label>
+          <input
+            id="password"
+            type="password"
+            minlength="8"
+            autocomplete="new-password"
+            required
+            class="form-control"
+          >
         </div>
 
         <div class="add-driver-card__group">
-          <label class="add-driver-card__label">Họ và Tên</label>
-          <input type="text" placeholder="VD: Nguyễn Văn Bình" required class="form-control">
+          <label class="add-driver-card__label" for="fullName">
+            Họ và Tên
+          </label>
+          <input
+            id="fullName"
+            type="text"
+            placeholder="VD: Nguyễn Văn Bình"
+            maxlength="100"
+            required
+            class="form-control"
+          >
         </div>
 
         <div class="add-driver-card__group">
-          <label class="add-driver-card__label">Số Điện Thoại</label>
-          <input type="tel" placeholder="0905 xxx xxx" class="form-control">
+          <label class="add-driver-card__label" for="phone">
+            Số Điện Thoại
+          </label>
+          <input
+            id="phone"
+            type="tel"
+            placeholder="0905 xxx xxx"
+            class="form-control"
+          >
         </div>
 
         <div class="add-driver-card__group">
-          <label class="add-driver-card__label">Hạng Bằng Lái</label>
-          <select class="form-control">
+          <label class="add-driver-card__label" for="licenseType">
+            Hạng Bằng Lái
+          </label>
+          <select id="licenseType" class="form-control">
             <option value="Hạng B2">Hạng B2</option>
             <option value="Hạng C">Hạng C</option>
             <option value="Hạng D">Hạng D</option>
             <option value="Hạng E" selected>Hạng E</option>
           </select>
         </div>
+
       </div>
+
+      <p id="formMessage"
+         role="status"
+         aria-live="polite"
+         style="margin-top: 1rem; display: none;">
+      </p>
     </div>
 
     <footer class="add-driver-card__footer">
-      <a href="drivers.html" class="btn btn--secondary">Hủy Bỏ</a>
-      <button type="submit" class="btn btn--primary">
-        <i class="fa-solid fa-floppy-disk"></i> Lưu Hồ Sơ
+      <a href="drivers.html" class="btn btn--secondary">
+        Hủy Bỏ
+      </a>
+
+      <button type="submit" id="saveButton" class="btn btn--primary">
+        <i class="fa-solid fa-floppy-disk"></i>
+        <span>Lưu Hồ Sơ</span>
       </button>
     </footer>
+
   </form>
+
+  <script>
+    const form = document.getElementById("addDriverForm");
+    const saveButton = document.getElementById("saveButton");
+    const message = document.getElementById("formMessage");
+
+    function showMessage(text, isError = false) {
+      message.textContent = text;
+      message.style.display = "block";
+      message.style.color = isError ? "#dc2626" : "#15803d";
+    }
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      if (!form.reportValidity()) return;
+
+      const driverId = document.getElementById("driverId").value.trim();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      const fullName = document.getElementById("fullName").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const licenseType = document.getElementById("licenseType").value;
+
+      if (!driverId || !username || !fullName || password.length < 8) {
+        showMessage("Vui lòng nhập đầy đủ thông tin hợp lệ.", true);
+        return;
+      }
+
+      // Đúng cấu trúc mà DriversController.cs đang nhận
+      const data = {
+        driver: {
+          id: driverId,
+          fullName: fullName,
+          dateOfBirth: null,
+          address: null,
+          avatarUrl: null,
+          phone: phone || null,
+          licenseType: licenseType,
+          isSuspended: false
+        },
+        account: {
+          username: username,
+          passwordHash: password
+        }
+      };
+
+      saveButton.disabled = true;
+      saveButton.querySelector("span").textContent = "Đang lưu...";
+      showMessage("Đang lưu hồ sơ tài xế...");
+
+      try {
+          const response = await fetch("http://localhost:5005/api/drivers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        let result = {};
+
+        try {
+          result = await response.json();
+        } catch {
+          // Server có thể trả về nội dung không phải JSON
+        }
+
+        if (!response.ok) {
+          throw new Error(
+            result.message ||
+            result.detail ||
+            "Không thể thêm tài xế (HTTP " + response.status + ")"
+          );
+        }
+
+        showMessage("Thêm tài xế thành công! Đang chuyển về danh sách...");
+
+        form.reset();
+
+        window.location.href = "drivers.html";
+
+      } catch (error) {
+        console.error("Lỗi thêm tài xế:", error);
+        showMessage(error.message || "Không thể kết nối backend.", true);
+
+      } finally {
+        saveButton.disabled = false;
+        saveButton.querySelector("span").textContent = "Lưu Hồ Sơ";
+      }
+    });
+  </script>
 
 </body>
 </html>

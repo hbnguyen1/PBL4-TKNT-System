@@ -1,48 +1,66 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quản Lý & Điều Phối Phương Tiện - DriverWebDb</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../../assets/base.css">
   <link rel="stylesheet" href="../../assets/pages/vehicles.css">
 </head>
+
 <body class="vehicles-page">
 
-  <!-- Header có sẵn Nút Khai Báo Phương Tiện Mới -->
+  <!-- Header -->
   <div class="page-header">
     <div>
-      <h1 class="page-header__title">Quản Lý & Điều Phối Phương Tiện</h1>
-      <p class="page-header__subtitle">Kiểm soát danh sách xe, phân bổ tuyến hoạt động và cấu hình thiết bị IoT</p>
+      <h1 class="page-header__title">
+        Quản Lý & Điều Phối Phương Tiện
+      </h1>
+      <p class="page-header__subtitle">
+        Kiểm soát danh sách xe, phân bổ tuyến hoạt động
+        và cấu hình thiết bị IoT
+      </p>
     </div>
+
     <a href="add-vehicle.html" class="btn btn--primary">
       <i class="fa-solid fa-plus"></i>
       <span>Khai Báo Phương Tiện Mới</span>
     </a>
   </div>
 
-  <!-- Bộ lọc tìm kiếm xe -->
+  <!-- Bộ lọc -->
   <section class="vehicles-filter">
     <div class="vehicles-filter__search">
       <i class="fa-solid fa-magnifying-glass vehicles-filter__icon"></i>
-      <input type="text" placeholder="Tìm kiếm theo biển số xe, dòng xe..." class="form-control vehicles-filter__input">
+
+      <input
+        type="text"
+        id="searchVehicle"
+        placeholder="Tìm kiếm theo biển số xe, dòng xe, tuyến hoặc tài xế..."
+        class="form-control vehicles-filter__input"
+      >
     </div>
+
     <div class="vehicles-filter__group">
-      <select class="form-control" style="width: 11rem;">
+      <select id="filterStatus"
+              class="form-control"
+              style="width: 11rem;">
         <option value="">Tất cả trạng thái</option>
-        <option value="Đang vận hành">Đang vận hành</option>
-        <option value="Chờ tài xế">Chờ tài xế</option>
-        <option value="Trong bãi">Trong bãi</option>
-        <option value="Bảo trì">Bảo trì</option>
+        <option value="assigned">Đã phân công</option>
+        <option value="unassigned">Chờ tài xế</option>
       </select>
     </div>
   </section>
 
-  <!-- Bảng Dữ Liệu Phương Tiện -->
+  <!-- Bảng danh sách xe -->
   <div class="data-card">
     <div class="table-wrapper">
       <table class="data-table">
+
         <thead class="data-table__head">
           <tr>
             <th class="data-table__th">Biển Số Xe</th>
@@ -50,75 +68,218 @@
             <th class="data-table__th">Tuyến Hoạt Động (Route)</th>
             <th class="data-table__th">Tài Xế Phụ Trách</th>
             <th class="data-table__th">Trạng Thái</th>
-            <th class="data-table__th" style="text-align: center;">Hành Động</th>
+            <th class="data-table__th" style="text-align:center;">
+              Hành Động
+            </th>
           </tr>
         </thead>
-        <tbody class="data-table__body">
-          
-          <!-- Dòng 1: Xe đang chạy -->
+
+        <tbody id="vehicleTableBody" class="data-table__body">
           <tr>
-            <td class="data-table__td">
-              <a href="vehicle-detail.html?plate=43B-012.34" class="vehicles-list__plate">43B-012.34</a>
-            </td>
-            <td class="data-table__td" style="font-weight: 500;">Thaco Mobihome 2024</td>
-            <td class="data-table__td">
-              <span class="vehicles-list__route">Đà Nẵng - Huế</span>
-            </td>
-            <td class="data-table__td" style="font-weight: 500;">TX-101 (Nguyễn Văn An)</td>
-            <td class="data-table__td">
-              <span class="badge badge--success">Đang vận hành</span>
-            </td>
-            <td class="data-table__td" style="text-align: center;">
-              <a href="vehicle-detail.html?plate=43B-012.34" class="btn btn--secondary" style="padding: 0.25rem 0.625rem; font-size: 0.6875rem;" title="Xem/Chỉnh sửa chi tiết">
-                <i class="fa-solid fa-pen-to-square"></i> Chi Tiết
-              </a>
+            <td colspan="6"
+                class="data-table__td"
+                style="text-align:center;">
+              Đang tải danh sách phương tiện...
             </td>
           </tr>
-
-          <!-- Dòng 2: Chờ tài xế tự chọn -->
-          <tr>
-            <td class="data-table__td">
-              <a href="vehicle-detail.html?plate=43B-099.11" class="vehicles-list__plate">43B-099.11</a>
-            </td>
-            <td class="data-table__td" style="font-weight: 500;">Hyundai Universe</td>
-            <td class="data-table__td">
-              <span class="vehicles-list__route">Đà Nẵng - Kon Tum</span>
-            </td>
-            <td class="data-table__td" style="color: var(--color-warning); font-style: italic;">Chờ tài xế tự nhận trên App</td>
-            <td class="data-table__td">
-              <span class="badge badge--warning">Chờ tài xế</span>
-            </td>
-            <td class="data-table__td" style="text-align: center;">
-              <a href="vehicle-detail.html?plate=43B-099.11" class="btn btn--secondary" style="padding: 0.25rem 0.625rem; font-size: 0.6875rem;" title="Xem/Chỉnh sửa chi tiết">
-                <i class="fa-solid fa-pen-to-square"></i> Chi Tiết
-              </a>
-            </td>
-          </tr>
-
-          <!-- Dòng 3: Xe bảo trì -->
-          <tr>
-            <td class="data-table__td">
-              <a href="vehicle-detail.html?plate=43B-077.22" class="vehicles-list__plate">43B-077.22</a>
-            </td>
-            <td class="data-table__td" style="font-weight: 500;">Tracomeco Global</td>
-            <td class="data-table__td">
-              <span class="vehicles-list__route vehicles-list__route--empty">Chưa gán tuyến (Đang bảo dưỡng)</span>
-            </td>
-            <td class="data-table__td" style="color: var(--color-text-muted); font-style: italic;">--</td>
-            <td class="data-table__td">
-              <span class="badge badge--danger"><i class="fa-solid fa-screwdriver-wrench" style="margin-right: 0.25rem;"></i> Bảo trì</span>
-            </td>
-            <td class="data-table__td" style="text-align: center;">
-              <a href="vehicle-detail.html?plate=43B-077.22" class="btn btn--secondary" style="padding: 0.25rem 0.625rem; font-size: 0.6875rem;" title="Xem/Chỉnh sửa chi tiết">
-                <i class="fa-solid fa-pen-to-square"></i> Chi Tiết
-              </a>
-            </td>
-          </tr>
-
         </tbody>
+
       </table>
     </div>
   </div>
+
+  <script>
+    // Backend ASP.NET Core chạy ở cổng 5005
+    const API_BASE = "http://localhost:5005";
+    const VEHICLES_API = `${API_BASE}/api/vehicles`;
+
+    const searchInput = document.getElementById("searchVehicle");
+    const statusFilter = document.getElementById("filterStatus");
+    const tableBody = document.getElementById("vehicleTableBody");
+
+    let vehicles = [];
+
+    // Ngăn dữ liệu từ database bị hiểu thành mã HTML
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function showTableMessage(message, isError = false) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="6"
+              class="data-table__td"
+              style="text-align:center; ${isError ? 'color:#dc2626;' : ''}">
+            ${escapeHTML(message)}
+          </td>
+        </tr>
+      `;
+    }
+
+    // Lấy dữ liệu xe từ backend
+    async function loadVehicles() {
+      showTableMessage("Đang tải danh sách phương tiện...");
+
+      try {
+        const response = await fetch(VEHICLES_API, {
+          method: "GET",
+          headers: {
+            "Accept": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error("API không trả về danh sách hợp lệ");
+        }
+
+        vehicles = data;
+        renderVehicles();
+
+      } catch (error) {
+        console.error("Lỗi tải phương tiện:", error);
+
+        showTableMessage(
+          "Không thể tải danh sách xe. Kiểm tra backend ở cổng 5005 và cấu hình CORS.",
+          true
+        );
+      }
+    }
+
+    // Hiển thị xe lên bảng
+    function renderVehicles() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      const status = statusFilter.value;
+
+      const filteredVehicles = vehicles.filter(vehicle => {
+        const searchText = [
+          vehicle.licensePlate,
+          vehicle.vehicleName,
+          vehicle.route,
+          vehicle.driverId,
+          vehicle.driverName
+        ]
+        .map(value => String(value ?? ""))
+        .join(" ")
+        .toLowerCase();
+
+        const matchesSearch = searchText.includes(keyword);
+
+        const hasDriver =
+          vehicle.driverId !== null &&
+          vehicle.driverId !== undefined &&
+          String(vehicle.driverId).trim() !== "";
+
+        const matchesStatus =
+          status === "" ||
+          (status === "assigned" && hasDriver) ||
+          (status === "unassigned" && !hasDriver);
+
+        return matchesSearch && matchesStatus;
+      });
+
+      if (filteredVehicles.length === 0) {
+        showTableMessage("Không tìm thấy phương tiện phù hợp.");
+        return;
+      }
+
+      tableBody.innerHTML = filteredVehicles.map(vehicle => {
+        const plate = escapeHTML(vehicle.licensePlate);
+        const name = escapeHTML(vehicle.vehicleName || "Chưa cập nhật");
+
+        const route = vehicle.route
+          ? `<span class="vehicles-list__route">
+               ${escapeHTML(vehicle.route)}
+             </span>`
+          : `<span class="vehicles-list__route vehicles-list__route--empty">
+               Chưa gán tuyến
+             </span>`;
+
+        const hasDriver =
+          vehicle.driverId !== null &&
+          vehicle.driverId !== undefined &&
+          String(vehicle.driverId).trim() !== "";
+
+        const driverText = hasDriver
+          ? `${escapeHTML(vehicle.driverId)}${
+              vehicle.driverName
+                ? ` (${escapeHTML(vehicle.driverName)})`
+                : ""
+            }`
+          : "Chưa phân công tài xế";
+
+        const driverStyle = hasDriver
+          ? "font-weight:500;"
+          : "color:var(--color-warning);font-style:italic;";
+
+        const statusBadge = hasDriver
+          ? `<span class="badge badge--success">
+               Đã phân công
+             </span>`
+          : `<span class="badge badge--warning">
+               Chờ tài xế
+             </span>`;
+
+        const detailUrl =
+          "vehicle-detail.html?plate=" +
+          encodeURIComponent(vehicle.licensePlate);
+
+        return `
+          <tr>
+            <td class="data-table__td">
+              <a href="${detailUrl}" class="vehicles-list__plate">
+                ${plate}
+              </a>
+            </td>
+
+            <td class="data-table__td" style="font-weight:500;">
+              ${name}
+            </td>
+
+            <td class="data-table__td">
+              ${route}
+            </td>
+
+            <td class="data-table__td" style="${driverStyle}">
+              ${driverText}
+            </td>
+
+            <td class="data-table__td">
+              ${statusBadge}
+            </td>
+
+            <td class="data-table__td" style="text-align:center;">
+              <a href="${detailUrl}"
+                 class="btn btn--secondary"
+                 style="padding:0.25rem 0.625rem;font-size:0.6875rem;"
+                 title="Xem hoặc chỉnh sửa chi tiết">
+                <i class="fa-solid fa-pen-to-square"></i>
+                Chi Tiết
+              </a>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // Tìm kiếm và lọc trực tiếp
+    searchInput.addEventListener("input", renderVehicles);
+    statusFilter.addEventListener("change", renderVehicles);
+
+    // Gọi API khi mở trang
+    loadVehicles();
+  </script>
 
 </body>
 </html>

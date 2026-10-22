@@ -20,8 +20,8 @@
         </a>
         <div>
           <h1 class="driver-detail-card__title">
-            Hồ Sơ Tài Xế: <span id="header-driver-name">Nguyễn Văn An</span>
-            <span id="header-driver-id" class="driver-detail-card__badge-id">TX-101</span>
+            Hồ Sơ Tài Xế: <span id="header-driver-name">Đang tải...</span>
+            <span id="header-driver-id" class="driver-detail-card__badge-id">...</span>
           </h1>
           <p class="driver-detail-card__subtitle">Quản lý lý lịch cá nhân, bằng lái và lịch sử xử lý kỷ luật</p>
         </div>
@@ -29,20 +29,19 @@
     </header>
 
     <!-- Form Nội Dung Chi Tiết -->
-    <form id="form-driver-detail" action="drivers.html" method="GET" class="driver-detail-form">
-
+    <form id="form-driver-detail" class="driver-detail-form"> 
       <!-- Khối 1: Định danh & Trạng thái hoạt động ban đầu -->
       <section class="driver-identity">
         <div class="driver-identity__profile">
           <img id="img-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=160" alt="Avatar" class="driver-identity__avatar">
           <div>
-            <h2 id="view-fullname" class="driver-identity__name">Nguyễn Văn An</h2>
+            <h2 id="view-fullname" class="driver-identity__name">Đang tải...</h2>
             <p class="driver-identity__meta">
-              Mã tài xế: <strong id="view-id" class="driver-identity__meta-val">TX-101</strong> • 
-              Tài khoản: <strong id="view-username">vana_tx101</strong>
+              Mã tài xế: <strong id="view-id" class="driver-identity__meta-val">...</strong> • 
+              Tài khoản: <strong id="view-username">Không có dữ liệu</strong>
             </p>
             <p class="driver-identity__meta">
-              Xe đang phụ trách: <span id="view-current-vehicle" class="driver-identity__vehicle-tag">43B-012.34</span>
+              Xe đang phụ trách: <span id="view-current-vehicle" class="driver-identity__vehicle-tag">Đang tải...</span>
             </p>
           </div>
         </div>
@@ -64,11 +63,11 @@
         <div class="driver-edit-card__fields">
           <div class="driver-edit-card__group">
             <label class="driver-edit-card__label">Họ và Tên Tài Xế</label>
-            <input type="text" id="inp-fullname" name="full_name" value="Nguyễn Văn An" required class="form-control">
+            <input type="text" id="inp-fullname" name="full_name" required class="form-control">
           </div>
           <div class="driver-edit-card__group">
             <label class="driver-edit-card__label">Số Điện Thoại Liên Hệ</label>
-            <input type="tel" id="inp-phone" name="phone" value="0905 123 456" required class="form-control">
+            <input type="tel" id="inp-phone" name="phone" required class="form-control">
           </div>
           <div class="driver-edit-card__group">
             <label class="driver-edit-card__label">Hạng Bằng Lái Hiện Có</label>
@@ -81,11 +80,11 @@
           </div>
           <div class="driver-edit-card__group">
             <label class="driver-edit-card__label">Ngày Sinh (Date of Birth)</label>
-            <input type="date" id="inp-dob" name="date_of_birth" value="1988-08-15" class="form-control">
+            <input type="date" id="inp-dob" name="date_of_birth" class="form-control">
           </div>
           <div class="driver-edit-card__group">
             <label class="driver-edit-card__label">Địa Chỉ Thường Trú</label>
-            <textarea id="inp-address" name="address" rows="2" class="form-control">123 Đường Hải Phòng, Quận Thanh Khê, TP. Đà Nẵng</textarea>
+            <textarea id="inp-address" name="address" rows="2" class="form-control"></textarea>
           </div>
         </div>
       </section>
@@ -96,7 +95,7 @@
           <h3 class="driver-history-card__title">
             <i class="fa-solid fa-triangle-exclamation" style="color: var(--color-danger);"></i> Lịch Sử Vi Phạm Kỷ Luật (DemeritPoints)
           </h3>
-          <span id="demerit-total-badge" class="driver-history-card__badge">Lũy kế điểm trừ: -2 Điểm</span>
+          <span id="demerit-total-badge" class="driver-history-card__badge">Lũy kế điểm trừ: Đang tải...</span>
         </div>
         <div class="table-wrapper">
           <table class="data-table">
@@ -108,16 +107,13 @@
                 <th class="data-table__th">Thời Gian Ghi Nhận</th>
               </tr>
             </thead>
-            <tbody id="demerits-table-body" class="data-table__body">
-              <tr>
-                <td class="data-table__td" style="font-family: monospace; font-weight: 700; color: var(--color-primary);">#DP-002</td>
-                <td class="data-table__td">Dừng đỗ đón trả khách sai vị trí quy định</td>
-                <td class="data-table__td" style="text-align: center;">
-                  <span class="badge badge--warning">-2 Điểm</span>
-                </td>
-                <td class="data-table__td" style="font-family: monospace; color: var(--color-text-muted);">2026-09-25 09:30</td>
-              </tr>
-            </tbody>
+              <tbody id="demerits-table-body" class="data-table__body">
+                <tr>
+                  <td colspan="4" class="data-table__td" style="text-align:center;">
+                    Đang tải lịch sử vi phạm...
+                  </td>
+                </tr>
+              </tbody>
           </table>
         </div>
       </section>
@@ -126,15 +122,185 @@
 
     <!-- Footer Nút Thao Tác -->
     <footer class="driver-detail-card__footer">
-      <button type="button" onclick="if(confirm('Bạn có chắc chắn muốn xóa hồ sơ tài xế này khỏi hệ thống?')) { window.location.href='drivers.html'; }" class="btn btn--danger">
+      <button type="button" id="btn-delete-driver" class="btn btn--danger">
         <i class="fa-solid fa-trash-can"></i> Xóa Tài Xế
       </button>
-      <button type="submit" form="form-driver-detail" class="btn btn--primary">
+      <button type="submit" id="btn-save-driver"
+              form="form-driver-detail" class="btn btn--primary">
         <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi Hồ Sơ
       </button>
     </footer>
 
   </div>
+  
+<script>
+  // Backend ASP.NET Core chạy cổng 5005; Live Server chạy cổng 5500.
+  const API_BASE = "http://localhost:5005";
+  const driverId = new URLSearchParams(location.search).get("id");
+  const form = document.getElementById("form-driver-detail");
+  const saveBtn = document.getElementById("btn-save-driver");
+  const deleteBtn = document.getElementById("btn-delete-driver");
+  const el = id => document.getElementById(id);
+  let currentDriver = null;
 
+  function setText(id, value) {
+    el(id).textContent = value === null || value === undefined || value === ""
+      ? "Chưa cập nhật" : String(value);
+  }
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;",
+      '"': "&quot;", "'": "&#39;"
+    })[c]);
+  }
+
+  async function api(path, options = {}) {
+    let response;
+    try {
+      response = await fetch(API_BASE + path, options);
+    } catch {
+      throw new Error("Không kết nối được backend ở " + API_BASE + ". Kiểm tra dotnet run và CORS.");
+    }
+    const contentType = response.headers.get("content-type") || "";
+    const result = contentType.includes("application/json")
+      ? await response.json().catch(() => null)
+      : await response.text().catch(() => "");
+    if (!response.ok) {
+      const error = result && typeof result === "object"
+        ? (result.message || result.detail || result.title)
+        : null;
+      throw new Error(error || `HTTP ${response.status}`);
+    }
+    return result;
+  }
+
+  async function loadDriver() {
+    if (!driverId) {
+      alert("Thiếu mã tài xế. Hãy mở hồ sơ từ trang danh sách.");
+      location.href = "drivers.html";
+      return;
+    }
+    saveBtn.disabled = true;
+    deleteBtn.disabled = true;
+    try {
+      const d = await api(`/api/drivers/${encodeURIComponent(driverId)}`);
+      currentDriver = d;
+      setText("header-driver-name", d.fullName);
+      setText("header-driver-id", d.id);
+      setText("view-fullname", d.fullName);
+      setText("view-id", d.id);
+      setText("view-username", "Chưa có trong API");
+      el("inp-fullname").value = d.fullName ?? "";
+      el("inp-phone").value = d.phone ?? "";
+      el("inp-address").value = d.address ?? "";
+      el("inp-dob").value = d.dateOfBirth ? String(d.dateOfBirth).slice(0, 10) : "";
+      el("inp-suspended").value = d.isSuspended ? "1" : "0";
+
+      const license = String(d.licenseType ?? "").trim();
+      const normalized = license && !/^Hạng\s+/i.test(license)
+        ? "Hạng " + license : license;
+      if (normalized && !Array.from(el("inp-license").options)
+        .some(option => option.value === normalized)) {
+        el("inp-license").add(new Option(normalized, normalized));
+      }
+      el("inp-license").value = normalized || "Hạng E";
+      if (d.avatarUrl && /^https?:\/\//i.test(d.avatarUrl)) {
+        el("img-avatar").src = d.avatarUrl;
+      }
+      saveBtn.disabled = false;
+      deleteBtn.disabled = false;
+      // Lỗi API phụ không làm mất quyền sửa hồ sơ.
+      await Promise.allSettled([loadVehicle(), loadDemerits()]);
+    } catch (error) {
+      alert("Không tải được hồ sơ: " + error.message);
+      console.error(error);
+    }
+  }
+
+  async function loadVehicle() {
+    try {
+      const vehicles = await api("/api/vehicles");
+      if (!Array.isArray(vehicles)) throw new Error("Dữ liệu xe không hợp lệ");
+      const assigned = vehicles.filter(v => v.driverId === driverId);
+      setText("view-current-vehicle", assigned.length
+        ? assigned.map(v => v.licensePlate).join(", ") : "Chưa phân công");
+    } catch (error) {
+      console.error("Lỗi tải xe:", error);
+      setText("view-current-vehicle", "Không tải được thông tin xe");
+    }
+  }
+
+  async function loadDemerits() {
+    const body = el("demerits-table-body");
+    try {
+      const items = await api(`/api/drivers/${encodeURIComponent(driverId)}/demerits`);
+      if (!Array.isArray(items)) throw new Error("Dữ liệu vi phạm không hợp lệ");
+      const total = items.reduce((sum, x) => sum + Math.abs(Number(x.pointsDeducted) || 0), 0);
+      setText("demerit-total-badge", `Lũy kế điểm trừ: -${total} Điểm`);
+      if (!items.length) {
+        body.innerHTML = '<tr><td colspan="4" class="data-table__td" style="text-align:center">Chưa có vi phạm</td></tr>';
+        return;
+      }
+      body.innerHTML = items.map(x => `
+        <tr>
+          <td class="data-table__td">#DP-${escapeHTML(x.id)}</td>
+          <td class="data-table__td">${escapeHTML(x.violation)}</td>
+          <td class="data-table__td" style="text-align:center">
+            <span class="badge badge--warning">-${escapeHTML(Math.abs(Number(x.pointsDeducted) || 0))} Điểm</span>
+          </td>
+          <td class="data-table__td">${escapeHTML(String(x.violatedAt ?? "").replace("T", " "))}</td>
+        </tr>`).join("");
+    } catch (error) {
+      console.error("Lỗi lịch sử vi phạm:", error);
+      setText("demerit-total-badge", "Không tải được điểm trừ");
+      body.innerHTML = '<tr><td colspan="4" class="data-table__td" style="text-align:center">Không tải được lịch sử vi phạm</td></tr>';
+    }
+  }
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (!currentDriver || !form.reportValidity()) return;
+    const updated = {
+      ...currentDriver,
+      id: driverId,
+      fullName: el("inp-fullname").value.trim(),
+      phone: el("inp-phone").value.trim(),
+      licenseType: el("inp-license").value,
+      dateOfBirth: el("inp-dob").value || null,
+      address: el("inp-address").value.trim() || null,
+      isSuspended: el("inp-suspended").value === "1"
+    };
+    saveBtn.disabled = true;
+    try {
+      await api(`/api/drivers/${encodeURIComponent(driverId)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updated)
+      });
+      alert("Đã lưu thay đổi hồ sơ!");
+      await loadDriver();
+    } catch (error) {
+      alert("Không lưu được: " + error.message);
+    } finally {
+      saveBtn.disabled = false;
+    }
+  });
+
+  deleteBtn.addEventListener("click", async () => {
+    if (!currentDriver || !confirm(`Bạn chắc chắn muốn xóa tài xế ${driverId}?`)) return;
+    deleteBtn.disabled = true;
+    try {
+      await api(`/api/drivers/${encodeURIComponent(driverId)}`, { method: "DELETE" });
+      alert("Đã xóa tài xế!");
+      location.href = "drivers.html";
+    } catch (error) {
+      alert("Không xóa được: " + error.message);
+      deleteBtn.disabled = false;
+    }
+  });
+
+  loadDriver();
+</script>
 </body>
 </html>
