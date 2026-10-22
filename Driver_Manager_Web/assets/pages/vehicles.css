@@ -1,11 +1,76 @@
-/* VEHICLES.CSS - Dành riêng cho trang quản lý đội xe */
-.vehicles-page { padding: 1.5rem; }
+/* ==========================================================================
+   VEHICLES.CSS - CSS Dành riêng cho trang Quản Lý & Điều Phối Phương Tiện
+   ========================================================================== */
 
-@media (min-width: 768px) {
-  .vehicles-page { padding: 2rem; }
+.vehicles-page {
+  padding: 1.5rem;
 }
 
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
+@media (min-width: 768px) {
+  .vehicles-page {
+    padding: 2rem;
+  }
+}
+
+.vehicles-filter {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--brand-border);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.vehicles-filter__search {
+  position: relative;
+  flex: 1;
+  min-width: 16rem;
+}
+
+.vehicles-filter__icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.vehicles-filter__input {
+  padding-left: 2.25rem;
+}
+
+.vehicles-filter__group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.vehicles-list__plate {
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.vehicles-list__plate:hover {
+  text-decoration: underline;
+}
+
+.vehicles-list__route {
+  font-weight: 600;
+  color: var(--color-text-main);
+}
+
+.vehicles-list__route--empty {
+  font-weight: 400;
+  font-style: italic;
+  color: var(--color-text-muted);
 }
