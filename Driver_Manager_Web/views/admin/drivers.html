@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ Sơ Tài Xế - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/base.css">
+  <link rel="stylesheet" href="../../assets/pages/drivers.css">
+</head>
+<body class="drivers-page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">Danh Sách Hồ Sơ Tài Xế (Drivers)</h1>
+      <p class="page-header__subtitle">Quản lý thông tin định danh, bằng lái và quyền vận hành ca xe</p>
+    </div>
+    <a href="add-driver.html" class="btn btn--primary">
+      <i class="fa-solid fa-user-plus"></i>
+      <span>Khai Báo Tài Xế Mới</span>
+    </a>
+  </div>
+
+  <section class="drivers-filter">
+    <div class="drivers-filter__search">
+      <i class="fa-solid fa-magnifying-glass drivers-filter__icon"></i>
+      <input type="text" placeholder="Tìm kiếm theo tên, mã TX, số điện thoại..." class="form-control drivers-filter__input">
+    </div>
+    <div class="drivers-filter__group">
+      <select class="form-control" style="width: 10rem;">
+        <option value="">Tất cả hạng bằng</option>
+        <option value="Hạng E">Hạng E</option>
+        <option value="Hạng D">Hạng D</option>
+        <option value="Hạng C">Hạng C</option>
+      </select>
+      <select class="form-control" style="width: 10rem;">
+        <option value="">Tất cả trạng thái</option>
+        <option value="0">Đang hoạt động</option>
+        <option value="1">Đình chỉ</option>
+      </select>
+    </div>
+  </section>
+
+  <div class="data-card">
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead class="data-table__head">
+          <tr>
+            <th class="data-table__th">Mã ID</th>
+            <th class="data-table__th">Họ và Tên Tài Xế</th>
+            <th class="data-table__th">Số Điện Thoại</th>
+            <th class="data-table__th">Hạng Bằng</th>
+            <th class="data-table__th">Trạng Thái</th>
+          </tr>
+        </thead>
+        <tbody class="data-table__body">
+          <tr>
+            <td class="data-table__td" style="font-family: monospace; font-weight: 700; color: var(--color-primary);">TX-101</td>
+            <td class="data-table__td">
+              <a href="driver-detail.html?id=TX-101" class="drivers-list__link">Nguyễn Văn An</a>
+              <span class="drivers-list__username">username: vana_tx101</span>
+            </td>
+            <td class="data-table__td" style="font-family: monospace;">0905 123 456</td>
+            <td class="data-table__td"><span class="badge badge--info">Hạng E</span></td>
+            <td class="data-table__td"><span class="badge badge--success">Đang hoạt động</span></td>
+          </tr>
+          <tr>
+            <td class="data-table__td" style="font-family: monospace; font-weight: 700; color: var(--color-primary);">TX-102</td>
+            <td class="data-table__td">
+              <a href="driver-detail.html?id=TX-102" class="drivers-list__link">Trần Văn Bình</a>
+              <span class="drivers-list__username">username: binhtv_tx102</span>
+            </td>
+            <td class="data-table__td" style="font-family: monospace;">0914 987 654</td>
+            <td class="data-table__td"><span class="badge badge--info">Hạng D</span></td>
+            <td class="data-table__td"><span class="badge badge--danger">Đình chỉ</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>

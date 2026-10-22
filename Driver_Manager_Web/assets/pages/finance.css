@@ -1,0 +1,168 @@
+/* ==========================================================================
+   FINANCE.CSS - Dành riêng cho trang Báo Cáo Tài Chính (BEM Standard)
+   ========================================================================== */
+
+.finance-page {
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .finance-page {
+    padding: 2rem;
+  }
+}
+
+/* 4 Thẻ chỉ số KPI */
+.finance-stats {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .finance-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .finance-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.finance-stat-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.25rem;
+}
+
+.finance-stat-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.finance-stat-card__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.finance-stat-card__icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+
+.finance-stat-card__icon--blue {
+  background-color: #eff6ff;
+  color: var(--color-primary);
+}
+
+.finance-stat-card__icon--slate {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.finance-stat-card__icon--green {
+  background-color: #ecfdf5;
+  color: var(--color-success);
+}
+
+.finance-stat-card__icon--rose {
+  background-color: #ffe4e6;
+  color: var(--color-danger);
+}
+
+.finance-stat-card__val {
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  margin-top: 0.75rem;
+}
+
+.finance-stat-card__val--blue { color: var(--color-primary); }
+.finance-stat-card__val--slate { color: var(--color-text-main); }
+.finance-stat-card__val--green { color: var(--color-success); }
+.finance-stat-card__val--rose { color: var(--color-danger); }
+
+.finance-stat-card__sub {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Biểu đồ */
+.finance-chart-card {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.finance-chart-card__head {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+.finance-chart-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--brand-dark);
+}
+
+.finance-chart-card__sub {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.125rem;
+}
+
+.finance-chart-card__body {
+  position: relative;
+  height: 20rem;
+  margin-top: 1.5rem;
+}
+
+.finance-chart-card__no-data {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 0.75rem;
+}
+
+.finance-chart-card__no-data--hidden {
+  display: none !important;
+}
+
+/* Bảng hạch toán */
+.finance-tbl-card {
+  margin-top: 1.5rem;
+}
+
+.finance-tbl-card__head {
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--brand-border);
+  background-color: rgba(248, 250, 252, 0.5);
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.data-table__td--highlight {
+  background-color: rgba(37, 99, 235, 0.05);
+  font-weight: 700;
+  color: var(--color-primary);
+}

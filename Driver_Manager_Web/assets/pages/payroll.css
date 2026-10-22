@@ -1,0 +1,115 @@
+/* ==========================================================================
+   PAYROLL.CSS - Dành riêng cho trang quản lý bảng lương
+   ========================================================================== */
+
+.payroll-page {
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .payroll-page {
+    padding: 2rem;
+  }
+}
+
+.payroll-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--brand-border);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.payroll-filter__search-box {
+  position: relative;
+  flex: 1;
+  min-width: 14rem;
+}
+
+.payroll-filter__search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+.payroll-filter__input {
+  padding-left: 2.25rem;
+}
+
+.payroll-filter__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.payroll-filter__field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.payroll-filter__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  white-space: nowrap;
+}
+
+.payroll-table__driver-link {
+  font-weight: 700;
+  color: var(--color-text-main);
+  text-decoration: none;
+  display: block;
+}
+
+.payroll-table__driver-link:hover {
+  color: var(--color-primary);
+}
+
+.payroll-table__driver-id {
+  font-size: 0.6875rem;
+  font-family: monospace;
+  color: var(--color-primary);
+  font-weight: 700;
+  display: block;
+}
+
+.payroll-table__currency {
+  text-align: right;
+  font-family: monospace;
+  color: var(--color-text-main);
+}
+
+.payroll-table__currency--bonus {
+  color: var(--color-success);
+  font-weight: 700;
+}
+
+.payroll-table__currency--deduct {
+  color: var(--color-danger);
+  font-weight: 700;
+}
+
+.payroll-table__net {
+  text-align: right;
+  font-family: monospace;
+  font-weight: 900;
+  font-size: 0.875rem;
+  color: var(--color-primary);
+  background-color: #eff6ff;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}

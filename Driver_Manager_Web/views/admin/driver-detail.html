@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi Tiết Hồ Sơ Tài Xế - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/base.css">
+  <link rel="stylesheet" href="../../assets/pages/driver-detail.css">
+</head>
+<body class="driver-detail-page">
+
+  <div class="driver-detail-card">
+    
+    <!-- Header Thẻ Hồ Sơ -->
+    <header class="driver-detail-card__header">
+      <div class="driver-detail-card__header-left">
+        <a href="drivers.html" class="driver-detail-card__back-btn" title="Quay lại danh sách">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <div>
+          <h1 class="driver-detail-card__title">
+            Hồ Sơ Tài Xế: <span id="header-driver-name">Nguyễn Văn An</span>
+            <span id="header-driver-id" class="driver-detail-card__badge-id">TX-101</span>
+          </h1>
+          <p class="driver-detail-card__subtitle">Quản lý lý lịch cá nhân, bằng lái và lịch sử xử lý kỷ luật</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Form Nội Dung Chi Tiết -->
+    <form id="form-driver-detail" action="drivers.html" method="GET" class="driver-detail-form">
+
+      <!-- Khối 1: Định danh & Trạng thái hoạt động ban đầu -->
+      <section class="driver-identity">
+        <div class="driver-identity__profile">
+          <img id="img-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=160" alt="Avatar" class="driver-identity__avatar">
+          <div>
+            <h2 id="view-fullname" class="driver-identity__name">Nguyễn Văn An</h2>
+            <p class="driver-identity__meta">
+              Mã tài xế: <strong id="view-id" class="driver-identity__meta-val">TX-101</strong> • 
+              Tài khoản: <strong id="view-username">vana_tx101</strong>
+            </p>
+            <p class="driver-identity__meta">
+              Xe đang phụ trách: <span id="view-current-vehicle" class="driver-identity__vehicle-tag">43B-012.34</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="driver-identity__status-box">
+          <label class="driver-identity__status-label">Trạng thái vận hành ca</label>
+          <select id="inp-suspended" name="is_suspended" class="driver-identity__status-select">
+            <option value="0" selected>Hoạt động bình thường</option>
+            <option value="1">Đình chỉ (Khóa ca chạy)</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Khối 2: Thông tin cho phép sửa (Mỗi ô xếp thành 1 hàng dọc) -->
+      <section class="driver-edit-card">
+        <h3 class="driver-edit-card__header">
+          <i class="fa-solid fa-pen-to-square driver-edit-card__icon"></i> Cập Nhật Thông Tin Cá Nhân
+        </h3>
+        <div class="driver-edit-card__fields">
+          <div class="driver-edit-card__group">
+            <label class="driver-edit-card__label">Họ và Tên Tài Xế</label>
+            <input type="text" id="inp-fullname" name="full_name" value="Nguyễn Văn An" required class="form-control">
+          </div>
+          <div class="driver-edit-card__group">
+            <label class="driver-edit-card__label">Số Điện Thoại Liên Hệ</label>
+            <input type="tel" id="inp-phone" name="phone" value="0905 123 456" required class="form-control">
+          </div>
+          <div class="driver-edit-card__group">
+            <label class="driver-edit-card__label">Hạng Bằng Lái Hiện Có</label>
+            <select id="inp-license" name="license_type" class="form-control">
+              <option value="Hạng B2">Hạng B2</option>
+              <option value="Hạng C">Hạng C</option>
+              <option value="Hạng D">Hạng D</option>
+              <option value="Hạng E" selected>Hạng E (Xe chở khách > 30 chỗ)</option>
+            </select>
+          </div>
+          <div class="driver-edit-card__group">
+            <label class="driver-edit-card__label">Ngày Sinh (Date of Birth)</label>
+            <input type="date" id="inp-dob" name="date_of_birth" value="1988-08-15" class="form-control">
+          </div>
+          <div class="driver-edit-card__group">
+            <label class="driver-edit-card__label">Địa Chỉ Thường Trú</label>
+            <textarea id="inp-address" name="address" rows="2" class="form-control">123 Đường Hải Phòng, Quận Thanh Khê, TP. Đà Nẵng</textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Khối 3: Nhật ký xử lý vi phạm kỷ luật (DemeritPoints) -->
+      <section class="driver-history-card">
+        <div class="driver-history-card__header">
+          <h3 class="driver-history-card__title">
+            <i class="fa-solid fa-triangle-exclamation" style="color: var(--color-danger);"></i> Lịch Sử Vi Phạm Kỷ Luật (DemeritPoints)
+          </h3>
+          <span id="demerit-total-badge" class="driver-history-card__badge">Lũy kế điểm trừ: -2 Điểm</span>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead class="data-table__head">
+              <tr>
+                <th class="data-table__th">Mã Biên Bản</th>
+                <th class="data-table__th">Nội Dung Lỗi Vi Phạm Quy Chuẩn</th>
+                <th class="data-table__th" style="text-align: center;">Điểm Trừ</th>
+                <th class="data-table__th">Thời Gian Ghi Nhận</th>
+              </tr>
+            </thead>
+            <tbody id="demerits-table-body" class="data-table__body">
+              <tr>
+                <td class="data-table__td" style="font-family: monospace; font-weight: 700; color: var(--color-primary);">#DP-002</td>
+                <td class="data-table__td">Dừng đỗ đón trả khách sai vị trí quy định</td>
+                <td class="data-table__td" style="text-align: center;">
+                  <span class="badge badge--warning">-2 Điểm</span>
+                </td>
+                <td class="data-table__td" style="font-family: monospace; color: var(--color-text-muted);">2026-09-25 09:30</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </form>
+
+    <!-- Footer Nút Thao Tác -->
+    <footer class="driver-detail-card__footer">
+      <button type="button" onclick="if(confirm('Bạn có chắc chắn muốn xóa hồ sơ tài xế này khỏi hệ thống?')) { window.location.href='drivers.html'; }" class="btn btn--danger">
+        <i class="fa-solid fa-trash-can"></i> Xóa Tài Xế
+      </button>
+      <button type="submit" form="form-driver-detail" class="btn btn--primary">
+        <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi Hồ Sơ
+      </button>
+    </footer>
+
+  </div>
+
+</body>
+</html>

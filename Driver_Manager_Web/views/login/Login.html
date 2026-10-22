@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng Nhập - DriverWebDb</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#0b1120',      // Xanh đen nền chính
+              card: '#1e293b',      // Slate 800
+              accent: '#2563eb',    // Xanh dương nổi bật
+              surface: '#f8fafc',
+              border: '#e2e8f0'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-brand-dark min-h-screen flex items-center justify-center p-4 font-sans text-slate-800 relative overflow-hidden">
+
+  <!-- HỌA TIẾT NỀN CÔNG NGHỆ CHÌM (BACKGROUND GLOW) -->
+  <div class="absolute -top-32 -left-32 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- CONTAINER TRUNG TÂM -->
+  <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-700/40 overflow-hidden relative z-10">
+    
+    <!-- HEADER XANH ĐEN & LOGO HỆ THỐNG -->
+    <div class="bg-slate-950 px-8 pt-8 pb-7 text-center border-b border-slate-800">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-600 text-white text-xl font-bold shadow-lg shadow-blue-500/30 mb-3">
+        <i class="fa-solid fa-truck-fast"></i>
+      </div>
+      <h1 class="text-xl font-black text-white tracking-wide">DriverWebDb</h1>
+      <p class="text-xs text-slate-400 mt-1">Hệ Thống Quản Lý Điều Hành & Hồ Sơ Đội Xe</p>
+    </div>
+
+    <!-- KHU VỰC FORM ĐĂNG NHẬP -->
+    <div class="p-8">
+      <form id="form-login" action="admin/index.html" method="GET" class="space-y-4">
+        <!-- Tên Đăng Nhập -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            Tên Đăng Nhập (Username)
+          </label>
+          <div class="relative">
+            <i class="fa-regular fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <input type="text" name="username" required placeholder="Nhập tên đăng nhập hoặc mã TX/AD..."
+                   class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white transition-all">
+          </div>
+        </div>
+
+        <!-- Mật Khẩu -->
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+              Mật Khẩu
+            </label>
+            <a href="#" class="text-[11px] text-blue-600 hover:underline font-semibold">Quên mật khẩu?</a>
+          </div>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <input type="password" name="password" required placeholder="••••••••"
+                   class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white transition-all">
+          </div>
+        </div>
+
+        <!-- Ghi nhớ phiên đăng nhập -->
+        <div class="flex items-center justify-between text-xs text-slate-600 pt-1">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500">
+            <span>Ghi nhớ tài khoản</span>
+          </label>
+        </div>
+
+        <!-- Nút Đăng Nhập -->
+        <button type="submit" 
+                class="w-full mt-3 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold tracking-wide shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2">
+          <span>Đăng Nhập Vào Hệ Thống</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+</body>
+</html>

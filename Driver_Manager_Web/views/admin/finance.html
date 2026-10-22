@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thống Kê Tài Chính - DriverWebDb</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/base.css">
+  <link rel="stylesheet" href="../../assets/pages/finance.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="finance-page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">Báo Cáo Tài Chính & Chi Phí Vận Hành</h1>
+      <p class="page-header__subtitle">Tổng hợp chỉ số hạch toán chi phí lương, phụ cấp và giảm trừ vi phạm</p>
+    </div>
+    <a href="payroll.html" class="btn btn--primary">
+      <span>Xem Bảng Lương Chi Tiết</span>
+      <i class="fa-solid fa-arrow-right"></i>
+    </a>
+  </div>
+
+  <!-- Bộ lọc Theo Tháng / Quý / Năm -->
+  <section class="drivers-filter" style="margin-bottom: 1.5rem;">
+    <div class="drivers-filter__group">
+      <div style="display: flex; align-items: center; gap: 0.375rem;">
+        <span style="font-size: 0.75rem; font-weight: 600; color: #475569;">Xem theo:</span>
+        <select id="viewTypeSelect" onchange="onViewTypeChange()" class="form-control" style="font-weight: 700; width: 8.5rem;">
+          <option value="month" selected>Theo Tháng</option>
+          <option value="quarter">Theo Quý</option>
+          <option value="year">Theo Năm</option>
+        </select>
+      </div>
+
+      <div id="periodWrapper" style="display: flex; align-items: center; gap: 0.375rem;">
+        <span id="periodLabel" style="font-size: 0.75rem; font-weight: 600; color: #475569;">Tháng:</span>
+        <select id="periodSelect" onchange="applyFilter()" class="form-control" style="width: 8rem;">
+          <!-- Nội dung nạp động bằng JS -->
+        </select>
+      </div>
+
+      <div id="yearWrapper" style="display: flex; align-items: center; gap: 0.375rem;">
+        <span style="font-size: 0.75rem; font-weight: 600; color: #475569;">Năm:</span>
+        <input id="yearInput" onchange="applyFilter()" type="number" value="2026" class="form-control" style="width: 5rem; font-family: monospace; font-weight: 700;">
+      </div>
+    </div>
+
+    <span style="font-size: 0.75rem; color: var(--color-text-muted); font-style: italic;">* Số liệu tự động đối soát từ biên bản vi phạm và bảng lương</span>
+  </section>
+
+  <!-- 4 Cards Tài Chính -->
+  <section class="finance-stats">
+    <div class="data-card finance-stat-card">
+      <div class="finance-stat-card__head">
+        <span class="finance-stat-card__label">Tổng Thực Chi Lương</span>
+        <div class="finance-stat-card__icon finance-stat-card__icon--blue"><i class="fa-solid fa-money-bill-wave"></i></div>
+      </div>
+      <div>
+        <div id="statTotalPay" class="finance-stat-card__val finance-stat-card__val--blue">745,200,000 ₫</div>
+        <div class="finance-stat-card__sub">Đã khấu trừ các khoản phạt</div>
+      </div>
+    </div>
+
+    <div class="data-card finance-stat-card">
+      <div class="finance-stat-card__head">
+        <span class="finance-stat-card__label">Lương Cơ Bản</span>
+        <div class="finance-stat-card__icon finance-stat-card__icon--slate"><i class="fa-solid fa-wallet"></i></div>
+      </div>
+      <div>
+        <div id="statBaseSalary" class="finance-stat-card__val finance-stat-card__val--slate">384,000,000 ₫</div>
+        <div class="finance-stat-card__sub">Định mức theo hợp đồng</div>
+      </div>
+    </div>
+
+    <div class="data-card finance-stat-card">
+      <div class="finance-stat-card__head">
+        <span class="finance-stat-card__label">Phụ Cấp & Thưởng</span>
+        <div class="finance-stat-card__icon finance-stat-card__icon--green"><i class="fa-solid fa-route"></i></div>
+      </div>
+      <div>
+        <div id="statBonus" class="finance-stat-card__val finance-stat-card__val--green">+379,700,000 ₫</div>
+        <div class="finance-stat-card__sub">Hỗ trợ tuyến + Thưởng chuyến</div>
+      </div>
+    </div>
+
+    <div class="data-card finance-stat-card">
+      <div class="finance-stat-card__head">
+        <span class="finance-stat-card__label">Khấu Trừ Vi Phạm</span>
+        <div class="finance-stat-card__icon finance-stat-card__icon--rose"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      </div>
+      <div>
+        <div id="statPenalty" class="finance-stat-card__val finance-stat-card__val--rose">-18,500,000 ₫</div>
+        <div id="statPenaltyRatio" class="finance-stat-card__sub">Tỷ lệ: 2.48% (Trong ngưỡng)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Biểu Đồ Cột So Sánh -->
+  <section class="data-card finance-chart-card">
+    <div class="finance-chart-card__head">
+      <h3 class="finance-chart-card__title">Biểu Đồ So Sánh Thu Nhập Tài Xế & Tiền Phạt Vi Phạm</h3>
+      <p class="finance-chart-card__sub" id="chartSubTitle">Dữ liệu đối soát thực tế</p>
+    </div>
+
+    <div class="finance-chart-card__body">
+      <canvas id="financeBarChart"></canvas>
+      <div id="chartNoData" class="finance-chart-card__no-data finance-chart-card__no-data--hidden">
+        <div style="width: 3rem; height: 3rem; border-radius: 9999px; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 1.25rem; margin-bottom: 0.5rem;">
+          <i class="fa-solid fa-chart-simple"></i>
+        </div>
+        <p style="font-size: 0.875rem; font-weight: 600; color: #475569;">Chưa có số liệu ghi nhận</p>
+        <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.125rem;">Kỳ này hiện chưa phát sinh dữ liệu lương và vi phạm</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bảng Thống Kê Chi Tiết -->
+  <section class="data-card finance-tbl-card">
+    <div class="finance-tbl-card__head">
+      <h3 class="finance-chart-card__title">Chi Tiết Thống Kê Đội Xe</h3>
+      <p class="finance-chart-card__sub">Bảng hạch toán lương và các khoản giảm trừ vi phạm</p>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead class="data-table__head">
+          <tr>
+            <th class="data-table__th">Kỳ Hoạt Động</th>
+            <th class="data-table__th" style="text-align: center;">Tài Xế Hoạt Động</th>
+            <th class="data-table__th" style="text-align: center;">Số Chuyến Xe</th>
+            <th class="data-table__th" style="text-align: right;">Lương Cơ Bản</th>
+            <th class="data-table__th" style="text-align: right;">Phụ Cấp Tuyến</th>
+            <th class="data-table__th" style="text-align: right; color: var(--color-success);">Thưởng Năng Suất</th>
+            <th class="data-table__th" style="text-align: right; color: var(--color-danger);">Khấu Trừ Phạt</th>
+            <th class="data-table__th" style="text-align: right;">Tổng Thực Chi</th>
+            <th class="data-table__th" style="text-align: center;">Tỷ Lệ Phạt</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody" class="data-table__body">
+          <!-- Nạp động qua JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+    const DB = {
+      "month_2026_9": {
+        periodName: "Tháng 09/2026",
+        drivers: "48 Tài xế",
+        trips: "1,240 Chuyến",
+        base: 384000000,
+        allowance: 295500000,
+        bonus: 84200000,
+        penalty: 18500000,
+        total: 745200000,
+        penaltyRate: "2.48%",
+        chartLabels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4'],
+        incomeData: [180, 195, 185, 185.2],
+        penaltyData: [4.5, 5.0, 3.8, 5.2]
+      },
+      "month_2026_8": {
+        periodName: "Tháng 08/2026",
+        drivers: "46 Tài xế",
+        trips: "1,180 Chuyến",
+        base: 368000000,
+        allowance: 282000000,
+        bonus: 76000000,
+        penalty: 14200000,
+        total: 711800000,
+        penaltyRate: "2.00%",
+        chartLabels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4'],
+        incomeData: [170, 180, 175, 186.8],
+        penaltyData: [3.2, 4.0, 3.5, 3.5]
+      },
+      "month_2026_7": {
+        periodName: "Tháng 07/2026",
+        drivers: "45 Tài xế",
+        trips: "1,150 Chuyến",
+        base: 360000000,
+        allowance: 274000000,
+        bonus: 71500000,
+        penalty: 22100000,
+        total: 683400000,
+        penaltyRate: "3.23%",
+        chartLabels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4'],
+        incomeData: [165, 172, 170, 176.4],
+        penaltyData: [5.5, 6.0, 4.8, 5.8]
+      },
+      "quarter_2026_3": {
+        periodName: "Quý 3/2026",
+        drivers: "48 Tài xế",
+        trips: "3,570 Chuyến",
+        base: 1112000000,
+        allowance: 851500000,
+        bonus: 231700000,
+        penalty: 54800000,
+        total: 2140400000,
+        penaltyRate: "2.56%",
+        chartLabels: ['Tháng 07', 'Tháng 08', 'Tháng 09'],
+        incomeData: [683.4, 711.8, 745.2],
+        penaltyData: [22.1, 14.2, 18.5]
+      },
+      "quarter_2026_2": {
+        periodName: "Quý 2/2026",
+        drivers: "44 Tài xế",
+        trips: "3,320 Chuyến",
+        base: 1050000000,
+        allowance: 790000000,
+        bonus: 210000000,
+        penalty: 45000000,
+        total: 2005000000,
+        penaltyRate: "2.24%",
+        chartLabels: ['Tháng 04', 'Tháng 05', 'Tháng 06'],
+        incomeData: [650, 675, 680],
+        penaltyData: [15, 16, 14]
+      },
+      "year_2026": {
+        periodName: "Năm 2026",
+        drivers: "48 Tài xế",
+        trips: "10,250 Chuyến",
+        base: 3200000000,
+        allowance: 2450000000,
+        bonus: 680000000,
+        penalty: 155000000,
+        total: 6175000000,
+        penaltyRate: "2.51%",
+        chartLabels: ['Quý 1', 'Quý 2', 'Quý 3', 'Quý 4 (Dự kiến)'],
+        incomeData: [1920, 2005, 2140, 2200],
+        penaltyData: [45, 48, 54.8, 50]
+      },
+      "year_2025": {
+        periodName: "Năm 2025",
+        drivers: "42 Tài xế",
+        trips: "12,800 Chuyến",
+        base: 4100000000,
+        allowance: 3100000000,
+        bonus: 900000000,
+        penalty: 180000000,
+        total: 7920000000,
+        penaltyRate: "2.27%",
+        chartLabels: ['Quý 1', 'Quý 2', 'Quý 3', 'Quý 4'],
+        incomeData: [1850, 1950, 2020, 2100],
+        penaltyData: [48, 45, 42, 45]
+      }
+    };
+
+    let financeChart = null;
+
+    function onViewTypeChange() {
+      const type = document.getElementById('viewTypeSelect').value;
+      const periodWrapper = document.getElementById('periodWrapper');
+      const periodLabel = document.getElementById('periodLabel');
+      const periodSelect = document.getElementById('periodSelect');
+      const yearWrapper = document.getElementById('yearWrapper');
+
+      periodSelect.innerHTML = '';
+
+      if (type === 'month') {
+        periodWrapper.style.display = 'flex';
+        yearWrapper.style.display = 'flex';
+        periodLabel.textContent = 'Tháng:';
+        for (let m = 1; m <= 12; m++) {
+          const opt = document.createElement('option');
+          opt.value = m;
+          opt.textContent = `Tháng ${m < 10 ? '0' + m : m}`;
+          if (m === 9) opt.selected = true;
+          periodSelect.appendChild(opt);
+        }
+      } else if (type === 'quarter') {
+        periodWrapper.style.display = 'flex';
+        yearWrapper.style.display = 'flex';
+        periodLabel.textContent = 'Quý:';
+        for (let q = 1; q <= 4; q++) {
+          const opt = document.createElement('option');
+          opt.value = q;
+          opt.textContent = `Quý ${q}`;
+          if (q === 3) opt.selected = true;
+          periodSelect.appendChild(opt);
+        }
+      } else if (type === 'year') {
+        periodWrapper.style.display = 'none';
+        yearWrapper.style.display = 'flex';
+      }
+
+      applyFilter();
+    }
+
+    function applyFilter() {
+      const type = document.getElementById('viewTypeSelect').value;
+      const year = document.getElementById('yearInput').value;
+      let key = '';
+
+      if (type === 'month') {
+        const month = document.getElementById('periodSelect').value;
+        key = `month_${year}_${month}`;
+      } else if (type === 'quarter') {
+        const quarter = document.getElementById('periodSelect').value;
+        key = `quarter_${year}_${quarter}`;
+      } else if (type === 'year') {
+        key = `year_${year}`;
+      }
+
+      const record = DB[key];
+
+      if (record) {
+        document.getElementById('statTotalPay').textContent = record.total.toLocaleString('vi-VN') + ' ₫';
+        document.getElementById('statBaseSalary').textContent = record.base.toLocaleString('vi-VN') + ' ₫';
+        document.getElementById('statBonus').textContent = '+' + (record.allowance + record.bonus).toLocaleString('vi-VN') + ' ₫';
+        document.getElementById('statPenalty').textContent = '-' + record.penalty.toLocaleString('vi-VN') + ' ₫';
+        document.getElementById('statPenaltyRatio').textContent = `Tỷ lệ: ${record.penaltyRate}`;
+
+        document.getElementById('tableBody').innerHTML = `
+          <tr>
+            <td class="data-table__td" style="font-weight: 700; color: var(--color-primary);">${record.periodName}</td>
+            <td class="data-table__td" style="text-align: center;">${record.drivers}</td>
+            <td class="data-table__td" style="text-align: center; font-family: monospace;">${record.trips}</td>
+            <td class="data-table__td" style="text-align: right; font-family: monospace;">${record.base.toLocaleString('vi-VN')} ₫</td>
+            <td class="data-table__td" style="text-align: right; font-family: monospace;">${record.allowance.toLocaleString('vi-VN')} ₫</td>
+            <td class="data-table__td" style="text-align: right; font-family: monospace; color: var(--color-success);">+${record.bonus.toLocaleString('vi-VN')} ₫</td>
+            <td class="data-table__td" style="text-align: right; font-family: monospace; color: var(--color-danger);">-${record.penalty.toLocaleString('vi-VN')} ₫</td>
+            <td class="data-table__td data-table__td--highlight" style="text-align: right; font-family: monospace;">${record.total.toLocaleString('vi-VN')} ₫</td>
+            <td class="data-table__td" style="text-align: center;">
+              <span class="badge badge--success">${record.penaltyRate}</span>
+            </td>
+          </tr>
+        `;
+
+        renderChart(record.chartLabels, record.incomeData, record.penaltyData);
+      } else {
+        document.getElementById('statTotalPay').textContent = 'Chưa có';
+        document.getElementById('statBaseSalary').textContent = 'Chưa có';
+        document.getElementById('statBonus').textContent = 'Chưa có';
+        document.getElementById('statPenalty').textContent = 'Chưa có';
+        document.getElementById('statPenaltyRatio').textContent = 'Chưa có số liệu';
+
+        document.getElementById('tableBody').innerHTML = `
+          <tr>
+            <td colspan="9" style="text-align: center; padding: 2rem 1.25rem; color: #94a3b8;">
+              <i class="fa-solid fa-folder-open" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+              <span style="font-size: 0.75rem; font-weight: 500;">Chưa có số liệu thống kê cho kỳ này</span>
+            </td>
+          </tr>
+        `;
+
+        showNoChart();
+      }
+    }
+
+    function renderChart(labels, income, penalty) {
+      document.getElementById('chartNoData').classList.add('finance-chart-card__no-data--hidden');
+      const ctx = document.getElementById('financeBarChart').getContext('2d');
+
+      if (financeChart) financeChart.destroy();
+
+      financeChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Tổng Thu Nhập & Phụ Cấp (Triệu ₫)',
+              data: income,
+              backgroundColor: '#2563eb',
+              borderRadius: 6,
+              barPercentage: 0.6,
+              categoryPercentage: 0.6
+            },
+            {
+              label: 'Tiền Phạt Vi Phạm (Triệu ₫)',
+              data: penalty,
+              backgroundColor: '#f43f5e',
+              borderRadius: 6,
+              barPercentage: 0.6,
+              categoryPercentage: 0.6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: { boxWidth: 10, boxHeight: 10, usePointStyle: true, font: { size: 12 } }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString('vi-VN') + ' Tr ₫';
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: '#f1f5f9' },
+              ticks: { callback: v => v + ' Tr', font: { size: 11 } }
+            },
+            x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+          }
+        }
+      });
+    }
+
+    function showNoChart() {
+      if (financeChart) financeChart.destroy();
+      document.getElementById('chartNoData').classList.remove('finance-chart-card__no-data--hidden');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      onViewTypeChange();
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khai Báo Phương Tiện Mới - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/base.css">
+  <link rel="stylesheet" href="../../assets/pages/add-vehicle.css">
+</head>
+<body>
+
+  <div class="page-header" style="max-width: 48rem; margin: 0 auto 1.5rem auto;">
+    <div>
+      <h1 class="page-header__title">Khai Báo Phương Tiện Mới</h1>
+      <p class="page-header__subtitle">Thêm xe mới vào đội vận hành và thiết lập thiết bị IoT giám sát</p>
+    </div>
+    <a href="vehicles.html" class="btn btn--secondary">
+      <i class="fa-solid fa-arrow-left"></i> Trở Lại
+    </a>
+  </div>
+
+  <form action="vehicles.html" method="GET" class="add-vehicle-card">
+    <div class="add-vehicle-card__body">
+      
+      <!-- Khối 1: Thông tin cơ bản -->
+      <section class="add-vehicle-card__section">
+        <div class="add-vehicle-card__section-header">
+          <i class="fa-solid fa-bus" style="color: var(--color-primary);"></i>
+          <h2 class="add-vehicle-card__section-title">1. Thông Tin Định Danh Xe</h2>
+        </div>
+        <div class="add-vehicle-card__grid">
+          <div class="add-vehicle-card__group">
+            <label class="add-vehicle-card__label">Biển Số Xe (license_plate) <span style="color: var(--color-danger);">*</span></label>
+            <input type="text" name="license_plate" placeholder="VD: 43B-019.88" required class="form-control" style="font-family: monospace; text-transform: uppercase; font-weight: 700;">
+          </div>
+          <div class="add-vehicle-card__group">
+            <label class="add-vehicle-card__label">Tên Dòng Xe (vehicle_name) <span style="color: var(--color-danger);">*</span></label>
+            <input type="text" name="vehicle_name" placeholder="VD: Thaco Mobihome 2024" required class="form-control">
+          </div>
+        </div>
+      </section>
+
+      <!-- Khối 2: Cấu hình IoT -->
+      <section class="add-vehicle-card__section">
+        <div class="add-vehicle-card__section-header">
+          <i class="fa-solid fa-microchip" style="color: var(--color-primary);"></i>
+          <h2 class="add-vehicle-card__section-title">2. Cấu Hình Thiết Bị IoT Giám Sát</h2>
+        </div>
+        <div class="add-vehicle-card__group">
+          <label class="add-vehicle-card__label">Thông Tin Module GPS & Camera (device_info)</label>
+          <input type="text" name="device_info" placeholder="VD: ESP32-CAM-03 (IP: 192.168.1.108) | GPS-NEO6M-BK" class="form-control" style="font-family: monospace;">
+        </div>
+      </section>
+
+      <!-- Khối 3: Phân bổ vận hành ban đầu -->
+      <section class="add-vehicle-card__section">
+        <div class="add-vehicle-card__section-header">
+          <i class="fa-solid fa-route" style="color: var(--color-primary);"></i>
+          <h2 class="add-vehicle-card__section-title">3. Tuyến Đường & Trạng Thái</h2>
+        </div>
+        <div class="add-vehicle-card__grid">
+          <div class="add-vehicle-card__group">
+            <label class="add-vehicle-card__label">Tuyến Hoạt Động (Route)</label>
+            <input type="text" name="route" placeholder="VD: Đà Nẵng - Huế" class="form-control">
+          </div>
+          <div class="add-vehicle-card__group">
+            <label class="add-vehicle-card__label">Trạng Thái Ban Đầu</label>
+            <select name="dispatch_status" class="form-control">
+              <option value="Trong bãi" selected>Trong bãi (Đang đậu bãi)</option>
+              <option value="Chờ tài xế">Chờ tài xế tự chọn ca</option>
+              <option value="Bảo trì">Bảo trì (Đang bảo dưỡng)</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <footer class="add-vehicle-card__footer">
+      <a href="vehicles.html" class="btn btn--secondary">Hủy Bỏ</a>
+      <button type="submit" class="btn btn--primary">
+        <i class="fa-solid fa-floppy-disk"></i> Khai Báo Xe Vào Bãi
+      </button>
+    </footer>
+  </form>
+
+</body>
+</html>

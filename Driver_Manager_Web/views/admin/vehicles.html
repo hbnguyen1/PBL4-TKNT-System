@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Điều Phối Xe - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/base.css">
+  <link rel="stylesheet" href="../../assets/pages/vehicles.css">
+</head>
+<body class="vehicles-page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">Quản Lý Đội Xe & Điều Phối (Vehicles)</h1>
+      <p class="page-header__subtitle">Theo dõi biển số xe, tuyến vận hành và trạng thái kết nối IoT</p>
+    </div>
+  </div>
+
+  <div class="data-card">
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead class="data-table__head">
+          <tr>
+            <th class="data-table__th">Biển Số Xe</th>
+            <th class="data-table__th">Dòng Xe</th>
+            <th class="data-table__th">Tuyến Vận Hành</th>
+            <th class="data-table__th">Tài Xế Phụ Trách</th>
+            <th class="data-table__th">Trạng Thái</th>
+            <th class="data-table__th" style="text-align: center;">Cấu Hình</th>
+          </tr>
+        </thead>
+        <tbody class="data-table__body">
+          <tr>
+            <td class="data-table__td" style="font-family: monospace; font-weight: 700; color: var(--color-primary);">43B-012.34</td>
+            <td class="data-table__td">Thaco Mobihome 2024</td>
+            <td class="data-table__td">Đà Nẵng - Huế</td>
+            <td class="data-table__td">Nguyễn Văn An (TX-101)</td>
+            <td class="data-table__td"><span class="badge badge--success">Đang vận hành</span></td>
+            <td class="data-table__td" style="text-align: center;">
+              <a href="vehicle-detail.html?plate=43B-012.34" class="btn btn--secondary" style="padding: 0.25rem 0.625rem; font-size: 0.6875rem;">
+                <i class="fa-solid fa-sliders"></i> Kết Nối & Sửa
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>

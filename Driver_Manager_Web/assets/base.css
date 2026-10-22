@@ -1,0 +1,183 @@
+/* ==========================================================================
+   BASE.CSS - Quy chuẩn giao diện chung cho toàn hệ thống DriverWebDb
+   ========================================================================== */
+:root {
+  --brand-dark: #0b1120;
+  --brand-card: #1e293b;
+  --brand-border: #e2e8f0;
+  --brand-surface: #f8fafc;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-text-main: #1e293b;
+  --color-text-muted: #94a3b8;
+  --color-danger: #f43f5e;
+  --color-success: #059669;
+  --color-warning: #d97706;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--brand-surface);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--color-text-main);
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  body { padding: 2rem; }
+}
+
+/* Page Header Cục Bộ */
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+.page-header__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--brand-dark);
+}
+
+.page-header__subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.125rem;
+}
+
+/* Buttons Dùng Chung */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.btn--primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn--secondary {
+  background-color: #ffffff;
+  border: 1px solid var(--brand-border);
+  color: var(--color-text-main);
+}
+
+.btn--secondary:hover {
+  background-color: var(--brand-surface);
+}
+
+.btn--danger {
+  background-color: #ffe4e6;
+  color: var(--color-danger);
+  border: 1px solid #fecdd3;
+}
+
+.btn--danger:hover {
+  background-color: #fecdd3;
+}
+
+/* Form Controls */
+.form-control {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-family: inherit;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  color: var(--color-text-main);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.form-control:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.form-control--readonly {
+  background-color: #f1f5f9;
+  color: var(--color-text-muted);
+  font-family: monospace;
+  font-weight: 700;
+  cursor: not-allowed;
+}
+
+/* Badge System */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge--success { background-color: #d1fae5; color: #065f46; }
+.badge--warning { background-color: #fef3c7; color: #92400e; }
+.badge--danger { background-color: #ffe4e6; color: #9f1239; }
+.badge--info { background-color: #dbeafe; color: #1e40af; }
+
+/* Table Base */
+.data-card {
+  background-color: #ffffff;
+  border: 1px solid var(--brand-border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.75rem;
+}
+
+.data-table__head {
+  background-color: #f8fafc;
+  border-bottom: 1px solid var(--brand-border);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  font-size: 0.6875rem;
+}
+
+.data-table__th,
+.data-table__td {
+  padding: 0.875rem 1rem;
+}
+
+.data-table__body tr {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.data-table__body tr:last-child {
+  border-bottom: none;
+}

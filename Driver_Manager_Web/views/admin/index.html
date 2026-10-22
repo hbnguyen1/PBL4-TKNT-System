@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hệ Thống Điều Hành Xe - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Sửa đường dẫn trỏ chính xác vào thư mục assets/pages/index.css -->
+  <link rel="stylesheet" href="../../assets/pages/index.css">
+</head>
+<body>
+
+  <!-- SIDEBAR CỐ ĐỊNH -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand-box">
+        <div class="brand-icon">
+          <i class="fa-solid fa-truck-fast"></i>
+        </div>
+        <div>
+          <span class="brand-name">DriverWebDb</span>
+          <span class="brand-tag">Trung Tâm Điều Hành</span>
+        </div>
+      </div>
+
+      <!-- MỤC LỤC ĐIỀU HƯỚNG MỞ TRANG CON VÀO IFRAME -->
+      <nav class="nav-menu">
+        <a href="overview.html" target="content-frame" class="nav-link">
+          <i class="fa-solid fa-chart-pie"></i><span>Tổng Quan</span>
+        </a>
+        <a href="drivers.html" target="content-frame" class="nav-link">
+          <i class="fa-solid fa-id-card"></i><span>Hồ Sơ Tài Xế</span>
+        </a>
+        <a href="vehicles.html" target="content-frame" class="nav-link">
+          <i class="fa-solid fa-bus"></i><span>Điều Phối Xe</span>
+        </a>
+        <a href="finance.html" target="content-frame" class="nav-link">
+          <i class="fa-solid fa-chart-column"></i><span>Thống Kê Tài Chính</span>
+        </a>
+        <a href="demerits.html" target="content-frame" class="nav-link">
+          <i class="fa-solid fa-triangle-exclamation"></i><span>Điểm Trừ Vi Phạm</span>
+        </a>
+        <a href="payroll.html" target="content-frame" class="nav-link">
+          <i class="fa-solid fa-file-invoice-dollar"></i><span>Quản Lý Bảng Lương</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <a href="../login.html" target="_top" class="btn-logout">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Đăng Xuất</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- KHUNG HIỂN THỊ NỘI DUNG TRANG CON -->
+  <main class="main-content">
+    <iframe name="content-frame" id="content-frame" src="overview.html" class="content-frame"></iframe>
+  </main>
+
+</body>
+</html>

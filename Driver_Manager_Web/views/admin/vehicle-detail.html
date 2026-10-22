@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi Tiết Phương Tiện - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/base.css">
+  <link rel="stylesheet" href="../../assets/pages/vehicle-detail.css">
+</head>
+<body class="vehicle-detail-page">
+
+  <div class="vehicle-detail-card">
+    
+    <!-- Header -->
+    <header class="vehicle-detail-card__header">
+      <div class="vehicle-detail-card__header-left">
+        <a href="vehicles.html" class="vehicle-detail-card__back-btn" title="Quay lại danh sách xe">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <div>
+          <h1 class="vehicle-detail-card__title">
+            Phương Tiện: <span class="vehicle-detail-card__plate-badge">43B-012.34</span>
+          </h1>
+          <p class="vehicle-detail-card__subtitle">Cấu hình tuyến hành trình, phân bổ tài xế và kiểm tra kết nối thiết bị phần cứng IoT</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Form Content -->
+    <form id="form-vehicle-detail" action="vehicles.html" method="GET" class="vehicle-detail-form">
+      
+      <!-- Khối 1: Thông tin định danh xe -->
+      <section class="vehicle-detail-form__section">
+        <div class="vehicle-detail-form__section-header">
+          <i class="fa-solid fa-bus vehicle-detail-form__section-icon"></i>
+          <h2 class="vehicle-detail-form__section-title">1. Thông Tin Định Danh Phương Tiện</h2>
+        </div>
+
+        <div class="vehicle-detail-form__grid vehicle-detail-form__grid--cols-2">
+          <div class="vehicle-detail-form__group">
+            <label class="vehicle-detail-form__label">Biển Số Xe (license_plate)</label>
+            <input type="text" value="43B-012.34" readonly class="vehicle-detail-form__control vehicle-detail-form__control--readonly">
+          </div>
+
+          <div class="vehicle-detail-form__group">
+            <label class="vehicle-detail-form__label">Dòng Xe / Hãng Sản Xuất</label>
+            <input type="text" name="vehicle_name" value="Thaco Mobihome 2024" required class="vehicle-detail-form__control">
+          </div>
+        </div>
+      </section>
+
+      <!-- Khối 2: Tuyến đường & Phân bổ ca chạy -->
+      <section class="vehicle-detail-form__section">
+        <div class="vehicle-detail-form__section-header">
+          <i class="fa-solid fa-route vehicle-detail-form__section-icon"></i>
+          <h2 class="vehicle-detail-form__section-title">2. Phân Bổ Điều Hành & Ca Chạy</h2>
+        </div>
+
+        <div class="vehicle-detail-form__grid vehicle-detail-form__grid--cols-2">
+          <div class="vehicle-detail-form__group">
+            <label class="vehicle-detail-form__label">Tuyến Hoạt Động (Route)</label>
+            <input type="text" name="route" value="Đà Nẵng - Huế" required class="vehicle-detail-form__control">
+            <span class="vehicle-detail-form__hint">Hành trình tuyến đường cố định hoặc liên tỉnh</span>
+          </div>
+
+          <div class="vehicle-detail-form__group">
+            <label class="vehicle-detail-form__label">Tài Xế Phụ Trách</label>
+            <select name="driver_id" class="vehicle-detail-form__control">
+              <option value="TX-101" selected>TX-101 (Nguyễn Văn An)</option>
+              <option value="TX-102">TX-102 (Trần Văn Bình)</option>
+              <option value="">-- Chưa gán tài xế (Để tài xế tự chọn) --</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Khối 3: Chuỗi thông số cấu hình IoT -->
+      <section class="vehicle-detail-form__section">
+        <div class="vehicle-detail-form__section-header">
+          <i class="fa-solid fa-microchip vehicle-detail-form__section-icon"></i>
+          <h2 class="vehicle-detail-form__section-title">3. Cấu Hình Chuỗi Thông Số IoT Phần Cứng</h2>
+        </div>
+
+        <div class="vehicle-detail-form__group">
+          <label class="vehicle-detail-form__label">Thông Số Cấu Hình ESP32 & GPS (device_info)</label>
+          <input type="text" name="device_info" value="ESP32-CAM-01 (IP: 192.168.1.101) | GPS-NEO6M-01" class="vehicle-detail-form__control" style="font-family: monospace;">
+          <span class="vehicle-detail-form__hint">Địa chỉ IP phân giải luồng video cabin và mã định danh định vị GPS gắn cố định trên xe</span>
+        </div>
+      </section>
+
+      <!-- Khối 4: 2 Khung xem Live Stream ESP32-CAM & Tọa độ GPS gắn trực tiếp trên Xe -->
+      <section class="vehicle-detail-form__section">
+        <div class="vehicle-detail-form__section-header">
+          <i class="fa-solid fa-satellite-dish vehicle-detail-form__section-icon"></i>
+          <h2 class="vehicle-detail-form__section-title">4. Khung Tín Hiệu Kết Nối Trực Tiếp</h2>
+        </div>
+
+        <div class="vehicle-detail-iot-grid">
+          <!-- Khung Camera ESP32-CAM -->
+          <div class="vehicle-detail-iot-card">
+            <div>
+              <div class="vehicle-detail-iot-card__head">
+                <span class="vehicle-detail-iot-card__title">
+                  <span class="vehicle-detail-iot-card__dot"></span> ESP32-CAM Stream
+                </span>
+                <span class="vehicle-detail-iot-card__status">LIVE</span>
+              </div>
+              <div class="vehicle-detail-iot-card__viewport">
+                <i class="fa-solid fa-video" style="font-size: 1.5rem; color: #334155; margin-bottom: 0.375rem;"></i>
+                <span style="color: #94a3b8; font-size: 0.6875rem;">http://192.168.1.101/stream</span>
+                <span style="color: #475569; font-size: 0.625rem;">720p • 30 FPS Live Feed</span>
+              </div>
+            </div>
+            <div style="font-size: 0.625rem; color: #94a3b8; margin-top: 0.5rem; display: flex; justify-content: space-between;">
+              <span>Module: ESP32-CAM-01</span>
+              <span style="color: #34d399; font-weight: 600;">Kết nối OK</span>
+            </div>
+          </div>
+
+          <!-- Khung Tọa độ GPS NEO-6M -->
+          <div class="vehicle-detail-iot-card">
+            <div>
+              <div class="vehicle-detail-iot-card__head">
+                <span class="vehicle-detail-iot-card__title">
+                  <i class="fa-solid fa-location-crosshairs" style="color: #60a5fa;"></i> GPS NEO-6M
+                </span>
+                <span class="vehicle-detail-iot-card__status" style="background-color: #0c4a6e; color: #38bdf8;">GPS LOCK</span>
+              </div>
+              <div class="vehicle-detail-iot-card__gps-box">
+                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                  <p style="margin: 0; color: #94a3b8;">Tọa độ: <span style="color: #ffffff; font-weight: 700;">16.0544° N, 108.2022° E</span></p>
+                  <p style="margin: 0; color: #94a3b8;">Vị trí: <span style="color: #34d399;">Hải Châu, Đà Nẵng</span></p>
+                </div>
+                <p style="margin: 0; color: #94a3b8; padding-top: 0.375rem; border-top: 1px solid #0f172a;">Vận tốc: <span style="color: #ffffff; font-weight: 700;">58.4 km/h</span></p>
+              </div>
+            </div>
+            <div style="font-size: 0.625rem; color: #94a3b8; margin-top: 0.5rem; display: flex; justify-content: space-between;">
+              <span>Module: GPS-NEO6M-01</span>
+              <span style="color: #60a5fa; font-weight: 600;">Sai số: ±2m</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </form>
+
+    <!-- Footer: CHỈ CÓ 1 NÚT TRỞ LẠI VÀ 1 NÚT LƯU -->
+    <footer class="vehicle-detail-card__footer">
+      <button type="submit" form="form-vehicle-detail" class="btn btn--primary">
+        <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi
+      </button>
+    </footer>
+
+  </div>
+
+</body>
+</html>

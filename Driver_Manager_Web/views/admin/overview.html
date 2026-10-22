@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tổng Quan - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/base.css">
+  <link rel="stylesheet" href="../../assets/pages/overview.css">
+</head>
+<body class="overview-page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">Trung Tâm Điều Hành & Giám Sát Realtime</h1>
+    </div>
+  </div>
+
+  <!-- Cụm thẻ KPI -->
+  <section class="overview-kpi">
+    <a href="drivers.html" class="overview-kpi__card">
+      <div class="overview-kpi__info">
+        <span class="overview-kpi__label">Tổng Tài Xế</span>
+        <h3 class="overview-kpi__value">48</h3>
+        <span class="overview-kpi__link">Xem danh sách &rarr;</span>
+      </div>
+      <div class="overview-kpi__icon overview-kpi__icon--blue">
+        <i class="fa-solid fa-users"></i>
+      </div>
+    </a>
+
+    <a href="vehicles.html" class="overview-kpi__card">
+      <div class="overview-kpi__info">
+        <span class="overview-kpi__label">Xe Vận Hành</span>
+        <h3 class="overview-kpi__value">32 / 40</h3>
+        <span class="overview-kpi__link overview-kpi__link--emerald">Điều phối ngay &rarr;</span>
+      </div>
+      <div class="overview-kpi__icon overview-kpi__icon--emerald">
+        <i class="fa-solid fa-bus"></i>
+      </div>
+    </a>
+
+    <a href="payroll.html" class="overview-kpi__card">
+      <div class="overview-kpi__info">
+        <span class="overview-kpi__label">Quỹ Lương Kỳ Này</span>
+        <h3 class="overview-kpi__value">745.2M ₫</h3>
+        <span class="overview-kpi__link overview-kpi__link--indigo">Bảng tính lương &rarr;</span>
+      </div>
+      <div class="overview-kpi__icon overview-kpi__icon--indigo">
+        <i class="fa-solid fa-vault"></i>
+      </div>
+    </a>
+
+    <a href="demerits.html" class="overview-kpi__card">
+      <div class="overview-kpi__info">
+        <span class="overview-kpi__label">Vi Phạm Chờ Duyệt</span>
+        <h3 class="overview-kpi__value overview-kpi__value--danger">2 Ca</h3>
+        <span class="overview-kpi__link overview-kpi__link--rose">Kiểm duyệt ngay &rarr;</span>
+      </div>
+      <div class="overview-kpi__icon overview-kpi__icon--rose">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+    </a>
+  </section>
+
+  <!-- Khung Radar Giám Sát IoT -->
+  <section class="overview-radar">
+    <div class="overview-radar__header">
+      <div>
+        <h3 class="overview-radar__title">
+          <span class="overview-radar__dot"></span> Radar Giám Sát Hành Trình Trực Tuyến
+        </h3>
+        <p class="overview-radar__subtitle">Kết nối thời gian thực qua Gateway ESP32-CAM và GPS NEO-6M</p>
+      </div>
+      <a href="vehicles.html" class="btn btn--primary">Quản lý đội xe</a>
+    </div>
+    <div class="overview-radar__screen">
+      [IoT Map Simulation: 32 xe đang vận hành trên tuyến Quốc lộ 1A và Đà Nẵng - Huế]
+    </div>
+  </section>
+
+</body>
+</html>

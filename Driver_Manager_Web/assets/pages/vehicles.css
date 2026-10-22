@@ -1,0 +1,11 @@
+/* VEHICLES.CSS - Dành riêng cho trang quản lý đội xe */
+.vehicles-page { padding: 1.5rem; }
+
+@media (min-width: 768px) {
+  .vehicles-page { padding: 2rem; }
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}

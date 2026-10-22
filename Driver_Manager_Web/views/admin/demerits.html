@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Điểm Trừ Vi Phạm - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/base.css">
+  <link rel="stylesheet" href="../../assets/pages/demerits.css">
+</head>
+<body class="demerits-page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">Kiểm Duyệt Vi Phạm Kỷ Luật & Bằng Chứng IoT</h1>
+      <p class="page-header__subtitle">Xét duyệt biên bản từ bảng <code>DemeritPoints</code> dựa trên hình ảnh ESP32-CAM và vị trí GPS</p>
+    </div>
+  </div>
+
+  <section class="demerits-filter">
+    <div class="demerits-filter__group">
+      <div class="demerits-filter__search">
+        <i class="fa-solid fa-magnifying-glass demerits-filter__icon"></i>
+        <input type="text" placeholder="Tìm tên hoặc mã TX..." class="form-control demerits-filter__input">
+      </div>
+      <select class="form-control" style="width: 7.5rem;">
+        <option value="9" selected>Tháng 09</option>
+        <option value="8">Tháng 08</option>
+      </select>
+      <input type="number" value="2026" class="form-control" style="width: 5.5rem; font-family: monospace;">
+    </div>
+  </section>
+
+  <div class="data-card">
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead class="data-table__head">
+          <tr>
+            <th class="data-table__th">Mã Biên Bản</th>
+            <th class="data-table__th">Tài Xế Vi Phạm</th>
+            <th class="data-table__th">Lỗi Vi Phạm Quy Chuẩn</th>
+            <th class="data-table__th" style="text-align: center;">Ảnh Bằng Chứng</th>
+            <th class="data-table__th" style="text-align: center;">Điểm Trừ</th>
+            <th class="data-table__th">Thời Gian & Tọa Độ</th>
+            <th class="data-table__th" style="text-align: center;">Phê Duyệt</th>
+          </tr>
+        </thead>
+        <tbody class="data-table__body">
+          <tr>
+            <td class="data-table__td" style="font-family: monospace; font-weight: 700; color: var(--color-primary);">#DP-001</td>
+            <td class="data-table__td">
+              <a href="driver-detail.html?id=TX-102" style="font-weight: 700; color: var(--color-text-main); text-decoration: none;">Trần Văn Bình</a>
+              <div style="font-size: 0.6875rem; color: var(--color-text-muted); font-family: monospace;">TX-102</div>
+            </td>
+            <td class="data-table__td">Chạy quá tốc độ giới hạn trên cao tốc (+18km/h)</td>
+            <td class="data-table__td" style="text-align: center;">
+              <button type="button" onclick="alert('Đang hiển thị Snapshot ESP32-CAM tại tọa độ: 16.0544, 108.2022')" class="btn btn--secondary" style="padding: 0.25rem 0.5rem; font-size: 0.6875rem;">
+                <i class="fa-solid fa-camera" style="color: var(--color-primary);"></i> Xem Ảnh
+              </button>
+            </td>
+            <td class="data-table__td" style="text-align: center;"><span class="badge badge--danger">-4 Điểm</span></td>
+            <td class="data-table__td" style="font-family: monospace; color: var(--color-text-muted);">
+              <div>2026-09-24 14:15</div>
+              <div style="font-size: 0.6875rem; color: var(--color-primary);">16.0544° N, 108.2022° E</div>
+            </td>
+            <td class="data-table__td" style="text-align: center;">
+              <div style="display: flex; justify-content: center; gap: 0.375rem;">
+                <button type="button" class="btn btn--primary" style="padding: 0.25rem 0.5rem; font-size: 0.6875rem; background-color: var(--color-success);">Duyệt</button>
+                <button type="button" class="btn btn--danger" style="padding: 0.25rem 0.5rem; font-size: 0.6875rem;">Không Duyệt</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>

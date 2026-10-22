@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cài Đặt Admin - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/base.css">
+  <link rel="stylesheet" href="../../assets/pages/admin-detail.css">
+</head>
+<body>
+
+  <div class="page-header" style="max-width: 36rem; margin: 0 auto 1.5rem auto;">
+    <div>
+      <h1 class="page-header__title">Cài Đặt Tài Khoản Quản Trị</h1>
+      <p class="page-header__subtitle">Thay đổi tên đăng nhập và cập nhật mật khẩu quản trị hệ thống</p>
+    </div>
+  </div>
+
+  <form action="overview.html" method="GET" class="admin-detail-card">
+    <div class="admin-detail-card__body">
+      
+      <div class="admin-detail-card__group">
+        <label class="admin-detail-card__label">Mã Tài Khoản (Accounts.id)</label>
+        <input type="text" value="AD-01" readonly class="form-control form-control--readonly">
+      </div>
+
+      <div class="admin-detail-card__group">
+        <label class="admin-detail-card__label">Tên Đăng Nhập (Username)</label>
+        <input type="text" name="username" value="admin_danang" required class="form-control">
+      </div>
+
+      <div style="border-top: 1px solid var(--brand-border); padding-top: 1rem; margin-top: 0.5rem;" class="admin-detail-card__group">
+        <label class="admin-detail-card__label" style="color: var(--color-primary); margin-top: 0.5rem;">Đổi Mật Khẩu (Password)</label>
+      </div>
+
+      <div class="admin-detail-card__group">
+        <label class="admin-detail-card__label">Mật Khẩu Mới</label>
+        <input type="password" name="new_password" placeholder="Mật khẩu mới..." class="form-control">
+      </div>
+
+      <div class="admin-detail-card__group">
+        <label class="admin-detail-card__label">Xác Nhận Mật Khẩu Mới</label>
+        <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu mới..." class="form-control">
+      </div>
+
+    </div>
+
+    <footer class="admin-detail-card__footer">
+      <button type="submit" class="btn btn--primary">
+        <i class="fa-solid fa-floppy-disk"></i> Cập Nhật Tài Khoản
+      </button>
+    </footer>
+  </form>
+
+</body>
+</html>

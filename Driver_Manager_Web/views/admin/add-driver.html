@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thêm Tài Xế Mới - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/base.css">
+  <link rel="stylesheet" href="../../assets/pages/add-driver.css">
+</head>
+<body class="add-driver-page">
+
+  <div class="page-header" style="max-width: 48rem; margin: 0 auto 1.5rem auto;">
+    <div>
+      <h1 class="page-header__title">Khai Báo Hồ Sơ Tài Xế Mới</h1>
+      <p class="page-header__subtitle">Tạo đồng thời dữ liệu trong bảng Accounts và Drivers</p>
+    </div>
+  </div>
+
+  <form action="drivers.html" method="GET" class="add-driver-card">
+    <div class="add-driver-card__body">
+      <div class="add-driver-card__grid">
+        <div class="add-driver-card__group">
+          <label class="add-driver-card__label">Mã Tài Xế (id)</label>
+          <input type="text" placeholder="VD: TX-103" required class="form-control">
+        </div>
+
+        <div class="add-driver-card__group">
+          <label class="add-driver-card__label">Tên Đăng Nhập (username)</label>
+          <input type="text" placeholder="VD: vanb_tx103" required class="form-control">
+        </div>
+
+        <div class="add-driver-card__group">
+          <label class="add-driver-card__label">Mật Khẩu Ban Đầu</label>
+          <input type="password" required class="form-control">
+        </div>
+
+        <div class="add-driver-card__group">
+          <label class="add-driver-card__label">Họ và Tên</label>
+          <input type="text" placeholder="VD: Nguyễn Văn Bình" required class="form-control">
+        </div>
+
+        <div class="add-driver-card__group">
+          <label class="add-driver-card__label">Số Điện Thoại</label>
+          <input type="tel" placeholder="0905 xxx xxx" class="form-control">
+        </div>
+
+        <div class="add-driver-card__group">
+          <label class="add-driver-card__label">Hạng Bằng Lái</label>
+          <select class="form-control">
+            <option value="Hạng B2">Hạng B2</option>
+            <option value="Hạng C">Hạng C</option>
+            <option value="Hạng D">Hạng D</option>
+            <option value="Hạng E" selected>Hạng E</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <footer class="add-driver-card__footer">
+      <a href="drivers.html" class="btn btn--secondary">Hủy Bỏ</a>
+      <button type="submit" class="btn btn--primary">
+        <i class="fa-solid fa-floppy-disk"></i> Lưu Hồ Sơ
+      </button>
+    </footer>
+  </form>
+
+</body>
+</html>

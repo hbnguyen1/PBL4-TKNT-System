@@ -1,0 +1,275 @@
+/* ==========================================================================
+   VEHICLE-DETAIL.CSS - Dành riêng cho trang Chi Tiết Phương Tiện (BEM Standard)
+   ========================================================================== */
+
+.vehicle-detail-page {
+  padding: 1.5rem;
+  background-color: var(--brand-surface, #f8fafc);
+}
+
+@media (min-width: 768px) {
+  .vehicle-detail-page {
+    padding: 2rem;
+  }
+}
+
+.vehicle-detail-card {
+  max-width: 56rem;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  border: 1px solid var(--brand-border, #e2e8f0);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* Header */
+.vehicle-detail-card__header {
+  background-color: var(--brand-dark, #0b1120);
+  padding: 1rem 1.5rem;
+  color: #ffffff;
+  border-bottom: 1px solid #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vehicle-detail-card__header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.vehicle-detail-card__back-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background-color: #1e293b;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.vehicle-detail-card__back-btn:hover {
+  background-color: #334155;
+  color: #ffffff;
+}
+
+.vehicle-detail-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vehicle-detail-card__plate-badge {
+  font-family: monospace;
+  color: var(--color-primary, #2563eb);
+  background-color: rgba(37, 99, 235, 0.15);
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(37, 99, 235, 0.3);
+}
+
+.vehicle-detail-card__subtitle {
+  font-size: 0.6875rem;
+  color: #94a3b8;
+  margin: 0.125rem 0 0 0;
+}
+
+/* Form Body */
+.vehicle-detail-form {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.vehicle-detail-form__section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.vehicle-detail-form__section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--brand-border, #e2e8f0);
+}
+
+.vehicle-detail-form__section-icon {
+  color: var(--color-primary, #2563eb);
+  font-size: 0.875rem;
+}
+
+.vehicle-detail-form__section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-main, #1e293b);
+  margin: 0;
+}
+
+.vehicle-detail-form__grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .vehicle-detail-form__grid--cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.vehicle-detail-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.vehicle-detail-form__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-main, #1e293b);
+  text-transform: uppercase;
+}
+
+.vehicle-detail-form__control {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text-main, #1e293b);
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.vehicle-detail-form__control:focus {
+  border-color: var(--color-primary, #2563eb);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.vehicle-detail-form__control--readonly {
+  background-color: #f1f5f9;
+  color: var(--color-text-muted, #64748b);
+  cursor: not-allowed;
+  font-family: monospace;
+  font-weight: 700;
+}
+
+.vehicle-detail-form__hint {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted, #64748b);
+}
+
+/* Khung hiển thị Live Media IoT */
+.vehicle-detail-iot-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .vehicle-detail-iot-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.vehicle-detail-iot-card {
+  background-color: var(--brand-dark, #0b1120);
+  border: 1px solid #1e293b;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.vehicle-detail-iot-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.vehicle-detail-iot-card__title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.vehicle-detail-iot-card__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: #f43f5e;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+
+.vehicle-detail-iot-card__status {
+  font-size: 0.625rem;
+  font-family: monospace;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: #1e293b;
+  color: #34d399;
+}
+
+.vehicle-detail-iot-card__viewport {
+  background-color: #020617;
+  border-radius: 0.375rem;
+  height: 10rem;
+  border: 1px solid #1e293b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.vehicle-detail-iot-card__gps-box {
+  background-color: #020617;
+  border-radius: 0.375rem;
+  height: 10rem;
+  padding: 0.875rem;
+  border: 1px solid #1e293b;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+/* Footer: Duy nhất 1 nút Trở Lại và 1 nút Lưu */
+.vehicle-detail-card__footer {
+  padding: 1rem 1.5rem;
+  background-color: #f8fafc;
+  border-top: 1px solid var(--brand-border, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
