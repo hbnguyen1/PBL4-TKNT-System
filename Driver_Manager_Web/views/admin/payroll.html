@@ -1,93 +1,185 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quản Lý Bảng Lương - DriverWebDb</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../../assets/base.css">
-  <link rel="stylesheet" href="../../assets/pages/payroll.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Quản Lý Bảng Lương - DriverWebDb</title>
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/base.css">
+    <link rel="stylesheet" href="/assets/pages/payroll.css">
 </head>
+
 <body class="payroll-page">
 
-  <div class="page-header">
-    <div>
-      <h1 class="page-header__title">Quản Lý & Chi Trả Bảng Lương (Salary)</h1>
-      <p class="page-header__subtitle">Dữ liệu tự động tính toán từ cấu trúc lương SalaryStructures và ghi nhận nhật ký SalaryPayments</p>
-    </div>
-  </div>
+    <!-- Tiêu đề -->
+    <header class="page-header">
+        <div>
+            <h1 class="page-header__title">
+                Quản Lý &amp; Chi Trả Bảng Lương
+            </h1>
 
-  <section class="payroll-filter">
-    <div class="payroll-filter__search-box">
-      <i class="fa-solid fa-magnifying-glass payroll-filter__search-icon"></i>
-      <input type="text" placeholder="Tìm theo tên hoặc mã tài xế..." class="form-control payroll-filter__input">
-    </div>
+            <p class="page-header__subtitle">
+                Tính lương từ SalaryStructures và lưu trạng thái
+                thanh toán trong SalaryPayments.
+            </p>
+        </div>
+    </header>
 
-    <div class="payroll-filter__controls">
-      <div class="payroll-filter__field">
-        <label class="payroll-filter__label">Kỳ lương:</label>
-        <select class="form-control" style="width: 7.5rem;">
-          <option value="9" selected>Tháng 09</option>
-          <option value="8">Tháng 08</option>
-          <option value="7">Tháng 07</option>
-        </select>
-        <input type="number" value="2026" class="form-control form-control--readonly" style="width: 5.5rem;">
-      </div>
+    <!-- Tìm kiếm và chọn kỳ lương -->
+    <section class="payroll-filter">
 
-      <button type="button" class="btn btn--primary">
-        <i class="fa-solid fa-calculator"></i>
-        <span>Tính Lương Kỳ Này</span>
-      </button>
-    </div>
-  </section>
+        <div class="payroll-filter__search-box">
+            <i class="fa-solid fa-magnifying-glass payroll-filter__search-icon"></i>
 
-  <div class="data-card">
-    <div class="table-wrapper">
-      <table class="data-table">
-        <thead class="data-table__head">
-          <tr>
-            <th class="data-table__th">Tài Xế Phụ Trách</th>
-            <th class="data-table__th" style="text-align: right;">Lương Cơ Bản</th>
-            <th class="data-table__th" style="text-align: right;">Phụ Cấp Tuyến</th>
-            <th class="data-table__th" style="text-align: right;">Thưởng Ca</th>
-            <th class="data-table__th" style="text-align: right; color: var(--color-danger);">Khấu Trừ Phạt</th>
-            <th class="data-table__th" style="text-align: right;">Thực Lĩnh (Net)</th>
-            <th class="data-table__th" style="text-align: center;">Trạng Thái</th>
-          </tr>
-        </thead>
-        <tbody class="data-table__body">
-          <tr>
-            <td class="data-table__td">
-              <a href="driver-detail.html?id=TX-101" class="payroll-table__driver-link">Nguyễn Văn An</a>
-              <span class="payroll-table__driver-id">TX-101</span>
-            </td>
-            <td class="data-table__td payroll-table__currency">8,000,000 ₫</td>
-            <td class="data-table__td payroll-table__currency">4,500,000 ₫</td>
-            <td class="data-table__td payroll-table__currency payroll-table__currency--bonus">+1,000,000 ₫</td>
-            <td class="data-table__td payroll-table__currency payroll-table__currency--deduct">-0 ₫</td>
-            <td class="data-table__td payroll-table__net">13,500,000 ₫</td>
-            <td class="data-table__td" style="text-align: center;">
-              <span class="badge badge--success"><i class="fa-solid fa-check"></i> Đã thanh toán</span>
-            </td>
-          </tr>
-          <tr>
-            <td class="data-table__td">
-              <a href="driver-detail.html?id=TX-102" class="payroll-table__driver-link">Trần Văn Bình</a>
-              <span class="payroll-table__driver-id">TX-102</span>
-            </td>
-            <td class="data-table__td payroll-table__currency">7,500,000 ₫</td>
-            <td class="data-table__td payroll-table__currency">3,000,000 ₫</td>
-            <td class="data-table__td payroll-table__currency payroll-table__currency--bonus">+500,000 ₫</td>
-            <td class="data-table__td payroll-table__currency payroll-table__currency--deduct">-1,500,000 ₫</td>
-            <td class="data-table__td payroll-table__net">9,500,000 ₫</td>
-            <td class="data-table__td" style="text-align: center;">
-              <span class="badge badge--warning"><i class="fa-solid fa-clock"></i> Chờ duyệt chi</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+            <input
+                id="payrollSearch"
+                type="text"
+                placeholder="Tìm theo tên hoặc mã tài xế..."
+                class="form-control payroll-filter__input"
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="payroll-filter__controls">
+
+            <div class="payroll-filter__field">
+                <label
+                    for="payrollMonth"
+                    class="payroll-filter__label"
+                >
+                    Kỳ lương:
+                </label>
+
+                <select
+                    id="payrollMonth"
+                    class="form-control"
+                    style="width: 7.5rem;"
+                >
+                    <option value="1">Tháng 01</option>
+                    <option value="2">Tháng 02</option>
+                    <option value="3">Tháng 03</option>
+                    <option value="4">Tháng 04</option>
+                    <option value="5">Tháng 05</option>
+                    <option value="6">Tháng 06</option>
+                    <option value="7">Tháng 07</option>
+                    <option value="8">Tháng 08</option>
+                    <option value="9" selected>Tháng 09</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                </select>
+
+                <input
+                    id="payrollYear"
+                    type="number"
+                    value="2026"
+                    min="2000"
+                    max="2100"
+                    class="form-control form-control--readonly"
+                    style="width: 5.5rem;"
+                    aria-label="Năm tính lương"
+                >
+            </div>
+
+            <button
+                id="calculatePayroll"
+                type="button"
+                class="btn btn--primary"
+            >
+                <i class="fa-solid fa-calculator"></i>
+                <span>Tính Lương Kỳ Này</span>
+            </button>
+
+        </div>
+    </section>
+
+    <!-- Bảng lương -->
+    <section class="data-card">
+
+        <div class="table-wrapper">
+            <table class="data-table">
+
+                <thead class="data-table__head">
+                    <tr>
+                        <th class="data-table__th">
+                            Tài Xế Phụ Trách
+                        </th>
+
+                        <th
+                            class="data-table__th"
+                            style="text-align: right;"
+                        >
+                            Lương Cơ Bản
+                        </th>
+
+                        <th
+                            class="data-table__th"
+                            style="text-align: right;"
+                        >
+                            Phụ Cấp Tuyến
+                        </th>
+
+                        <th
+                            class="data-table__th"
+                            style="text-align: right;"
+                        >
+                            Thưởng Ca
+                        </th>
+
+                        <th
+                            class="data-table__th"
+                            style="text-align: right; color: var(--color-danger);"
+                        >
+                            Khấu Trừ Phạt
+                        </th>
+
+                        <th
+                            class="data-table__th"
+                            style="text-align: right;"
+                        >
+                            Thực Lĩnh (Net)
+                        </th>
+
+                        <th
+                            class="data-table__th"
+                            style="text-align: center;"
+                        >
+                            Trạng Thái
+                        </th>
+                    </tr>
+                </thead>
+
+                <!-- JavaScript tự nạp dữ liệu từ API -->
+                <tbody
+                    id="payrollTableBody"
+                    class="data-table__body"
+                >
+                    <tr>
+                        <td
+                            colspan="7"
+                            class="data-table__td"
+                            style="text-align: center; padding: 24px;"
+                        >
+                            Đang tải dữ liệu bảng lương...
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+    </section>
+
+    <!-- JavaScript -->
+    <script src="/assets/js/payroll.js"></script>
 
 </body>
 </html>
