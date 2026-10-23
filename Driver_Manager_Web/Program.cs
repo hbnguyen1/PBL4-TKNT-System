@@ -1,37 +1,103 @@
-
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
 using Driver_Manager_Web.Models;
 using MySqlConnector;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
+// Đăng ký API Controllers
 builder.Services.AddControllers();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins(
-            "http://127.0.0.1:5500",
-            "http://localhost:5500"
-        )
-        .AllowAnyHeader()
-        .AllowAnyMethod();
-    });
-});
+// OpenAPI
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
-app.UseCors("AllowFrontend");
 
-// Cau hinh OpenAPI khi chay Development
+// OpenAPI trong môi trường Development
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+// Phục vụ CSS, JavaScript và hình ảnh từ thư mục assets
+var assetsPath = Path.Combine(
+    app.Environment.ContentRootPath,
+    "assets"
+);
 
-// Kiem tra ket noi MySQL/XAMPP
+if (Directory.Exists(assetsPath))
+{
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(assetsPath),
+        RequestPath = "/assets"
+    });
+}
+
+// Đăng ký tất cả API Controllers
+// Bao gồm PayrollController và FinanceController
+app.MapControllers();
+
+// Trang chủ: views/admin/index.html
+app.MapGet("/", (IWebHostEnvironment env) =>
+{
+    var path = Path.Combine(
+        env.ContentRootPath,
+        "views",
+        "admin",
+        "index.html"
+    );
+
+    if (!File.Exists(path))
+    {
+        return Results.NotFound(
+            $"Không tìm thấy trang chủ: {path}"
+        );
+    }
+
+    return Results.File(path, "text/html");
+});
+
+// Tự động phục vụ các trang HTML trong views/admin
+// Ví dụ: /finance.html, /payroll.html, /drivers.html
+app.MapGet("/{page}.html", (
+    string page,
+    IWebHostEnvironment env) =>
+{
+    if (string.IsNullOrWhiteSpace(page) ||
+        page.Contains('/') ||
+        page.Contains('\\') ||
+        page.Contains(".."))
+    {
+        return Results.NotFound();
+    }
+
+    if (page.Equals(
+        "index",
+        StringComparison.OrdinalIgnoreCase))
+    {
+        return Results.Redirect("/");
+    }
+
+    var path = Path.Combine(
+        env.ContentRootPath,
+        "views",
+        "admin",
+        page + ".html"
+    );
+
+    if (!File.Exists(path))
+    {
+        return Results.NotFound(
+            $"Không tìm thấy trang HTML: {path}"
+        );
+    }
+
+    return Results.File(path, "text/html");
+});
+
+// Kiểm tra kết nối MySQL/XAMPP
 app.MapGet("/db-test", async () =>
 {
     try
@@ -41,54 +107,27 @@ app.MapGet("/db-test", async () =>
         await using var connection = db.GetConnection();
         await connection.OpenAsync();
 
-        await using var command =
-            new MySqlCommand("SELECT DATABASE()", connection);
+        await using var command = new MySqlCommand(
+            "SELECT DATABASE()",
+            connection
+        );
 
         var databaseName = await command.ExecuteScalarAsync();
 
         return Results.Ok(new
         {
             success = true,
-            message = "Ket noi XAMPP thanh cong!",
+            message = "Kết nối MySQL thành công!",
             database = databaseName
         });
     }
     catch (Exception ex)
     {
         return Results.Problem(
-            title: "Ket noi database that bai",
+            title: "Kết nối database thất bại",
             detail: ex.Message
         );
     }
 });
 
-// Endpoint mac dinh de kiem tra website
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild",
-    "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast(
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        )).ToArray();
-
-    return forecast;
-}).WithName("GetWeatherForecast");
-
-app.MapControllers();
 app.Run();
-
-record WeatherForecast(
-    DateOnly Date,
-    int TemperatureC,
-    string? Summary)
-{
-    public int TemperatureF =>
-        32 + (int)(TemperatureC / 0.5556);
-}

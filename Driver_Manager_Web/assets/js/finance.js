@@ -1,7 +1,5 @@
-
 document.addEventListener("DOMContentLoaded", () => {
-    const API = "/api/finance";
-
+    const API = "/Finance";
     let financeChart = null;
     let activeController = null;
 
@@ -25,18 +23,14 @@ document.addEventListener("DOMContentLoaded", () => {
         })[c]);
     }
 
-    async function apiRequest(url, signal) {
-        const response = await fetch(url, {
-            signal,
-            headers: { Accept: "application/json" }
-        });
-
+    async function getJson(url, signal) {
+        const response = await fetch(url, { signal });
         const text = await response.text();
-        let data = {};
+        let result = {};
 
         if (text) {
             try {
-                data = JSON.parse(text);
+                result = JSON.parse(text);
             } catch {
                 throw new Error("API không trả về JSON hợp lệ.");
             }
@@ -44,151 +38,192 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!response.ok) {
             throw new Error(
-                data.detail || data.message || data.title ||
-                `Lỗi HTTP ${response.status}`
+                result.message ||
+                result.detail ||
+                result.title ||
+                `HTTP ${response.status}`
             );
         }
 
-        return data;
+        if (result.success === false) {
+            throw new Error(result.message || "Tải dữ liệu thất bại.");
+        }
+
+        return result.data ?? result;
     }
 
-    // Tạo danh sách tháng hoặc quý khi đổi loại kỳ
+    function showMessage(message) {
+        el("tableBody").innerHTML = `
+            <tr>
+                <td colspan="9"
+                    style="text-align:center;padding:2rem;color:#dc2626">
+                    ${escapeHtml(message)}
+                </td>
+            </tr>`;
+    }
+
     function onViewTypeChange() {
         const type = el("viewTypeSelect").value;
-        const periodWrapper = el("periodWrapper");
-        const periodLabel = el("periodLabel");
         const periodSelect = el("periodSelect");
-        const yearWrapper = el("yearWrapper");
+
+        el("periodWrapper").style.display =
+            type === "year" ? "none" : "flex";
+        el("yearWrapper").style.display = "flex";
 
         periodSelect.innerHTML = "";
 
         if (type === "month") {
-            periodWrapper.style.display = "flex";
-            yearWrapper.style.display = "flex";
-            periodLabel.textContent = "Tháng:";
+            el("periodLabel").textContent = "Tháng:";
 
-            for (let m = 1; m <= 12; m++) {
+            for (let month = 1; month <= 12; month++) {
                 const option = new Option(
-                    `Tháng ${String(m).padStart(2, "0")}`,
-                    String(m)
+                    `Tháng ${String(month).padStart(2, "0")}`,
+                    month
                 );
-
-                if (m === 9) option.selected = true;
+                if (month === 9) option.selected = true;
                 periodSelect.add(option);
             }
-        } else if (type === "quarter") {
-            periodWrapper.style.display = "flex";
-            yearWrapper.style.display = "flex";
-            periodLabel.textContent = "Quý:";
-
-            for (let q = 1; q <= 4; q++) {
-                const option = new Option(`Quý ${q}`, String(q));
-                if (q === 3) option.selected = true;
-                periodSelect.add(option);
-            }
-        } else {
-            periodWrapper.style.display = "none";
-            yearWrapper.style.display = "flex";
         }
-
         applyFilter();
     }
 
-    function showNoChart() {
-        if (financeChart) {
-            financeChart.destroy();
-            financeChart = null;
-        }
+    async function applyFilter() {
+        const type = el("viewTypeSelect").value;
+        const year = Number(el("yearInput").value);
+        const period = Number(el("periodSelect").value || 1);
 
-        el("chartNoData").classList.remove(
-            "finance-chart-card__no-data--hidden"
-        );
-    }
-
-    function renderChart(labels, income, penalty) {
-        const canvas = el("financeBarChart");
-
-        el("chartNoData").classList.add(
-            "finance-chart-card__no-data--hidden"
-        );
-
-        if (financeChart) financeChart.destroy();
-
-        financeChart = new Chart(canvas.getContext("2d"), {
-            type: "bar",
-            data: {
-                labels,
-                datasets: [
-                    {
-                        label: "Lương ròng theo cấu trúc (triệu ₫)",
-                        data: income,
-                        backgroundColor: "#2563eb",
-                        borderRadius: 6,
-                        barPercentage: 0.6,
-                        categoryPercentage: 0.6
-                    },
-                    {
-                        label: "Khấu trừ phạt (triệu ₫)",
-                        data: penalty,
-                        backgroundColor: "#f43f5e",
-                        borderRadius: 6,
-                        barPercentage: 0.6,
-                        categoryPercentage: 0.6
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: "top" },
-                    tooltip: {
-                        callbacks: {
-                            label(context) {
-                                return context.dataset.label + ": " +
-                                    Number(context.parsed.y).toLocaleString("vi-VN") +
-                                    " triệu ₫";
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { callback: value => value + " Tr" }
-                    },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
-    }
-
-    function renderTable(data) {
-        const hasRecords = Number(data.drivers) > 0;
-
-        if (!hasRecords) {
-            el("tableBody").innerHTML = `
-                <tr>
-                    <td colspan="9"
-                        style="text-align:center;padding:2rem;color:#94a3b8">
-                        Chưa có dữ liệu lương trong kỳ này.
-                    </td>
-                </tr>
-            `;
+        if (!Number.isInteger(year) || year < 2000 || year > 2100) {
+            showMessage("Vui lòng nhập năm từ 2000 đến 2100.");
             return;
         }
 
+        if (activeController) activeController.abort();
+
+        const controller = new AbortController();
+        activeController = controller;
+
+        const params = new URLSearchParams({
+            type,
+            year: String(year),
+            period: String(period)
+        });
+
+        [
+            "statTotalPay",
+            "statBaseSalary",
+            "statBonus",
+            "statPenalty",
+            "statPenaltyRatio"
+        ].forEach(id => {
+            el(id).textContent = "Đang tải...";
+        });
+
+        try {
+            // Đúng route Report trong FinanceController.cs
+            const data = await getJson(
+                `${API}/Report?${params}`,
+                controller.signal
+            );
+
+            if (activeController !== controller) return;
+
+            const report = data;
+
+            const base = Number(report.baseSalary || 0);
+            const allowance = Number(report.allowance || 0);
+            const bonus = Number(report.bonus || 0);
+            const penalty = Number(report.penalty || 0);
+            const totalPaid = Number(report.totalPaid || 0);
+
+            const gross = base + allowance + bonus;
+            const penaltyRate = gross > 0
+                ? penalty / gross * 100
+                : 0;
+
+            el("statTotalPay").textContent = money(totalPaid);
+            el("statBaseSalary").textContent = money(base);
+            el("statBonus").textContent = money(allowance + bonus);
+            el("statPenalty").textContent = "-" + money(penalty);
+            el("statPenaltyRatio").textContent =
+                `Tỷ lệ phạt: ${penaltyRate.toFixed(2)}%`;
+
+            el("chartSubTitle").textContent =
+                `Dữ liệu thực tế từ XAMPP: ${getPeriodName(type, period, year)}`;
+
+            renderTable({
+                name: getPeriodName(type, period, year),
+                driverCount: report.driverCount,
+                base,
+                allowance,
+                bonus,
+                penalty,
+                totalPaid,
+                paidRecords: report.paidRecords,
+                unpaidRecords: report.unpaidRecords
+            });
+
+            // Lấy biểu đồ tháng trong năm rồi lọc khoảng đang xem
+            const chartData = await getJson(
+                `${API}/ChartYear?year=${year}`,
+                controller.signal
+            );
+
+            if (activeController !== controller) return;
+
+            let months = chartData.months || [];
+
+            if (type === "month") {
+                months = months.filter(item => Number(item.month) === period);
+            } 
+            renderChart(months);
+
+        } catch (error) {
+            if (error.name === "AbortError") return;
+            if (activeController !== controller) return;
+
+            console.error("Lỗi tải tài chính:", error);
+
+            [
+                "statTotalPay",
+                "statBaseSalary",
+                "statBonus",
+                "statPenalty"
+            ].forEach(id => {
+                el(id).textContent = "Lỗi tải dữ liệu";
+            });
+
+            el("statPenaltyRatio").textContent = error.message;
+            el("chartSubTitle").textContent = "Không tải được dữ liệu";
+
+            showMessage(error.message);
+            showNoChart();
+        } finally {
+            if (activeController === controller) {
+                activeController = null;
+            }
+        }
+    }
+
+    function getPeriodName(type, period, year) {
+        if (type === "month") {
+            return `Tháng ${String(period).padStart(2, "0")}/${year}`;
+        }
+
+        return `Năm ${year}`;
+    }
+
+    function renderTable(data) {
         el("tableBody").innerHTML = `
             <tr>
                 <td class="data-table__td"
                     style="font-weight:700;color:var(--color-primary)">
-                    ${escapeHtml(data.periodName)}
+                    ${escapeHtml(data.name)}
                 </td>
                 <td class="data-table__td" style="text-align:center">
-                    ${Number(data.drivers).toLocaleString("vi-VN")} tài xế
+                    ${Number(data.driverCount || 0).toLocaleString("vi-VN")} tài xế
                 </td>
                 <td class="data-table__td" style="text-align:center">
-                    ${data.trips == null ? "Chưa có dữ liệu" : escapeHtml(data.trips)}
+                    Chưa có dữ liệu
                 </td>
                 <td class="data-table__td" style="text-align:right">
                     ${money(data.base)}
@@ -206,105 +241,98 @@ document.addEventListener("DOMContentLoaded", () => {
                 </td>
                 <td class="data-table__td data-table__td--highlight"
                     style="text-align:right">
-                    ${money(data.total)}
+                    ${money(data.totalPaid)}
                 </td>
                 <td class="data-table__td" style="text-align:center">
                     <span class="badge badge--success">
-                        ${escapeHtml(data.penaltyRate)}
+                        Đã thanh toán: ${data.paidRecords}
+                    </span>
+                    <br>
+                    <span class="badge badge--warning">
+                        Chưa thanh toán: ${data.unpaidRecords}
                     </span>
                 </td>
-            </tr>
-        `;
+            </tr>`;
     }
 
-    // Tải thống kê từ XAMPP thông qua FinanceController
-    async function applyFilter() {
-        const type = el("viewTypeSelect").value;
-        const year = Number(el("yearInput").value);
-        const period = Number(el("periodSelect").value || 1);
+    function renderChart(months) {
+        const labels = months.map(item =>
+            `Tháng ${String(item.month).padStart(2, "0")}`
+        );
 
-        if (!Number.isInteger(year) || year < 2000 || year > 2100) {
-            showMessage("Vui lòng nhập năm hợp lệ.");
+        const income = months.map(item =>
+            Number(item.totalPaid || 0) / 1_000_000
+        );
+
+        const penalty = months.map(item =>
+            Number(item.totalPenalty || 0) / 1_000_000
+        );
+
+        if (income.every(value => value === 0) &&
+            penalty.every(value => value === 0)) {
+            showNoChart();
             return;
         }
 
-        if (activeController) activeController.abort();
+        el("chartNoData").classList.add(
+            "finance-chart-card__no-data--hidden"
+        );
 
-        const controller = new AbortController();
-        activeController = controller;
+        if (financeChart) financeChart.destroy();
 
-        const params = new URLSearchParams({
-            type,
-            period: String(period),
-            year: String(year)
-        });
-
-        el("statTotalPay").textContent = "Đang tải...";
-        el("statBaseSalary").textContent = "Đang tải...";
-        el("statBonus").textContent = "Đang tải...";
-        el("statPenalty").textContent = "Đang tải...";
-        el("statPenaltyRatio").textContent = "Đang tải...";
-
-        try {
-            const data = await apiRequest(
-                `${API}?${params.toString()}`,
-                controller.signal
-            );
-
-            if (activeController !== controller) return;
-
-            el("statTotalPay").textContent = money(data.totalPaid);
-            el("statBaseSalary").textContent = money(data.base);
-            el("statBonus").textContent = money(
-                Number(data.allowance || 0) + Number(data.bonus || 0)
-            );
-            el("statPenalty").textContent = "-" + money(data.penalty);
-            el("statPenaltyRatio").textContent =
-                `Tỷ lệ: ${data.penaltyRate}`;
-
-            el("chartSubTitle").textContent =
-                `Dữ liệu từ XAMPP: ${data.periodName}`;
-
-            renderTable(data);
-
-            const income = data.chartLabels.some(
-                (_, i) => Number(data.incomeData[i] || 0) !== 0
-            );
-
-            if (income) {
-                renderChart(
-                    data.chartLabels,
-                    data.incomeData,
-                    data.penaltyData
-                );
-            } else {
-                showNoChart();
+        financeChart = new Chart(
+            el("financeBarChart").getContext("2d"),
+            {
+                type: "bar",
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: "Lương đã thanh toán (triệu ₫)",
+                            data: income,
+                            backgroundColor: "#2563eb",
+                            borderRadius: 6
+                        },
+                        {
+                            label: "Khấu trừ phạt (triệu ₫)",
+                            data: penalty,
+                            backgroundColor: "#f43f5e",
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: "top" }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => `${value} Tr`
+                            }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
             }
-        } catch (error) {
-            if (error.name === "AbortError") return;
-            if (activeController !== controller) return;
+        );
+    }
 
-            console.error("Lỗi tải tài chính:", error);
-            showMessage(`Không thể tải dữ liệu: ${error.message}`);
-            showNoChart();
-        } finally {
-            if (activeController === controller) {
-                activeController = null;
-            }
+    function showNoChart() {
+        if (financeChart) {
+            financeChart.destroy();
+            financeChart = null;
         }
+
+        el("chartNoData").classList.remove(
+            "finance-chart-card__no-data--hidden"
+        );
     }
 
-    function showMessage(message) {
-        el("tableBody").innerHTML = `
-            <tr>
-                <td colspan="9" style="text-align:center;padding:2rem">
-                    ${escapeHtml(message)}
-                </td>
-            </tr>
-        `;
-    }
-
-    // Giữ tương thích với onchange trong HTML tài chính hiện tại
+    // Giữ các hàm có tên được gọi từ thuộc tính onchange trong HTML
     window.onViewTypeChange = onViewTypeChange;
     window.applyFilter = applyFilter;
 
