@@ -1,0 +1,67 @@
+# ================================
+# .NET / ASP.NET Core
+# ================================
+bin/
+obj/
+artifacts/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# Visual Studio / Rider / IDE
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.sln.iml
+
+# VS Code (bỏ comment nếu muốn chia sẻ cấu hình VS Code qua Git)
+# .vscode/
+
+# User-specific / generated files
+*.cache
+*.tmp
+*.temp
+*.log
+logs/
+
+# Secrets and local environment configuration
+.env
+.env.*
+!.env.example
+secrets.json
+secrets.*.json
+appsettings.Development.json
+appsettings.Local.json
+
+# Local database exports / backups
+*.sql.bak
+*.dump
+*.db
+*.sqlite
+*.sqlite3
+
+# Node.js / frontend tooling (nếu có sử dụng)
+node_modules/
+dist/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# PHP / Composer (nếu còn dùng phần PHP cũ)
+/vendor/
+.phpunit.cache/
+
+# Operating systems
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Publish / deployment output
+publish/
+wwwroot/lib/
