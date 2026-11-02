@@ -255,21 +255,71 @@ document.addEventListener("DOMContentLoaded", () => {
             </tr>`;
     }
 
+    
     function renderChart(months) {
+        const type = el("viewTypeSelect").value;
+
         const labels = months.map(item =>
             `Tháng ${String(item.month).padStart(2, "0")}`
         );
 
-        const income = months.map(item =>
-            Number(item.totalPaid || 0) / 1_000_000
+        let datasets = [];
+
+        if (type === "month") {
+            // Khi lọc theo tháng: hiển thị 3 khoản riêng biệt
+            datasets = [
+                {
+                    label: "Lương cơ bản",
+                    data: months.map(item =>
+                        Number(item.baseSalary || 0) / 1_000_000
+                    ),
+                    backgroundColor: "#2563eb",
+                    borderRadius: 6
+                },
+                {
+                    label: "Thưởng",
+                    data: months.map(item =>
+                        Number(item.bonus || 0) / 1_000_000
+                    ),
+                    backgroundColor: "#10b981",
+                    borderRadius: 6
+                },
+                {
+                    label: "Phạt",
+                    data: months.map(item =>
+                        Number(item.totalPenalty || 0) / 1_000_000
+                    ),
+                    backgroundColor: "#f43f5e",
+                    borderRadius: 6
+                }
+            ];
+        } else {
+            // Khi lọc theo năm: giữ nguyên 2 cột cũ
+            datasets = [
+                {
+                    label: "Lương đã thanh toán (triệu ₫)",
+                    data: months.map(item =>
+                        Number(item.totalPaid || 0) / 1_000_000
+                    ),
+                    backgroundColor: "#2563eb",
+                    borderRadius: 6
+                },
+                {
+                    label: "Khấu trừ phạt (triệu ₫)",
+                    data: months.map(item =>
+                        Number(item.totalPenalty || 0) / 1_000_000
+                    ),
+                    backgroundColor: "#f43f5e",
+                    borderRadius: 6
+                }
+            ];
+        }
+
+        const hasData = datasets.some(dataset =>
+            dataset.data.some(value => value !== 0)
         );
 
-        const penalty = months.map(item =>
-            Number(item.totalPenalty || 0) / 1_000_000
-        );
-
-        if (income.every(value => value === 0) &&
-            penalty.every(value => value === 0)) {
+        if (!hasData) {
             showNoChart();
             return;
         }
@@ -284,23 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
             el("financeBarChart").getContext("2d"),
             {
                 type: "bar",
-                data: {
-                    labels,
-                    datasets: [
-                        {
-                            label: "Lương đã thanh toán (triệu ₫)",
-                            data: income,
-                            backgroundColor: "#2563eb",
-                            borderRadius: 6
-                        },
-                        {
-                            label: "Khấu trừ phạt (triệu ₫)",
-                            data: penalty,
-                            backgroundColor: "#f43f5e",
-                            borderRadius: 6
-                        }
-                    ]
-                },
+                data: { labels, datasets },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -314,7 +348,9 @@ document.addEventListener("DOMContentLoaded", () => {
                                 callback: value => `${value} Tr`
                             }
                         },
-                        x: { grid: { display: false } }
+                        x: {
+                            grid: { display: false }
+                        }
                     }
                 }
             }

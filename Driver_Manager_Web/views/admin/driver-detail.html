@@ -49,12 +49,26 @@
 
         <div class="driver-identity__profile">
 
-          <img
-            id="img-avatar"
-            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=160"
-            alt="Avatar"
-            class="driver-identity__avatar"
-          >
+          <div class="driver-avatar">
+            <img
+              id="img-avatar"
+              src="/assets/images/default-avatar.jpg"
+              alt="Ảnh đại diện tài xế"
+              class="driver-identity__avatar"
+            >
+
+            <label for="inp-avatar" class="driver-avatar__edit">
+              <i class="fa-solid fa-camera"></i>
+            </label>
+
+            <input
+              type="file"
+              id="inp-avatar"
+              name="avatar"
+              accept="image/png, image/jpeg, image/webp"
+              hidden
+            >
+          </div>
 
           <div>
             <h2 id="view-fullname"

@@ -1,7 +1,7 @@
 
-// ======================================
-// 1. CẤU HÌNH API
-// ======================================
+ // ======================================
+ // 1. CẤU HÌNH API
+ // ======================================
 
 const API_URL = "http://localhost:5005/api/drivers";
 
@@ -18,202 +18,258 @@ let drivers = [];
 // ======================================
 
 function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[char]);
 }
 
 
 // ======================================
-// 3. TẢI DANH SÁCH TÀI XẾ TỪ MYSQL
+// 3. CHUẨN HÓA DỮ LIỆU
+// ======================================
+
+function normalizeBoolean(value) {
+    return (
+        value === true ||
+        value === 1 ||
+        value === "1" ||
+        String(value).toLowerCase() === "true"
+    );
+}
+
+
+// ======================================
+// 4. TẢI DANH SÁCH TÀI XẾ TỪ MYSQL
 // ======================================
 
 async function loadDrivers() {
-  try {
-    const response = await fetch(API_URL, {
-      headers: {
-        "Accept": "application/json"
-      }
-    });
+    try {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5"
+                    class="data-table__td"
+                    style="text-align:center;">
+                    Đang tải danh sách tài xế...
+                </td>
+            </tr>
+        `;
 
-    if (!response.ok) {
-      throw new Error("HTTP " + response.status);
+        const response = await fetch(API_URL, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        // Đọc nội dung phản hồi để dễ xác định lỗi Backend
+        const responseText = await response.text();
+
+        if (!response.ok) {
+            console.error(
+                "API GET /api/drivers thất bại:",
+                response.status,
+                responseText
+            );
+
+            throw new Error(
+                `HTTP ${response.status}: ${
+                    responseText || "Backend không trả về chi tiết lỗi"
+                }`
+            );
+        }
+
+        let data;
+
+        try {
+            data = JSON.parse(responseText);
+        } catch {
+            throw new Error("Backend trả về dữ liệu JSON không hợp lệ.");
+        }
+
+        if (!Array.isArray(data)) {
+            throw new Error("Dữ liệu API không đúng định dạng danh sách.");
+        }
+
+        drivers = data;
+
+        renderDrivers();
+
+    } catch (error) {
+        console.error("Lỗi tải tài xế:", error);
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5"
+                    class="data-table__td"
+                    style="text-align:center;color:#dc2626;">
+                    Không thể tải danh sách tài xế.
+                    <br>
+                    ${escapeHTML(error.message)}
+                </td>
+            </tr>
+        `;
     }
-
-    const data = await response.json();
-
-    if (!Array.isArray(data)) {
-      throw new Error("Dữ liệu API không đúng định dạng");
-    }
-
-    drivers = data;
-
-    // Hiển thị danh sách
-    renderDrivers();
-
-  } catch (error) {
-    console.error("Lỗi tải tài xế:", error);
-
-    tableBody.innerHTML = `
-      <tr>
-        <td
-          colspan="5"
-          class="data-table__td"
-          style="text-align:center;color:#dc2626;"
-        >
-          Không thể tải danh sách tài xế.
-          Vui lòng kiểm tra backend và kết nối MySQL.
-        </td>
-      </tr>
-    `;
-  }
 }
 
 
 // ======================================
-// 4. HIỂN THỊ DANH SÁCH TÀI XẾ
+// 5. HIỂN THỊ DANH SÁCH TÀI XẾ
 // ======================================
 
 function renderDrivers() {
-  // Lấy từ khóa tìm kiếm
-  const keyword = searchInput.value.trim().toLowerCase();
 
-  // Lấy bộ lọc
-  const license = licenseFilter.value;
-  const status = statusFilter.value;
+    // Kiểm tra các phần tử HTML
+    if (!searchInput || !licenseFilter ||
+        !statusFilter || !tableBody) {
+        console.error("Không tìm thấy các phần tử HTML cần thiết.");
+        return;
+    }
 
-  // Lọc dữ liệu
-  const filteredDrivers = drivers.filter(driver => {
+    // Lấy từ khóa tìm kiếm
+    const keyword = searchInput.value.trim().toLowerCase();
 
-    const searchableText = [
-      driver.id,
-      driver.fullName,
-      driver.phone
-    ].join(" ").toLowerCase();
+    // Lấy bộ lọc
+    const license = licenseFilter.value;
+    const status = statusFilter.value;
 
-    const matchSearch = searchableText.includes(keyword);
+    // Lọc dữ liệu
+    const filteredDrivers = drivers.filter(driver => {
 
-    // Chuẩn hóa hạng bằng lái
-    const licenseType = String(driver.licenseType ?? "")
-      .replace(/^Hạng\s+/i, "")
-      .trim()
-      .toUpperCase();
+        const searchableText = [
+            driver.id,
+            driver.fullName,
+            driver.phone
+        ]
+            .join(" ")
+            .toLowerCase();
 
-    const matchLicense =
-      !license || licenseType === license;
+        // Tìm kiếm
+        const matchSearch = searchableText.includes(keyword);
 
-    // Lọc trạng thái hoạt động / đình chỉ
-    const matchStatus =
-      status === "" ||
-      String(Number(driver.isSuspended === true)) === status;
+        // Chuẩn hóa hạng bằng lái
+        const licenseType = String(driver.licenseType ?? "")
+            .replace(/^Hạng\s+/i, "")
+            .trim()
+            .toUpperCase();
 
-    return matchSearch && matchLicense && matchStatus;
-  });
+        const matchLicense =
+            !license || licenseType === license.toUpperCase();
 
+        // Chuẩn hóa trạng thái
+        const suspended = normalizeBoolean(driver.isSuspended);
 
-  // Không có tài xế phù hợp
-  if (filteredDrivers.length === 0) {
-    tableBody.innerHTML = `
-      <tr>
-        <td
-          colspan="5"
-          class="data-table__td"
-          style="text-align:center;"
-        >
-          Không tìm thấy tài xế phù hợp.
-        </td>
-      </tr>
-    `;
-    return;
-  }
+        const matchStatus =
+            status === "" ||
+            String(Number(suspended)) === status;
+
+        return matchSearch && matchLicense && matchStatus;
+    });
 
 
-  // Hiển thị từng tài xế lên bảng
-  tableBody.innerHTML = filteredDrivers.map(driver => {
+    // Không có tài xế phù hợp
+    if (filteredDrivers.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5"
+                    class="data-table__td"
+                    style="text-align:center;">
+                    Không tìm thấy tài xế phù hợp.
+                </td>
+            </tr>
+        `;
+        return;
+    }
 
-    const id = escapeHTML(driver.id);
-    const name = escapeHTML(driver.fullName);
 
-    const phone = escapeHTML(
-      driver.phone || "Chưa cập nhật"
-    );
+    // Hiển thị từng tài xế
+    tableBody.innerHTML = filteredDrivers.map(driver => {
 
-    const license = escapeHTML(
-      driver.licenseType || "Chưa có"
-    );
+        const id = escapeHTML(driver.id);
+        const name = escapeHTML(driver.fullName);
 
-    // Trạng thái tài xế
-    const statusBadge = driver.isSuspended
-      ? '<span class="badge badge--danger">Đình chỉ</span>'
-      : '<span class="badge badge--success">Đang hoạt động</span>';
+        const phone = escapeHTML(
+            driver.phone || "Chưa cập nhật"
+        );
 
-    return `
-      <tr>
+        const license = escapeHTML(
+            driver.licenseType || "Chưa có"
+        );
 
-        <!-- MÃ TÀI XẾ -->
-        <td
-          class="data-table__td"
-          style="font-family:monospace;font-weight:700;color:var(--color-primary);"
-        >
-          ${id}
-        </td>
+        // Trạng thái tài xế
+        const isSuspended = normalizeBoolean(driver.isSuspended);
 
-        <!-- HỌ TÊN -->
-        <td class="data-table__td">
-          <a
-            href="driver-detail.html?id=${encodeURIComponent(driver.id)}"
-            class="drivers-list__link"
-          >
-            ${name}
-          </a>
-        </td>
+        const statusBadge = isSuspended
+            ? '<span class="badge badge--danger">Đình chỉ</span>'
+            : '<span class="badge badge--success">Đang hoạt động</span>';
 
-        <!-- SỐ ĐIỆN THOẠI -->
-        <td
-          class="data-table__td"
-          style="font-family:monospace;"
-        >
-          ${phone}
-        </td>
+        return `
+            <tr>
 
-        <!-- HẠNG BẰNG -->
-        <td class="data-table__td">
-          <span class="badge badge--info">
-            ${license}
-          </span>
-        </td>
+                <!-- MÃ TÀI XẾ -->
+                <td class="data-table__td"
+                    style="font-family:monospace;font-weight:700;color:var(--color-primary);">
+                    ${id}
+                </td>
 
-        <!-- TRẠNG THÁI -->
-        <td class="data-table__td">
-          ${statusBadge}
-        </td>
+                <!-- HỌ TÊN -->
+                <td class="data-table__td">
+                    <a
+                        href="driver-detail.html?id=${encodeURIComponent(driver.id)}"
+                        class="drivers-list__link">
+                        ${name}
+                    </a>
+                </td>
 
-      </tr>
-    `;
-  }).join("");
+                <!-- SỐ ĐIỆN THOẠI -->
+                <td class="data-table__td"
+                    style="font-family:monospace;">
+                    ${phone}
+                </td>
+
+                <!-- HẠNG BẰNG -->
+                <td class="data-table__td">
+                    <span class="badge badge--info">
+                        ${license}
+                    </span>
+                </td>
+
+                <!-- TRẠNG THÁI -->
+                <td class="data-table__td">
+                    ${statusBadge}
+                </td>
+
+            </tr>
+        `;
+    }).join("");
 }
 
 
 // ======================================
-// 5. XỬ LÝ TÌM KIẾM VÀ BỘ LỌC
+// 6. XỬ LÝ TÌM KIẾM VÀ BỘ LỌC
 // ======================================
 
-// Tìm kiếm theo tên, mã tài xế, SĐT
-searchInput.addEventListener("input", renderDrivers);
+// Tìm kiếm theo tên, mã tài xế, số điện thoại
+if (searchInput) {
+    searchInput.addEventListener("input", renderDrivers);
+}
 
 // Lọc theo hạng bằng lái
-licenseFilter.addEventListener("change", renderDrivers);
+if (licenseFilter) {
+    licenseFilter.addEventListener("change", renderDrivers);
+}
 
 // Lọc theo trạng thái
-statusFilter.addEventListener("change", renderDrivers);
+if (statusFilter) {
+    statusFilter.addEventListener("change", renderDrivers);
+}
 
 
 // ======================================
-// 6. KHỞI ĐỘNG TRANG
+// 7. KHỞI ĐỘNG TRANG
 // ======================================
 
 loadDrivers();

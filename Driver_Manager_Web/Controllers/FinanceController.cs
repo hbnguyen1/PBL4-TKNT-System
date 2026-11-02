@@ -235,30 +235,32 @@ namespace Driver_Manager_Web.Controllers
 
         const string sql = @"
             SELECT
-                s.period_month AS month,
+            s.period_month AS month,
+            COALESCE(SUM(s.base_salary), 0) AS base_salary,
+            COALESCE(SUM(s.bonus), 0) AS bonus,
 
-                COALESCE(SUM(
-                    CASE
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM salarypayments p
-                            WHERE p.salary_id = s.id
-                            AND p.payment_status = 'Đã thanh toán'
-                        )
-                        THEN s.base_salary
-                        + s.route_allowance
-                        + s.bonus
-                        - s.penalty
-                        ELSE 0
-                    END
-                ), 0) AS total_paid,
+            COALESCE(SUM(
+                CASE
+                    WHEN EXISTS (
+                        SELECT 1
+                        FROM salarypayments p
+                        WHERE p.salary_id = s.id
+                        AND p.payment_status = 'Đã thanh toán'
+                    )
+                    THEN s.base_salary
+                    + s.route_allowance
+                    + s.bonus
+                    - s.penalty
+                    ELSE 0
+                END
+            ), 0) AS total_paid,
 
-                COALESCE(SUM(s.penalty), 0) AS total_penalty
+            COALESCE(SUM(s.penalty), 0) AS total_penalty
 
-            FROM salarystructures s
-            WHERE s.period_year = @year
-            GROUP BY s.period_month
-            ORDER BY s.period_month;";
+        FROM salarystructures s
+        WHERE s.period_year = @year
+        GROUP BY s.period_month
+        ORDER BY s.period_month";
 
         try
         {
@@ -279,8 +281,10 @@ namespace Driver_Manager_Web.Controllers
                 months[month] = new
                 {
                     month,
-                    totalPaid = reader.GetDecimal(1),
-                    totalPenalty = reader.GetDecimal(2)
+                    baseSalary = reader.GetDecimal(1),
+                    bonus = reader.GetDecimal(2),
+                    totalPaid = reader.GetDecimal(3),
+                    totalPenalty = reader.GetDecimal(4)
                 };
             }
 
@@ -293,6 +297,8 @@ namespace Driver_Manager_Web.Controllers
                 return (object)new
                 {
                     month,
+                    baseSalary = 0m,
+                    bonus = 0m,
                     totalPaid = 0m,
                     totalPenalty = 0m
                 };

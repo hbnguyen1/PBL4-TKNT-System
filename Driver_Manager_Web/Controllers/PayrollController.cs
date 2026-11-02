@@ -17,7 +17,7 @@ namespace Driver_Manager_Web.Controllers
             [FromQuery] int year = 2026,
             [FromQuery] string search = "")
         {
-            if (month < 1 || month > 12 || year < 2000 || year > 2100)
+            if (month < 1 || month > 12 || year < 1800 || year > 2500)
             {
                 return BadRequest(new
                 {
@@ -115,7 +115,6 @@ namespace Driver_Manager_Web.Controllers
         }
 
         // POST: /api/payroll/calculate
-        // Tạo bản ghi chờ thanh toán cho toàn bộ tài xế trong kỳ
         [HttpPost("calculate")]
         public async Task<IActionResult> Calculate(
             [FromBody] PayrollPeriod request)
@@ -129,44 +128,66 @@ namespace Driver_Manager_Web.Controllers
                 });
             }
 
-            const string sql = @"
-                INSERT INTO salarypayments
-                (
-                    salary_id,
-                    payment_status,
-                    payment_time,
-                    note
-                )
-                SELECT
-                    ss.id,
-                    'Chưa thanh toán',
-                    NULL,
-                    CONCAT(
-                        'Chờ thanh toán lương tháng ',
-                        LPAD(ss.period_month, 2, '0'),
-                        '/',
-                        ss.period_year
-                    )
-                FROM salarystructures ss
-                WHERE ss.period_month = @month
-                  AND ss.period_year = @year
-
-                  AND NOT EXISTS
-                  (
-                      SELECT 1
-                      FROM salarypayments sp
-                      WHERE sp.salary_id = ss.id
-                  );
-            ";
-
             try
             {
                 var db = new Database();
                 await using var conn = db.GetConnection();
                 await conn.OpenAsync();
 
-                await using var cmd = new MySqlCommand(sql, conn);
+                const string initStructureSql = @"
+                    INSERT INTO salarystructures (driver_id, base_salary, route_allowance, bonus, penalty, period_month, period_year)
+                    SELECT 
+                        d.id, 
+                        COALESCE((SELECT ss_prev.base_salary FROM salarystructures ss_prev WHERE ss_prev.driver_id = d.id ORDER BY ss_prev.period_year DESC, ss_prev.period_month DESC LIMIT 1), 8000000) AS base_salary,
+                        COALESCE((SELECT ss_prev.route_allowance FROM salarystructures ss_prev WHERE ss_prev.driver_id = d.id ORDER BY ss_prev.period_year DESC, ss_prev.period_month DESC LIMIT 1), 0) AS route_allowance,
+                        0 AS bonus,
+                        0 AS penalty,
+                        @month,
+                        @year
+                    FROM drivers d
+                    WHERE NOT EXISTS (
+                        SELECT 1 FROM salarystructures ss_curr 
+                        WHERE ss_curr.driver_id = d.id 
+                          AND ss_curr.period_month = @month 
+                          AND ss_curr.period_year = @year
+                    );
+                ";
 
+                await using var initCmd = new MySqlCommand(initStructureSql, conn);
+                initCmd.Parameters.AddWithValue("@month", request.Month);
+                initCmd.Parameters.AddWithValue("@year", request.Year);
+                await initCmd.ExecuteNonQueryAsync();
+
+                const string paymentSql = @"
+                    INSERT INTO salarypayments
+                    (
+                        salary_id,
+                        payment_status,
+                        payment_time,
+                        note
+                    )
+                    SELECT
+                        ss.id,
+                        'Chưa thanh toán',
+                        NULL,
+                        CONCAT(
+                            'Chờ thanh toán lương tháng ',
+                            LPAD(ss.period_month, 2, '0'),
+                            '/',
+                            ss.period_year
+                        )
+                    FROM salarystructures ss
+                    WHERE ss.period_month = @month
+                      AND ss.period_year = @year
+                      AND NOT EXISTS
+                      (
+                          SELECT 1
+                          FROM salarypayments sp
+                          WHERE sp.salary_id = ss.id
+                      );
+                ";
+
+                await using var cmd = new MySqlCommand(paymentSql, conn);
                 cmd.Parameters.AddWithValue("@month", request.Month);
                 cmd.Parameters.AddWithValue("@year", request.Year);
 
@@ -176,9 +197,7 @@ namespace Driver_Manager_Web.Controllers
                 {
                     success = true,
                     count,
-                    message =
-                        $"Đã tạo {count} bản ghi chờ thanh toán cho kỳ " +
-                        $"{request.Month:00}/{request.Year}."
+                    message = $"Đã tính toán và khởi tạo thành công {count} bản ghi lương cho kỳ {request.Month:00}/{request.Year}."
                 });
             }
             catch (Exception ex)
@@ -191,15 +210,13 @@ namespace Driver_Manager_Web.Controllers
             }
         }
 
-        // POST: /api/payroll/pay
-        // Cập nhật trạng thái thanh toán của một tài xế
         [HttpPost("pay")]
         public async Task<IActionResult> Pay(
             [FromBody] PayPayrollRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.DriverId) ||
                 request.Month < 1 || request.Month > 12 ||
-                request.Year < 2000 || request.Year > 2100)
+                request.Year < 1800 || request.Year > 2500)
             {
                 return BadRequest(new
                 {
@@ -249,7 +266,7 @@ namespace Driver_Manager_Web.Controllers
                     {
                         message =
                             "Không tìm thấy bản ghi chờ thanh toán. " +
-                            "Em hãy tính lương kỳ này trước."
+                            "Hãy tính lương kỳ này trước."
                     });
                 }
 
