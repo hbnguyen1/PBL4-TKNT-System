@@ -440,8 +440,6 @@ public class DriversController : ControllerBase
             const string checkSql = """
                 SELECT
                   (SELECT COUNT(*) FROM vehicles WHERE driver_id = @id)
-                + (SELECT COUNT(*) FROM salarystructures WHERE driver_id = @id)
-                + (SELECT COUNT(*) FROM demeritpoints WHERE driver_id = @id)
                 """;
 
             await using (var check = new MySqlCommand(
@@ -456,7 +454,7 @@ public class DriversController : ControllerBase
                 {
                     return Conflict(new
                     {
-                        message = "Tài xế còn xe, dữ liệu lương hoặc vi phạm"
+                        message = "Tài xế còn xe"
                     });
                 }
             }

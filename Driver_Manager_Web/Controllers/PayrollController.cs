@@ -145,7 +145,8 @@ namespace Driver_Manager_Web.Controllers
                         @month,
                         @year
                     FROM drivers d
-                    WHERE NOT EXISTS (
+                    WHERE d.is_suspended = 0
+                     AND NOT EXISTS (
                         SELECT 1 FROM salarystructures ss_curr 
                         WHERE ss_curr.driver_id = d.id 
                           AND ss_curr.period_month = @month 

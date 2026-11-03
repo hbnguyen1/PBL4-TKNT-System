@@ -62,12 +62,14 @@
             Mã Tài Xế (id)
           </label>
           <input
-            id="driverId"
-            type="text"
-            placeholder="VD: TX-103"
-            maxlength="20"
-            required
-            class="form-control"
+              id="driverId"
+              name="driverId"
+              type="text"
+              placeholder="Đang tạo mã tài xế..."
+              maxlength="20"
+              required
+              class="form-control"
+              readonly
           >
         </div>
 
@@ -83,6 +85,7 @@
             required
             class="form-control"
           >
+          <small id="username-message"></small>
         </div>
 
         <div class="add-driver-card__group">
