@@ -2,62 +2,295 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
   <title>Hệ Thống Điều Hành Xe - DriverWebDb</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Sửa đường dẫn trỏ chính xác vào thư mục assets/pages/index.css -->
-  <link rel="stylesheet" href="../../assets/pages/index.css">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/pages/index.css">
 </head>
+
 <body>
 
-  <!-- SIDEBAR CỐ ĐỊNH -->
+  <!-- SIDEBAR -->
   <aside class="sidebar">
+
     <div>
+
+      <!-- LOGO -->
       <div class="brand-box">
         <div class="brand-icon">
           <i class="fa-solid fa-truck-fast"></i>
         </div>
+
         <div>
           <span class="brand-name">DriverWebDb</span>
           <span class="brand-tag">Trung Tâm Điều Hành</span>
         </div>
       </div>
 
-      <!-- MỤC LỤC ĐIỀU HƯỚNG MỞ TRANG CON VÀO IFRAME -->
+      <!-- MENU -->
       <nav class="nav-menu">
-        <a href="/overview.html" target="content-frame" class="nav-link">
-          <i class="fa-solid fa-chart-pie"></i><span>Tổng Quan</span>
+
+        <a href="/overview.html"
+           target="content-frame"
+           class="nav-link active">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Tổng Quan</span>
         </a>
-        <a href="/drivers.html" target="content-frame" class="nav-link">
-          <i class="fa-solid fa-id-card"></i><span>Hồ Sơ Tài Xế</span>
+
+        <a href="/drivers.html"
+           target="content-frame"
+           class="nav-link">
+          <i class="fa-solid fa-id-card"></i>
+          <span>Hồ Sơ Tài Xế</span>
         </a>
-        <a href="/vehicles.html" target="content-frame" class="nav-link">
-          <i class="fa-solid fa-bus"></i><span>Điều Phối Xe</span>
+
+        <a href="/vehicles.html"
+           target="content-frame"
+           class="nav-link">
+          <i class="fa-solid fa-bus"></i>
+          <span>Điều Phối Xe</span>
         </a>
-        <a href="/finance.html" target="content-frame" class="nav-link">
-          <i class="fa-solid fa-chart-column"></i><span>Thống Kê Tài Chính</span>
+
+        <a href="/finance.html"
+           target="content-frame"
+           class="nav-link">
+          <i class="fa-solid fa-chart-column"></i>
+          <span>Thống Kê Tài Chính</span>
         </a>
-        <a href="/demerits.html" target="content-frame" class="nav-link">
-          <i class="fa-solid fa-triangle-exclamation"></i><span>Điểm Trừ Vi Phạm</span>
+
+        <a href="/demerits.html"
+           target="content-frame"
+           class="nav-link">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>Điểm Trừ Vi Phạm</span>
         </a>
-        <a href="/payroll.html" target="content-frame" class="nav-link">
-          <i class="fa-solid fa-file-invoice-dollar"></i><span>Quản Lý Bảng Lương</span>
+
+        <a href="/payroll.html"
+           target="content-frame"
+           class="nav-link">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <span>Quản Lý Bảng Lương</span>
         </a>
+
+        <a href="/admin-detail.html"
+           target="content-frame"
+           class="nav-link">
+          <i class="fa-solid fa-user-gear"></i>
+          <span>Cài Đặt Tài Khoản</span>
+        </a>
+
       </nav>
     </div>
 
+    <!-- FOOTER -->
     <div class="sidebar-footer">
-      <a href="../login.html" target="_top" class="btn-logout">
+
+      <!-- THÔNG TIN ADMIN -->
+      <div style="
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 16px;
+          border-bottom: 1px solid #334155;
+          margin-bottom: 12px;">
+
+        <i class="fa-solid fa-circle-user"
+           style="font-size: 30px; color: #94a3b8;">
+        </i>
+
+        <div>
+          <div id="admin-username"
+               style="
+                 color: white;
+                 font-weight: 600;
+                 font-size: 14px;">
+            Đang tải...
+          </div>
+
+          <div style="
+              color: #94a3b8;
+              font-size: 12px;">
+            Quản trị viên
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ĐĂNG XUẤT -->
+      <a href="#"
+         id="btn-logout"
+         class="btn-logout">
+
         <i class="fa-solid fa-arrow-right-from-bracket"></i>
         <span>Đăng Xuất</span>
+
       </a>
+
     </div>
+
   </aside>
 
-  <!-- KHUNG HIỂN THỊ NỘI DUNG TRANG CON -->
+  <!-- NỘI DUNG CHÍNH -->
   <main class="main-content">
-    <iframe name="content-frame" id="content-frame" src="overview.html" class="content-frame"></iframe>
+
+    <iframe
+      id="content-frame"
+      name="content-frame"
+      class="content-frame"
+      title="Nội dung quản trị"
+      src="about:blank">
+    </iframe>
+
   </main>
+
+  <script>
+
+    // =====================================
+    // 1. NGĂN SIDEBAR BỊ LẶP TRONG IFRAME
+    // =====================================
+
+    if (window.self !== window.top) {
+      window.top.location.replace("/");
+    } else {
+      initializeAdmin();
+    }
+
+    // =====================================
+    // 2. KIỂM TRA QUYỀN ADMIN
+    // =====================================
+
+    async function initializeAdmin() {
+
+      try {
+
+        const response = await fetch("/api/auth/me", {
+          credentials: "same-origin",
+          cache: "no-store"
+        });
+
+        if (response.status === 401) {
+          window.location.replace("/login.html");
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error("Không thể xác thực tài khoản");
+        }
+
+        const data = await response.json();
+
+        if (data.role !== "Admin") {
+          window.location.replace("/driver.html");
+          return;
+        }
+
+        // Hiển thị tên tài khoản
+        document.getElementById("admin-username")
+          .textContent = data.username || "Admin";
+
+        // Chỉ tải nội dung sau khi xác thực
+        document.getElementById("content-frame")
+          .src = "/overview.html";
+
+      } catch (error) {
+
+        console.error("Lỗi xác thực:", error);
+
+        alert("Không thể xác thực tài khoản. Vui lòng đăng nhập lại.");
+
+        window.location.replace("/login.html");
+
+      }
+    }
+
+    // =====================================
+    // 3. ĐĂNG XUẤT
+    // =====================================
+
+    async function logout() {
+
+      const button =
+        document.getElementById("btn-logout");
+
+      button.style.pointerEvents = "none";
+
+      try {
+
+        const response = await fetch("/api/auth/logout", {
+          method: "POST",
+          credentials: "same-origin"
+        });
+
+        if (!response.ok && response.status !== 401) {
+          throw new Error("Đăng xuất thất bại");
+        }
+
+        // Chuyển toàn bộ trang về Login
+        window.top.location.replace("/login.html");
+
+      } catch (error) {
+
+        console.error("Lỗi đăng xuất:", error);
+
+        alert("Đăng xuất thất bại. Vui lòng thử lại.");
+
+        button.style.pointerEvents = "auto";
+
+      }
+    }
+
+    // =====================================
+    // 4. NÚT ĐĂNG XUẤT
+    // =====================================
+
+    document.getElementById("btn-logout")
+      .addEventListener("click", function(e) {
+
+        e.preventDefault();
+
+        logout();
+
+      });
+
+    // =====================================
+    // 5. MENU ĐANG CHỌN
+    // =====================================
+
+    const navLinks =
+      document.querySelectorAll(".nav-menu .nav-link");
+
+    navLinks.forEach(link => {
+
+      link.addEventListener("click", function() {
+
+        navLinks.forEach(item => {
+          item.classList.remove("active");
+        });
+
+        this.classList.add("active");
+
+      });
+
+    });
+
+    // =====================================
+    // 6. KIỂM TRA PHIÊN KHI QUAY LẠI TRANG
+    // =====================================
+
+    window.addEventListener("pageshow", function(event) {
+
+      if (event.persisted && window.self === window.top) {
+        initializeAdmin();
+      }
+
+    });
+
+  </script>
 
 </body>
 </html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Trang Tài Xế - DriverWebDb</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            margin: 0;
+            padding: 30px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: 30px auto;
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px #0001;
+        }
+
+        h1 {
+            color: #1e293b;
+        }
+
+        input, button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .logout {
+            background: #dc2626;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Trang Tài Xế</h1>
+
+    <p>Chào mừng bạn đến với hệ thống DriverWebDb.</p>
+
+    <p id="profile">Đang tải thông tin...</p>
+
+    <button class="logout" onclick="logout()">
+        Đăng Xuất
+    </button>
+
+    <hr>
+
+    <h2>Đổi Mật Khẩu</h2>
+
+    <form id="password-form">
+
+        <label>Mật khẩu hiện tại</label>
+        <input type="password"
+               name="currentPassword"
+               required>
+
+        <label>Mật khẩu mới</label>
+        <input type="password"
+               name="newPassword"
+               minlength="8"
+               required>
+
+        <label>Xác nhận mật khẩu mới</label>
+        <input type="password"
+               name="confirmPassword"
+               minlength="8"
+               required>
+
+        <button type="submit">
+            Cập Nhật Mật Khẩu
+        </button>
+
+        <p id="password-message"></p>
+
+    </form>
+
+</div>
+
+<script src="/assets/js/auth-common.js"></script>
+
+<script>
+    // Hiển thị thông tin tài khoản
+    async function loadProfile() {
+        try {
+            const response = await fetch("/api/auth/me");
+
+            if (!response.ok) {
+                window.location.replace("/login.html");
+                return;
+            }
+
+            const data = await response.json();
+
+            document.getElementById("profile").textContent =
+                "Tài khoản: " + data.username +
+                " | Mã tài xế: " + data.id;
+
+        } catch (error) {
+            document.getElementById("profile").textContent =
+                "Không tải được thông tin tài khoản.";
+        }
+    }
+
+    document.getElementById("password-form")
+        .addEventListener("submit", changePassword);
+
+    loadProfile();
+</script>
+
+</body>
+</html>

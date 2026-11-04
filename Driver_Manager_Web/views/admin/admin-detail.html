@@ -2,56 +2,404 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cài Đặt Admin - DriverWebDb</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../../assets/base.css">
-  <link rel="stylesheet" href="../../assets/pages/admin-detail.css">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Cài Đặt Tài Khoản - DriverWebDb</title>
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/base.css">
+
+  <link rel="stylesheet"
+        href="/assets/pages/admin-detail.css">
+
 </head>
+
 <body>
 
-  <div class="page-header" style="max-width: 36rem; margin: 0 auto 1.5rem auto;">
+  <!-- HEADER -->
+  <div class="page-header"
+       style="max-width: 36rem; margin: 0 auto 1.5rem;">
+
     <div>
-      <h1 class="page-header__title">Cài Đặt Tài Khoản Quản Trị</h1>
-      <p class="page-header__subtitle">Thay đổi tên đăng nhập và cập nhật mật khẩu quản trị hệ thống</p>
+
+      <h1 class="page-header__title">
+        Cài Đặt Tài Khoản Quản Trị
+      </h1>
+
+      <p class="page-header__subtitle">
+        Xem thông tin và cập nhật mật khẩu tài khoản Admin
+      </p>
+
     </div>
+
   </div>
 
-  <form action="overview.html" method="GET" class="admin-detail-card">
+  <!-- FORM -->
+  <form id="password-form" class="admin-detail-card">
+
     <div class="admin-detail-card__body">
-      
+
+      <!-- MÃ TÀI KHOẢN -->
       <div class="admin-detail-card__group">
-        <label class="admin-detail-card__label">Mã Tài Khoản (Accounts.id)</label>
-        <input type="text" value="AD-01" readonly class="form-control form-control--readonly">
+
+        <label class="admin-detail-card__label">
+          Mã Tài Khoản
+        </label>
+
+        <input
+          type="text"
+          id="admin-id"
+          value="Đang tải..."
+          readonly
+          class="form-control form-control--readonly">
+
       </div>
 
+      <!-- USERNAME -->
       <div class="admin-detail-card__group">
-        <label class="admin-detail-card__label">Tên Đăng Nhập (Username)</label>
-        <input type="text" name="username" value="admin_danang" required class="form-control">
+
+        <label class="admin-detail-card__label">
+          Tên Đăng Nhập
+        </label>
+
+        <input
+          type="text"
+          id="admin-username"
+          value="Đang tải..."
+          readonly
+          class="form-control form-control--readonly">
+
       </div>
 
-      <div style="border-top: 1px solid var(--brand-border); padding-top: 1rem; margin-top: 0.5rem;" class="admin-detail-card__group">
-        <label class="admin-detail-card__label" style="color: var(--color-primary); margin-top: 0.5rem;">Đổi Mật Khẩu (Password)</label>
+      <!-- ĐỔI MẬT KHẨU -->
+      <div class="admin-detail-card__group"
+           style="
+             border-top: 1px solid #e2e8f0;
+             padding-top: 20px;
+             margin-top: 15px;">
+
+        <label class="admin-detail-card__label"
+               style="color: #2563eb;">
+
+          <i class="fa-solid fa-lock"></i>
+          Đổi Mật Khẩu
+
+        </label>
+
       </div>
 
+      <!-- MẬT KHẨU HIỆN TẠI -->
       <div class="admin-detail-card__group">
-        <label class="admin-detail-card__label">Mật Khẩu Mới</label>
-        <input type="password" name="new_password" placeholder="Mật khẩu mới..." class="form-control">
+
+        <label class="admin-detail-card__label"
+               for="currentPassword">
+          Mật Khẩu Hiện Tại
+        </label>
+
+        <input
+          type="password"
+          id="currentPassword"
+          name="currentPassword"
+          placeholder="Nhập mật khẩu hiện tại..."
+          autocomplete="current-password"
+          required
+          class="form-control">
+
       </div>
 
+      <!-- MẬT KHẨU MỚI -->
       <div class="admin-detail-card__group">
-        <label class="admin-detail-card__label">Xác Nhận Mật Khẩu Mới</label>
-        <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu mới..." class="form-control">
+
+        <label class="admin-detail-card__label"
+               for="newPassword">
+          Mật Khẩu Mới
+        </label>
+
+        <input
+          type="password"
+          id="newPassword"
+          name="newPassword"
+          placeholder="Nhập mật khẩu mới..."
+          autocomplete="new-password"
+          minlength="8"
+          maxlength="128"
+          required
+          class="form-control">
+
+      </div>
+
+      <!-- XÁC NHẬN MẬT KHẨU -->
+      <div class="admin-detail-card__group">
+
+        <label class="admin-detail-card__label"
+               for="confirmPassword">
+          Xác Nhận Mật Khẩu Mới
+        </label>
+
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          placeholder="Nhập lại mật khẩu mới..."
+          autocomplete="new-password"
+          minlength="8"
+          maxlength="128"
+          required
+          class="form-control">
+
+      </div>
+
+      <!-- THÔNG BÁO -->
+      <div class="admin-detail-card__group">
+
+        <p id="password-message"
+           role="status"
+           aria-live="polite"
+           style="
+             font-size: 13px;
+             font-weight: 500;
+             margin-top: 10px;">
+        </p>
+
       </div>
 
     </div>
 
+    <!-- FOOTER -->
     <footer class="admin-detail-card__footer">
-      <button type="submit" class="btn btn--primary">
-        <i class="fa-solid fa-floppy-disk"></i> Cập Nhật Tài Khoản
+
+      <button type="submit"
+              id="btn-save"
+              class="btn btn--primary">
+
+        <i class="fa-solid fa-floppy-disk"></i>
+        Cập Nhật Mật Khẩu
+
       </button>
+
     </footer>
+
   </form>
-  
+
+  <script>
+
+    // =====================================
+    // 1. HIỂN THỊ THÔNG BÁO
+    // =====================================
+
+    function showMessage(message, success = false) {
+
+      const messageBox =
+        document.getElementById("password-message");
+
+      messageBox.textContent = message;
+
+      messageBox.style.color =
+        success ? "#16a34a" : "#dc2626";
+
+    }
+
+    // =====================================
+    // 2. KIỂM TRA VÀ LẤY THÔNG TIN ADMIN
+    // =====================================
+
+    let isAuthorizedAdmin = false;
+
+    async function loadAdminInfo() {
+
+      try {
+
+        const response = await fetch("/api/auth/me", {
+          credentials: "same-origin",
+          cache: "no-store"
+        });
+
+        // Chưa đăng nhập
+        if (response.status === 401) {
+          window.top.location.replace("/login.html");
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error("Không thể tải thông tin Admin");
+        }
+
+        const data = await response.json();
+
+        // Không phải Admin
+        if (data.role !== "Admin") {
+          window.top.location.replace("/driver.html");
+          return;
+        }
+
+        isAuthorizedAdmin = true;
+
+        document.getElementById("admin-id").value =
+          data.id || "";
+
+        document.getElementById("admin-username").value =
+          data.username || "";
+
+      } catch (error) {
+
+        console.error("Lỗi tải Admin:", error);
+
+        showMessage(
+          "Không thể tải thông tin tài khoản!",
+          false
+        );
+
+      }
+    }
+
+    // =====================================
+    // 3. ĐỔI MẬT KHẨU ADMIN
+    // =====================================
+
+    document.getElementById("password-form")
+      .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        if (!isAuthorizedAdmin) {
+          showMessage("Chưa xác thực tài khoản Admin!");
+          return;
+        }
+
+        const currentPassword =
+          document.getElementById("currentPassword").value;
+
+        const newPassword =
+          document.getElementById("newPassword").value;
+
+        const confirmPassword =
+          document.getElementById("confirmPassword").value;
+
+        const saveButton =
+          document.getElementById("btn-save");
+
+        // Kiểm tra rỗng
+        if (!currentPassword ||
+            !newPassword ||
+            !confirmPassword) {
+
+          showMessage("Vui lòng nhập đầy đủ thông tin!");
+          return;
+        }
+
+        // Kiểm tra độ dài
+        if (newPassword.length < 8 ||
+            newPassword.length > 128) {
+
+          showMessage(
+            "Mật khẩu mới phải có từ 8 đến 128 ký tự!"
+          );
+
+          return;
+        }
+
+        // Kiểm tra xác nhận
+        if (newPassword !== confirmPassword) {
+
+          showMessage("Mật khẩu xác nhận không khớp!");
+          return;
+        }
+
+        // Không cho trùng mật khẩu cũ
+        if (currentPassword === newPassword) {
+
+          showMessage(
+            "Mật khẩu mới phải khác mật khẩu hiện tại!"
+          );
+
+          return;
+        }
+
+        // Khóa nút
+        saveButton.disabled = true;
+
+        saveButton.innerHTML =
+          '<i class="fa-solid fa-spinner fa-spin"></i> Đang cập nhật...';
+
+        try {
+
+          const response = await fetch(
+            "/api/auth/change-password",
+            {
+              method: "POST",
+              credentials: "same-origin",
+
+              headers: {
+                "Content-Type": "application/json"
+              },
+
+              body: JSON.stringify({
+                currentPassword: currentPassword,
+                newPassword: newPassword,
+                confirmPassword: confirmPassword
+              })
+            }
+          );
+
+          // Phiên đăng nhập hết hạn
+          if (response.status === 401) {
+
+            window.top.location.replace("/login.html");
+            return;
+          }
+
+          const data = await response.json();
+
+          if (!response.ok) {
+
+            showMessage(
+              data.message || "Đổi mật khẩu thất bại!"
+            );
+
+            return;
+          }
+
+          // Đổi mật khẩu thành công
+          showMessage(
+            "Đổi mật khẩu thành công! Vui lòng đăng nhập lại.",
+            true
+          );
+
+          document.getElementById("password-form").reset();
+
+          // QUAN TRỌNG:
+          // Thoát toàn bộ iframe và chuyển về Login
+          window.top.location.replace("/login.html");
+
+        } catch (error) {
+
+          console.error("Lỗi đổi mật khẩu:", error);
+
+          showMessage(
+            "Không thể kết nối đến máy chủ!"
+          );
+
+        } finally {
+
+          saveButton.disabled = false;
+
+          saveButton.innerHTML =
+            '<i class="fa-solid fa-floppy-disk"></i> Cập Nhật Mật Khẩu';
+
+        }
+
+      });
+
+    // =====================================
+    // 4. KHỞI TẠO
+    // =====================================
+
+    loadAdminInfo();
+
+  </script>
+
 </body>
 </html>

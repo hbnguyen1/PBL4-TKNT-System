@@ -2,96 +2,292 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
   <title>Đăng Nhập - DriverWebDb</title>
-  <!-- Tailwind CSS CDN -->
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
             brand: {
-              dark: '#0b1120',      // Xanh đen nền chính
-              card: '#1e293b',      // Slate 800
-              accent: '#2563eb',    // Xanh dương nổi bật
+              dark: '#0b1120',
+              card: '#1e293b',
+              accent: '#2563eb',
               surface: '#f8fafc',
               border: '#e2e8f0'
             }
           }
         }
       }
-    }
+    };
   </script>
 </head>
+
 <body class="bg-brand-dark min-h-screen flex items-center justify-center p-4 font-sans text-slate-800 relative overflow-hidden">
 
-  <!-- HỌA TIẾT NỀN CÔNG NGHỆ CHÌM (BACKGROUND GLOW) -->
+  <!-- BACKGROUND -->
   <div class="absolute -top-32 -left-32 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
   <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
 
-  <!-- CONTAINER TRUNG TÂM -->
+  <!-- CONTAINER -->
   <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-700/40 overflow-hidden relative z-10">
-    
-    <!-- HEADER XANH ĐEN & LOGO HỆ THỐNG -->
+
+    <!-- HEADER -->
     <div class="bg-slate-950 px-8 pt-8 pb-7 text-center border-b border-slate-800">
+
       <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-600 text-white text-xl font-bold shadow-lg shadow-blue-500/30 mb-3">
         <i class="fa-solid fa-truck-fast"></i>
       </div>
-      <h1 class="text-xl font-black text-white tracking-wide">DriverWebDb</h1>
-      <p class="text-xs text-slate-400 mt-1">Hệ Thống Quản Lý Điều Hành & Hồ Sơ Đội Xe</p>
+
+      <h1 class="text-xl font-black text-white tracking-wide">
+        DriverWebDb
+      </h1>
+
+      <p class="text-xs text-slate-400 mt-1">
+        Hệ Thống Quản Lý Điều Hành & Hồ Sơ Đội Xe
+      </p>
+
     </div>
 
-    <!-- KHU VỰC FORM ĐĂNG NHẬP -->
+    <!-- FORM LOGIN -->
     <div class="p-8">
-      <form id="form-login" action="admin/index.html" method="GET" class="space-y-4">
-        <!-- Tên Đăng Nhập -->
+
+      <div class="mb-6">
+        <h2 class="text-lg font-bold text-slate-800">
+          Đăng Nhập
+        </h2>
+
+        <p class="text-xs text-slate-500 mt-1">
+          Vui lòng nhập thông tin tài khoản để tiếp tục.
+        </p>
+      </div>
+
+      <form id="form-login" class="space-y-4">
+
+        <!-- USERNAME -->
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-            Tên Đăng Nhập (Username)
+
+          <label for="username"
+                 class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            Tên Đăng Nhập
           </label>
+
           <div class="relative">
+
             <i class="fa-regular fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-            <input type="text" name="username" required placeholder="Nhập tên đăng nhập hoặc mã TX/AD..."
-                   class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white transition-all">
+
+            <input
+              id="username"
+              type="text"
+              name="username"
+              autocomplete="username"
+              required
+              placeholder="Nhập tên đăng nhập..."
+              class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
+            >
+
           </div>
         </div>
 
-        <!-- Mật Khẩu -->
+        <!-- PASSWORD -->
         <div>
-          <div class="flex justify-between items-center mb-1.5">
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Mật Khẩu
-            </label>
-            <a href="#" class="text-[11px] text-blue-600 hover:underline font-semibold">Quên mật khẩu?</a>
-          </div>
-          <div class="relative">
-            <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-            <input type="password" name="password" required placeholder="••••••••"
-                   class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white transition-all">
-          </div>
-        </div>
 
-        <!-- Ghi nhớ phiên đăng nhập -->
-        <div class="flex items-center justify-between text-xs text-slate-600 pt-1">
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500">
-            <span>Ghi nhớ tài khoản</span>
+          <label for="password"
+                 class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            Mật Khẩu
           </label>
+
+          <div class="relative">
+
+            <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+
+            <input
+              id="password"
+              type="password"
+              name="password"
+              autocomplete="current-password"
+              required
+              placeholder="Nhập mật khẩu..."
+              class="w-full pl-10 pr-11 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
+            >
+
+            <!-- HIỆN / ẨN MẬT KHẨU -->
+            <button
+              type="button"
+              id="toggle-password"
+              aria-label="Hiện mật khẩu"
+              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600"
+            >
+              <i id="eye-icon" class="fa-regular fa-eye"></i>
+            </button>
+
+          </div>
         </div>
 
-        <!-- Nút Đăng Nhập -->
-        <button type="submit" 
-                class="w-full mt-3 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold tracking-wide shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2">
-          <span>Đăng Nhập Vào Hệ Thống</span>
-          <i class="fa-solid fa-arrow-right text-xs"></i>
-        </button>
-      </form>
-    </div>
+        <!-- THÔNG BÁO LỖI -->
+        <div id="login-error"
+             role="alert"
+             class="hidden bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl p-3">
+        </div>
 
+        <!-- NÚT ĐĂNG NHẬP -->
+        <button
+          id="btn-login"
+          type="submit"
+          class="w-full mt-3 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-xl text-xs font-bold tracking-wide shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2"
+        >
+          <span id="login-text">
+            Đăng Nhập Vào Hệ Thống
+          </span>
+
+          <i id="login-icon"
+             class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+
+      </form>
+
+      <!-- FOOTER -->
+      <div class="mt-7 text-center border-t border-slate-100 pt-5">
+
+        <p class="text-[11px] text-slate-400">
+          © 2026 DriverWebDb
+        </p>
+
+        <p class="text-[10px] text-slate-400 mt-1">
+          Hệ thống quản lý tài xế và phương tiện
+        </p>
+
+      </div>
+
+    </div>
   </div>
+
+  <!-- XỬ LÝ ĐĂNG NHẬP -->
+  <script>
+    const form = document.getElementById("form-login");
+
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+
+    const errorBox = document.getElementById("login-error");
+
+    const loginButton = document.getElementById("btn-login");
+    const loginText = document.getElementById("login-text");
+    const loginIcon = document.getElementById("login-icon");
+
+    // HIỆN / ẨN MẬT KHẨU
+    document.getElementById("toggle-password")
+      .addEventListener("click", function () {
+
+        const eyeIcon = document.getElementById("eye-icon");
+
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+
+          eyeIcon.className = "fa-regular fa-eye-slash";
+          this.setAttribute("aria-label", "Ẩn mật khẩu");
+        } else {
+          passwordInput.type = "password";
+
+          eyeIcon.className = "fa-regular fa-eye";
+          this.setAttribute("aria-label", "Hiện mật khẩu");
+        }
+
+      });
+
+    // HIỂN THỊ LỖI
+    function showError(message) {
+      errorBox.textContent = message;
+      errorBox.classList.remove("hidden");
+    }
+
+    // ĐĂNG NHẬP
+    form.addEventListener("submit", async function (event) {
+
+      event.preventDefault();
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+
+      errorBox.classList.add("hidden");
+      errorBox.textContent = "";
+
+      if (!username || !password) {
+        showError("Vui lòng nhập đầy đủ tài khoản và mật khẩu!");
+        return;
+      }
+
+      loginButton.disabled = true;
+      loginText.textContent = "Đang đăng nhập...";
+      loginIcon.className = "fa-solid fa-spinner fa-spin";
+
+      try {
+
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "same-origin",
+          body: JSON.stringify({
+            username: username,
+            password: password
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showError(
+            data.message || "Tên đăng nhập hoặc mật khẩu không đúng!"
+          );
+          return;
+        }
+
+        // CHUYỂN TRANG THEO PHÂN QUYỀN
+        if (data.role === "Admin") {
+
+          window.location.replace("/");
+
+        } else if (data.role === "Driver") {
+
+          window.location.replace("/driver.html");
+
+        } else {
+
+          showError("Tài khoản chưa được phân quyền!");
+
+        }
+
+      } catch (error) {
+
+        console.error("Login error:", error);
+
+        showError(
+          "Không thể kết nối đến máy chủ. Vui lòng thử lại!"
+        );
+
+      } finally {
+
+        loginButton.disabled = false;
+        loginText.textContent = "Đăng Nhập Vào Hệ Thống";
+        loginIcon.className = "fa-solid fa-arrow-right text-xs";
+
+      }
+
+    });
+  </script>
 
 </body>
 </html>
