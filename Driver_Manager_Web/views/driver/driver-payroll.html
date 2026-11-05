@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lương của tôi</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="../../assets/base.css">
+    <link rel="stylesheet" href="../../assets/pages/driver-payroll.css">
+</head>
+
+<body class="driver-payroll-page">
+
+    <main class="driver-payroll-container">
+
+        <!-- Tiêu đề trang -->
+        <div class="page-header driver-payroll-page__header">
+            <div>
+                <h1>Thông tin lương</h1>
+                <p>Theo dõi lương, phụ cấp và các khoản khấu trừ của bạn</p>
+            </div>
+        </div>
+
+        <!-- Bộ lọc kỳ lương -->
+        <section class="driver-payroll-filter">
+            <div class="driver-payroll-filter__heading">
+                <i class="fa-solid fa-calendar-days"></i>
+                <h2>Chọn kỳ lương</h2>
+            </div>
+
+            <div class="driver-payroll-filter__fields">
+                <div class="driver-payroll-group">
+                    <label for="payrollMonth" class="driver-payroll-label">Tháng</label>
+                    <select id="payrollMonth" class="form-control" name="month">
+                        <option value="">Chọn tháng</option>
+                        <option value="1">Tháng 1</option>
+                        <option value="2">Tháng 2</option>
+                        <option value="3">Tháng 3</option>
+                        <option value="4">Tháng 4</option>
+                        <option value="5">Tháng 5</option>
+                        <option value="6">Tháng 6</option>
+                        <option value="7">Tháng 7</option>
+                        <option value="8">Tháng 8</option>
+                        <option value="9">Tháng 9</option>
+                        <option value="10">Tháng 10</option>
+                        <option value="11">Tháng 11</option>
+                        <option value="12">Tháng 12</option>
+                    </select>
+                </div>
+
+                <div class="driver-payroll-group">
+                    <label for="payrollYear" class="driver-payroll-label">Năm</label>
+                    <select id="payrollYear" class="form-control" name="year">
+    <option value="">Chọn năm</option>
+    <option value="2027">Năm 2027</option>
+    <option value="2026" selected>Năm 2026</option>
+    <option value="2025">Năm 2025</option>
+    <option value="2024">Năm 2024</option>
+    <option value="2023">Năm 2023</option>
+    <option value="2022">Năm 2022</option>
+    <option value="2021">Năm 2021</option>
+    <option value="2020">Năm 2020</option>
+</select>
+                </div>
+
+                <button type="button" class="btn btn--primary" id="filterPayrollButton">
+                    <i class="fa-solid fa-filter"></i>
+                    Xem bảng lương
+                </button>
+            </div>
+        </section>
+
+        <!-- Tổng quan lương -->
+        <section class="driver-payroll-summary">
+            <article class="driver-payroll-summary__card">
+                <div class="driver-payroll-summary__icon driver-payroll-summary__icon--salary">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div>
+                    <p class="driver-payroll-summary__label">Lương cơ bản</p>
+                    <p class="driver-payroll-summary__value" id="baseSalary">---</p>
+                </div>
+            </article>
+
+            <article class="driver-payroll-summary__card">
+                <div class="driver-payroll-summary__icon driver-payroll-summary__icon--allowance">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                </div>
+                <div>
+                    <p class="driver-payroll-summary__label">Phụ cấp</p>
+                    <p class="driver-payroll-summary__value" id="allowance">---</p>
+                </div>
+            </article>
+
+            <article class="driver-payroll-summary__card">
+                <div class="driver-payroll-summary__icon driver-payroll-summary__icon--bonus">
+                    <i class="fa-solid fa-gift"></i>
+                </div>
+                <div>
+                    <p class="driver-payroll-summary__label">Thưởng</p>
+                    <p class="driver-payroll-summary__value" id="bonus">---</p>
+                </div>
+            </article>
+
+            <article class="driver-payroll-summary__card">
+                <div class="driver-payroll-summary__icon driver-payroll-summary__icon--deduction">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                </div>
+                <div>
+                    <p class="driver-payroll-summary__label">Khấu trừ</p>
+                    <p class="driver-payroll-summary__value" id="penalty">---</p>
+                </div>
+            </article>
+        </section>
+
+        <!-- Tổng thực nhận -->
+        <section class="driver-payroll-total">
+            <div class="driver-payroll-total__icon">
+                <i class="fa-solid fa-money-bill-wave"></i>
+            </div>
+
+            <div class="driver-payroll-total__content">
+                <p class="driver-payroll-total__label">Tổng lương thực nhận</p>
+                <h2 id="totalPaid">---</h2>
+                <span id="payrollPeriod">Kỳ lương: Chưa chọn</span>
+            </div>
+        </section>
+
+        <!-- Chi tiết bảng lương -->
+        <section class="driver-payroll-section">
+            <div class="driver-payroll-section__header">
+                <div>
+                    <i class="fa-solid fa-list-check"></i>
+                    <h2>Chi tiết bảng lương</h2>
+                </div>
+            </div>
+
+            <div class="driver-payroll-table-wrapper">
+                <table class="driver-payroll-table">
+                    <thead>
+                        <tr>
+                            <th>Khoản mục</th>
+                            <th>Diễn giải</th>
+                            <th class="text-right">Số tiền</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="payrollDetailBody">
+                        <tr>
+                            <td>Lương cơ bản</td>
+                            <td>Mức lương theo thỏa thuận</td>
+                            <td class="text-right" id="detailBaseSalary">---</td>
+                        </tr>
+                        <tr>
+                            <td>Phụ cấp</td>
+                            <td>Các khoản phụ cấp được hưởng</td>
+                            <td class="text-right" id="detailAllowance">---</td>
+                        </tr>
+                        <tr>
+                            <td>Thưởng</td>
+                            <td>Các khoản thưởng trong kỳ</td>
+                            <td class="text-right" id="detailBonus">---</td>
+                        </tr>
+                        <tr>
+                            <td>Khấu trừ</td>
+                            <td>Các khoản bị khấu trừ trong kỳ</td>
+                            <td class="text-right" id="detailPenalty">---</td>
+                        </tr>
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <th colspan="2">Tổng thực nhận</th>
+                            <th class="text-right" id="detailTotalPaid">---</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+        <!-- Trạng thái thanh toán -->
+        <section class="driver-payroll-section">
+            <div class="driver-payroll-section__header">
+                <div>
+                    <i class="fa-solid fa-money-check-dollar"></i>
+                    <h2>Trạng thái thanh toán</h2>
+                </div>
+            </div>
+
+            <div class="driver-payroll-payment" id="paymentStatus">
+                <span class="driver-payroll-payment__badge">
+                    <i class="fa-solid fa-circle-info"></i>
+                    Chưa có thông tin thanh toán
+                </span>
+
+                <p id="paymentDate">Ngày thanh toán: ---</p>
+                <p id="paymentNote">Ghi chú: ---</p>
+            </div>
+        </section>
+
+        <p class="driver-payroll-message" id="payrollMessage"></p>
+
+    </main>
+    <script src="/assets/js/driver-payroll.js"></script>
+</body>
+</html>

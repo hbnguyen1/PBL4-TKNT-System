@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tổng Quan - Cổng Thông Tin Tài Xế</title>
+
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/base.css">
+  <link rel="stylesheet" href="/assets/pages/driver-overview.css">
+</head>
+
+<body class="driver-overview-page">
+
+  <!-- TIÊU ĐỀ -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">
+        Trung Tâm Điều Hành Cá Nhân
+      </h1>
+
+      <p class="page-header__subtitle">
+        Xin chào <span id="driver-name">Đang tải...</span>
+        — Chúc bạn một ngày lái xe an toàn và thuận lợi!
+      </p>
+    </div>
+  </div>
+
+  <!-- THỐNG KÊ -->
+  <section class="driver-kpi">
+
+    <!-- CHUYẾN TRONG TUẦN -->
+    <div class="driver-kpi__card">
+      <div>
+        <div class="driver-kpi__label">
+          Chuyến trong tuần
+        </div>
+
+        <div class="driver-kpi__value" id="weekly-trips">
+          —
+        </div>
+
+        <span class="driver-kpi__link driver-kpi__link--indigo"
+              id="trips-status">
+          Chưa có dữ liệu chuyến
+        </span>
+      </div>
+
+      <div class="driver-kpi__icon driver-kpi__icon--blue">
+        <i class="fa-solid fa-route"></i>
+      </div>
+    </div>
+
+    <!-- SỐ GIỜ VẬN HÀNH -->
+    <div class="driver-kpi__card">
+      <div>
+        <div class="driver-kpi__label">
+          Số giờ vận hành
+        </div>
+
+        <div class="driver-kpi__value" id="operating-hours">
+          —
+        </div>
+
+        <span class="driver-kpi__link driver-kpi__link--emerald"
+              id="hours-status">
+          Chưa có dữ liệu vận hành
+        </span>
+      </div>
+
+      <div class="driver-kpi__icon driver-kpi__icon--emerald">
+        <i class="fa-solid fa-clock"></i>
+      </div>
+    </div>
+
+    <!-- ĐIỂM VI PHẠM -->
+    <div class="driver-kpi__card">
+      <div>
+        <div class="driver-kpi__label">
+          Điểm trừ vi phạm
+        </div>
+
+        <div class="driver-kpi__value" id="total-demerits">
+          —
+        </div>
+
+        <span class="driver-kpi__link driver-kpi__link--emerald"
+              id="demerits-status">
+          Đang tải dữ liệu...
+        </span>
+      </div>
+
+      <div class="driver-kpi__icon driver-kpi__icon--indigo">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+    </div>
+
+    <!-- LƯƠNG -->
+    <div class="driver-kpi__card">
+      <div>
+        <div class="driver-kpi__label">
+          Lương tạm tính
+        </div>
+
+        <div class="driver-kpi__value"
+             id="current-salary"
+             style="font-size:1.25rem;margin-top:0.35rem;">
+          —
+        </div>
+
+        <span class="driver-kpi__link driver-kpi__link--rose"
+              id="salary-status">
+          Kỳ lương tháng này
+        </span>
+      </div>
+
+      <div class="driver-kpi__icon driver-kpi__icon--rose">
+        <i class="fa-solid fa-wallet"></i>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- LỊCH TRÌNH -->
+  <div class="driver-radar">
+
+    <div class="driver-radar__header">
+      <div>
+        <div class="driver-radar__title">
+          <span class="driver-radar__dot"></span>
+          Lịch Trình & Giám Sát Ca Làm Việc Hôm Nay
+        </div>
+
+        <div class="driver-radar__subtitle">
+          Thông tin phương tiện được phân công
+        </div>
+      </div>
+
+      <span class="badge badge--success"
+            id="work-status">
+        Đang tải...
+      </span>
+    </div>
+
+    <div class="driver-radar__screen">
+
+      <p style="margin:0;">
+        <strong style="color:#38bdf8;">
+          Mã tuyến / Chuyến:
+        </strong>
+        <span id="current-route">Đang tải...</span>
+      </p>
+
+      <p style="margin:0;">
+        <strong style="color:#38bdf8;">
+          Phương tiện đảm nhận:
+        </strong>
+        <span id="assigned-vehicle">Đang tải...</span>
+      </p>
+
+      <p style="margin:0;">
+        <strong style="color:#38bdf8;">
+          Thời gian xuất phát:
+        </strong>
+        <span id="departure-time">Chưa có lịch trình</span>
+      </p>
+
+      <p style="margin:0;">
+        <strong style="color:#38bdf8;">
+          Trạng thái hệ thống:
+        </strong>
+        <span id="system-status">
+          Chưa có dữ liệu giám sát trực tuyến
+        </span>
+      </p>
+
+    </div>
+  </div>
+
+  <script src="/assets/js/driver-overview.js"></script>
+</body>
+</html>

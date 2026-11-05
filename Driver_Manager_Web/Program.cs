@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.FileProviders;
 using Driver_Manager_Web.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -9,41 +12,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-// Cấu hình đăng nhập bằng Cookie
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/login.html";
-        options.AccessDeniedPath = "/login.html";
-
+        options.Cookie.Name = "DriverWebAuth";
         options.Cookie.HttpOnly = true;
-        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.SameSite = SameSiteMode.Lax;
         options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
 
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
 
         options.Events.OnRedirectToLogin = context =>
         {
-            if (context.Request.Path.StartsWithSegments("/api"))
-            {
-                context.Response.StatusCode = 401;
-                return Task.CompletedTask;
-            }
-
-            context.Response.Redirect("/login.html");
+            context.Response.StatusCode = 401;
             return Task.CompletedTask;
         };
 
         options.Events.OnRedirectToAccessDenied = context =>
         {
-            if (context.Request.Path.StartsWithSegments("/api"))
-            {
-                context.Response.StatusCode = 403;
-                return Task.CompletedTask;
-            }
-
-            context.Response.Redirect("/login.html");
+            context.Response.StatusCode = 403;
             return Task.CompletedTask;
         };
     });
@@ -57,57 +45,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseAuthentication();
-app.UseAuthorization();
+var root = app.Environment.ContentRootPath;
 
-// Kiểm tra quyền truy cập API
-app.Use(async (context, next) =>
-{
-    var path = context.Request.Path;
-
-    if (path.StartsWithSegments("/api") &&
-        !path.StartsWithSegments("/api/auth"))
-    {
-        if (context.User.Identity?.IsAuthenticated != true)
-        {
-            context.Response.StatusCode = 401;
-            return;
-        }
-
-        if (!context.User.IsInRole("Admin"))
-        {
-            context.Response.StatusCode = 403;
-            return;
-        }
-    }
-
-    // Chặn yêu cầu thay đổi dữ liệu từ Origin khác
-    bool isWrite =
-        HttpMethods.IsPost(context.Request.Method) ||
-        HttpMethods.IsPut(context.Request.Method) ||
-        HttpMethods.IsPatch(context.Request.Method) ||
-        HttpMethods.IsDelete(context.Request.Method);
-
-    if (path.StartsWithSegments("/api") && isWrite)
-    {
-        string origin = context.Request.Headers.Origin.ToString();
-        string expected = $"{context.Request.Scheme}://{context.Request.Host}";
-
-        if (!string.IsNullOrEmpty(origin) &&
-            !string.Equals(origin, expected,
-                StringComparison.OrdinalIgnoreCase))
-        {
-            context.Response.StatusCode = 403;
-            return;
-        }
-    }
-
-    await next();
-});
-
-// Cho phép tải CSS, JS, hình ảnh
-var assetsPath = Path.Combine(
-    app.Environment.ContentRootPath, "assets");
+var assetsPath = Path.Combine(root, "assets");
 
 if (Directory.Exists(assetsPath))
 {
@@ -118,51 +58,53 @@ if (Directory.Exists(assetsPath))
     });
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
+app.MapGet("/", () =>
+    Results.Redirect("/login/Login.html"));
+
 // Trang đăng nhập
-app.MapGet("/login.html", (IWebHostEnvironment env) =>
+app.MapGet("/login/{page}.html", (string page) =>
 {
-    return Results.File(
-        Path.Combine(env.ContentRootPath,
-            "views", "login", "Login.html"),
-        "text/html");
+    if (!ValidPage(page))
+        return Results.NotFound();
+
+    var path = Path.Combine(root, "views", "login", page + ".html");
+
+    return HtmlFile(path);
 });
 
-// Trang chủ Admin
-app.MapGet("/", (HttpContext ctx, IWebHostEnvironment env) =>
+// Trang Admin: giữ đường dẫn cũ
+app.MapGet("/{page}.html", (string page) =>
 {
-    if (ctx.User.Identity?.IsAuthenticated != true)
-        return Results.Redirect("/login.html");
+    if (!ValidPage(page))
+        return Results.NotFound();
 
-    if (!ctx.User.IsInRole("Admin"))
-        return Results.Redirect("/driver.html");
-
-    return Results.File(
-        Path.Combine(env.ContentRootPath,
-            "views", "admin", "index.html"),
-        "text/html");
-});
-
-// Trang dành cho Driver
-app.MapGet("/driver.html",
-    (HttpContext ctx, IWebHostEnvironment env) =>
-{
-    if (ctx.User.Identity?.IsAuthenticated != true)
-        return Results.Redirect("/login.html");
-
-    if (!ctx.User.IsInRole("Driver"))
+    if (page.Equals("index", StringComparison.OrdinalIgnoreCase))
         return Results.Redirect("/");
 
-    return Results.File(
-        Path.Combine(env.ContentRootPath,
-            "views", "driver", "driver.html"),
-        "text/html");
+    var path = Path.Combine(root, "views", "admin", page + ".html");
+
+    return HtmlFile(path);
 });
 
-// Các trang quản trị khác
-app.MapGet("/{page}.html",
-    (string page, HttpContext ctx, IWebHostEnvironment env) =>
+// Trang Driver: yêu cầu đăng nhập đúng vai trò
+app.MapGet("/driver/{page}.html",
+    (string page, HttpContext context) =>
+{
+    if (!ValidPage(page))
+        return Results.NotFound();
+
+    var path = Path.Combine(root, "views", "driver", page + ".html");
+
+    return HtmlFile(path);
+})
+.RequireAuthorization(new AuthorizeAttribute { Roles = "Driver" });
+
+app.MapGet("/db-test", async () =>
 {
     if (ctx.User.Identity?.IsAuthenticated != true)
         return Results.Redirect("/login.html");
@@ -195,22 +137,42 @@ app.MapGet("/db-test", async (HttpContext ctx) =>
     {
         var db = new Database();
 
-        await using var connection = db.GetConnection();
-        await connection.OpenAsync();
+        await using var conn = db.GetConnection();
+        await conn.OpenAsync();
 
-        await using var command =
-            new MySqlCommand("SELECT DATABASE()", connection);
+        await using var cmd =
+            new MySqlCommand("SELECT DATABASE()", conn);
+
+        var name = await cmd.ExecuteScalarAsync();
 
         return Results.Ok(new
         {
             success = true,
-            database = await command.ExecuteScalarAsync()
+            database = name
         });
     }
     catch
     {
-        return Results.Problem("Kết nối database thất bại.");
+        return Results.Problem(
+            "Không thể kết nối MySQL. Kiểm tra cấu hình database.");
     }
 });
 
 app.Run();
+
+static bool ValidPage(string page)
+{
+    return !string.IsNullOrWhiteSpace(page)
+        && page != "."
+        && page != ".."
+        && page.All(c =>
+            char.IsLetterOrDigit(c) || c == '-' || c == '_');
+}
+
+static IResult HtmlFile(string path)
+{
+    if (!File.Exists(path))
+        return Results.NotFound("Không tìm thấy trang HTML.");
+
+    return Results.File(path, "text/html");
+}

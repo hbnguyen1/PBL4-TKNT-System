@@ -1,0 +1,335 @@
+.driver-demerits-page {
+    padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .driver-demerits-page {
+        padding: 2rem;
+    }
+}
+
+.driver-demerits-container {
+    max-width: 64rem;
+    margin: 0 auto;
+}
+
+/* Tiêu đề */
+.driver-demerits-page__header {
+    margin: 0 0 1.5rem;
+}
+
+/* Tổng quan */
+.driver-demerits-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.driver-demerits-summary__card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+    padding: 1.125rem;
+    background-color: #ffffff;
+    border: 1px solid var(--brand-border);
+    border-radius: 0.75rem;
+}
+
+.driver-demerits-summary__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+    border-radius: 0.625rem;
+    font-size: 1.2rem;
+}
+
+.driver-demerits-summary__icon--total {
+    color: #2563eb;
+    background-color: #eff6ff;
+}
+
+.driver-demerits-summary__icon--points {
+    color: #e11d48;
+    background-color: #fff1f2;
+}
+
+.driver-demerits-summary__icon--latest {
+    color: #0891b2;
+    background-color: #ecfeff;
+}
+
+.driver-demerits-summary__content {
+    min-width: 0;
+}
+
+.driver-demerits-summary__label {
+    margin: 0 0 0.375rem;
+    color: #64748b;
+    font-size: 0.75rem;
+}
+
+.driver-demerits-summary__content h2 {
+    margin: 0;
+    color: var(--color-text-main);
+    font-size: 1.25rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+/* Bộ lọc */
+.driver-demerits-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    background-color: #ffffff;
+    border: 1px solid var(--brand-border);
+    border-radius: 0.75rem;
+}
+
+.driver-demerits-filter__header {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding-bottom: 0.875rem;
+    border-bottom: 1px solid var(--brand-border);
+}
+
+.driver-demerits-filter__header i {
+    color: var(--color-primary);
+}
+
+.driver-demerits-filter__header h2 {
+    margin: 0;
+    color: var(--color-text-main);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.driver-demerits-filter__fields {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+    align-items: end;
+    gap: 1rem;
+}
+
+.driver-demerits-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+}
+
+.driver-demerits-label {
+    color: var(--color-text-main);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.driver-demerits-filter .form-control {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.driver-demerits-filter__fields .btn {
+    min-height: 2.75rem;
+    white-space: nowrap;
+}
+
+/* Khu vực bảng */
+.driver-demerits-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    background-color: #ffffff;
+    border: 1px solid var(--brand-border);
+    border-radius: 0.75rem;
+}
+
+.driver-demerits-section__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.875rem;
+    border-bottom: 1px solid var(--brand-border);
+}
+
+.driver-demerits-section__header > div {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.driver-demerits-section__header i {
+    color: var(--color-primary);
+    font-size: 1rem;
+}
+
+.driver-demerits-section__header h2 {
+    margin: 0;
+    color: var(--color-text-main);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.driver-demerits-count {
+    padding: 0.3rem 0.65rem;
+    color: #64748b;
+    background-color: #f1f5f9;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+/* Bảng điểm trừ */
+.driver-demerits-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.driver-demerits-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.driver-demerits-table th,
+.driver-demerits-table td {
+    padding: 0.875rem 0.75rem;
+    border-bottom: 1px solid var(--brand-border);
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+.driver-demerits-table thead th {
+    color: #64748b;
+    background-color: #f8fafc;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.driver-demerits-table tbody td {
+    color: var(--color-text-main);
+}
+
+.driver-demerits-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.driver-demerits-table .text-center {
+    text-align: center;
+}
+
+.driver-demerits-empty {
+    padding: 2.5rem 1rem !important;
+    color: #94a3b8 !important;
+    text-align: center;
+}
+
+.driver-demerits-empty i {
+    display: block;
+    margin-bottom: 0.625rem;
+    font-size: 1.75rem;
+}
+
+/* Ghi chú */
+.driver-demerits-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    padding: 1rem 1.125rem;
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.75rem;
+}
+
+.driver-demerits-note__icon {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 1.1rem;
+}
+
+.driver-demerits-note h3 {
+    margin: 0 0 0.375rem;
+    color: #1e40af;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.driver-demerits-note p {
+    margin: 0;
+    color: #1e40af;
+    font-size: 0.825rem;
+    line-height: 1.6;
+}
+
+/* Thông báo */
+.driver-demerits-message {
+    display: none;
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .driver-demerits-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .driver-demerits-filter__fields {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .driver-demerits-filter__fields .btn {
+        grid-column: 1 / -1;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .driver-demerits-page {
+        padding: 1rem;
+    }
+
+    .driver-demerits-summary {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .driver-demerits-filter,
+    .driver-demerits-section {
+        padding: 1rem;
+    }
+
+    .driver-demerits-filter__fields {
+        grid-template-columns: 1fr;
+    }
+
+    .driver-demerits-filter__fields .btn {
+        grid-column: auto;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .driver-demerits-section__header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .driver-demerits-note {
+        padding: 1rem;
+    }
+}

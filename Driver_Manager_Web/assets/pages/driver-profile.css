@@ -1,0 +1,393 @@
+/* KHUNG THÔNG TIN TÀI XẾ */
+.driver-profile-identity {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+}
+
+/* BỐ CỤC NGANG */
+.driver-profile-identity__info {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+/* KHỐI AVATAR */
+.driver-profile-identity__info > .driver-profile-group {
+    flex: 0 0 auto;
+}
+
+.driver-profile-avatar-upload {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.driver-profile-avatar-upload__preview {
+    width: 110px;
+    height: 110px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #e2e8f0;
+}
+
+.driver-profile-avatar-upload__preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* THÔNG TIN TÀI XẾ */
+.driver-profile-identity__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.driver-profile-identity__name {
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 10px;
+}
+
+.driver-profile-identity__sub {
+    color: #64748b;
+    font-size: 13px;
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+.driver-profile-identity__sub strong {
+    color: #334155;
+}
+
+/* NÚT CHỨC NĂNG */
+.profile-avatar-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.driver-profile-avatar-upload__content small {
+    display: none;
+}
+
+/* ẨN TIÊU ĐỀ ẢNH ĐẠI DIỆN */
+.driver-profile-identity .driver-profile__label {
+    display: none;
+}
+
+/* MÀN HÌNH NHỎ */
+@media (max-width: 900px) {
+    .driver-profile-identity__info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .driver-profile-avatar-upload {
+        flex-wrap: wrap;
+    }
+}
+
+
+/* =========================================
+   KHÔI PHỤC GIAO DIỆN HỒ SƠ TÀI XẾ
+========================================= */
+
+/* Khung hồ sơ chính */
+.driver-profile-page .driver-profile-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.driver-profile-page .driver-profile-card__body {
+    padding: 32px;
+}
+
+/* Khôi phục khung từng phần */
+.driver-profile-page .driver-profile-section {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 26px 28px;
+    margin-bottom: 28px;
+}
+
+/* Tiêu đề của từng phần */
+.driver-profile-page .driver-profile-section__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.driver-profile-page .driver-profile-section__header i {
+    color: #2563eb;
+    font-size: 20px;
+}
+
+.driver-profile-page .driver-profile-section__header h2 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Khôi phục bố cục 2 cột */
+.driver-profile-page .driver-profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+/* Nhóm nhập liệu */
+.driver-profile-page .driver-profile-group {
+    min-width: 0;
+}
+
+.driver-profile-page .driver-profile-group--full {
+    grid-column: 1 / -1;
+}
+
+/* Nhãn */
+.driver-profile-page .driver-profile__label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+/* Ô nhập liệu */
+.driver-profile-page .form-control {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.driver-profile-page .form-control:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.driver-profile-page .form-control[readonly] {
+    background: #f8fafc;
+    color: #64748b;
+}
+
+/* Ghi chú dưới input */
+.driver-profile-page .driver-profile__hint {
+    display: block;
+    margin-top: 8px;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+/* Khôi phục nút Lưu hồ sơ bên phải */
+.driver-profile-page .driver-profile-card__footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px 32px;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .driver-profile-page .driver-profile-card__body {
+        padding: 18px;
+    }
+
+    .driver-profile-page .driver-profile-section {
+        padding: 20px;
+    }
+
+    .driver-profile-page .driver-profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .driver-profile-page .driver-profile-card__footer {
+        padding: 16px;
+    }
+}
+
+
+/* ==========================================
+   POPUP ĐỔI MẬT KHẨU - FIX GIAO DIỆN
+========================================== */
+
+.driver-profile-page .password-modal[hidden] {
+    display: none !important;
+}
+
+.driver-profile-page .password-modal {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 99999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+    background: rgba(15, 23, 42, 0.65);
+}
+
+.driver-profile-page .password-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+}
+
+.driver-profile-page .password-modal__content {
+    position: relative !important;
+    z-index: 1;
+    width: 100% !important;
+    max-width: 440px !important;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+}
+
+/* HEADER */
+.driver-profile-page .password-modal__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 22px 24px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.driver-profile-page .password-modal__header h2 {
+    font-size: 19px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.driver-profile-page .password-modal__header h2 i {
+    color: #2563eb;
+    margin-right: 8px;
+}
+
+.driver-profile-page .password-modal__header p {
+    font-size: 12px;
+    color: #64748b;
+    margin: 7px 0 0;
+    line-height: 1.5;
+}
+
+.driver-profile-page .password-modal__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 8px;
+    background: #f1f5f9;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.driver-profile-page .password-modal__close:hover {
+    background: #e2e8f0;
+}
+
+/* BODY */
+.driver-profile-page .password-modal__body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px;
+}
+
+.driver-profile-page .password-modal__body .driver-profile-group {
+    width: 100%;
+}
+
+.driver-profile-page .password-modal__body .driver-profile__label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+.driver-profile-page .password-modal__body .form-control {
+    width: 100%;
+    height: 44px;
+    padding: 10px 13px;
+    font-size: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: #ffffff;
+    box-sizing: border-box;
+}
+
+.driver-profile-page .password-modal__body .form-control:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.driver-profile-page .password-modal__message {
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* FOOTER */
+.driver-profile-page .password-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 24px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.driver-profile-page .password-modal__footer .btn {
+    width: auto;
+    min-height: 40px;
+    padding: 10px 15px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+    .driver-profile-page .password-modal__content {
+        max-width: 100% !important;
+    }
+
+    .driver-profile-page .password-modal__header,
+    .driver-profile-page .password-modal__body {
+        padding: 18px;
+    }
+
+    .driver-profile-page .password-modal__footer {
+        padding: 14px 18px;
+    }
+}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phương tiện được phân công</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="../../assets/base.css">
+    <link rel="stylesheet" href="../../assets/pages/driver-assigned-vehicle.css">
+</head>
+
+<body class="driver-assigned-vehicle-page">
+
+    <main class="driver-assigned-vehicle-container">
+
+        <!-- Tiêu đề trang -->
+        <div class="page-header driver-assigned-vehicle-page__header">
+            <div>
+                <h1>Phương tiện được phân công</h1>
+                <p>Thông tin phương tiện và thiết bị được giao cho bạn</p>
+            </div>
+        </div>
+
+        <!-- Card chính -->
+        <div class="driver-assigned-vehicle-card">
+            <div class="driver-assigned-vehicle-card__body">
+
+                <!-- Tổng quan phương tiện -->
+                <section class="driver-vehicle-identity">
+                    <div class="driver-vehicle-identity__icon">
+                        <i class="fa-solid fa-truck"></i>
+                    </div>
+
+                    <div class="driver-vehicle-identity__content">
+                        <h2 id="vehicleName">Tên phương tiện</h2>
+
+                        <p class="driver-vehicle-identity__plate">
+                            Biển số xe:
+                            <strong id="licensePlate">---</strong>
+                        </p>
+
+                        <span class="driver-vehicle-status" id="vehicleStatus">
+                            <i class="fa-solid fa-circle"></i>
+                            Chưa xác định
+                        </span>
+                    </div>
+                </section>
+
+                <!-- Thông tin phương tiện -->
+                <section class="driver-vehicle-section">
+                    <div class="driver-vehicle-section__header">
+                        <i class="fa-solid fa-car"></i>
+                        <h2>Thông tin phương tiện</h2>
+                    </div>
+
+                    <div class="driver-vehicle-grid">
+
+                        <div class="driver-vehicle-group">
+                            <label class="driver-vehicle-label">Tên phương tiện</label>
+                            <div class="driver-vehicle-value" id="vehicleNameDetail">---</div>
+                        </div>
+
+                        <div class="driver-vehicle-group">
+                            <label class="driver-vehicle-label">Biển số xe</label>
+                            <div class="driver-vehicle-value" id="vehiclePlateDetail">---</div>
+                        </div>
+
+                        <div class="driver-vehicle-group">
+                            <label class="driver-vehicle-label">Tuyến đường</label>
+                            <div class="driver-vehicle-value" id="vehicleRoute">---</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Thông tin phân công -->
+                <section class="driver-vehicle-section">
+                    <div class="driver-vehicle-section__header">
+                        <i class="fa-solid fa-user"></i>
+                        <h2>Thông tin phân công</h2>
+                    </div>
+
+                    <div class="driver-vehicle-grid">
+                        <div class="driver-vehicle-group">
+                            <label class="driver-vehicle-label">Mã tài xế</label>
+                            <div class="driver-vehicle-value" id="driverId">---</div>
+                        </div>
+
+                        <div class="driver-vehicle-group">
+                            <label class="driver-vehicle-label">Họ và tên</label>
+                            <div class="driver-vehicle-value" id="driverName">---</div>
+                        </div>
+
+                        <div class="driver-vehicle-group">
+                            <label class="driver-vehicle-label">Số điện thoại</label>
+                            <div class="driver-vehicle-value" id="driverPhone">---</div>
+                        </div>
+
+                        <div class="driver-vehicle-group">
+                            <label class="driver-vehicle-label">Trạng thái phân công</label>
+                            <div class="driver-vehicle-value" id="assignmentStatus">---</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Thông tin thiết bị IoT -->
+                <section class="driver-vehicle-section">
+                    <div class="driver-vehicle-section__header">
+                        <i class="fa-solid fa-microchip"></i>
+                        <h2>Thông tin thiết bị IoT</h2>
+                    </div>
+
+                    <div class="driver-vehicle-grid">
+                        <div class="driver-vehicle-group">
+                            <label class="driver-vehicle-label">Thông tin thiết bị</label>
+                            <div class="driver-vehicle-value" id="deviceInfo">---</div>
+                        </div>
+
+                        <div class="driver-vehicle-group">
+                            <label class="driver-vehicle-label">Trạng thái kết nối</label>
+                            <div class="driver-vehicle-value" id="deviceStatus">Chưa xác định</div>
+                        </div>
+                    </div>
+                </section>
+
+                <p class="driver-vehicle-message" id="vehicleMessage"></p>
+
+            </div>
+        </div>
+
+    </main>
+    <script src="/assets/js/driver-assigned-vehicle.js"></script>
+</body>
+</html>
