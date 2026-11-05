@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cổng Thông Tin Tài Xế - DriverWebDb</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Giữ nguyên đường dẫn CSS hệ thống hoặc tùy chỉnh riêng cho trang tài xế -->
+  <link rel="stylesheet" href="../../assets/pages/index.css">
+</head>
+<body>
+
+  <!-- SIDEBAR CỐ ĐỊNH DÀNH CHO TÀI XẾ -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand-box">
+        <div class="brand-icon">
+          <i class="fa-solid fa-id-badge"></i>
+        </div>
+        <div>
+          <span class="brand-name">DriverWebDb</span>
+          <span class="brand-tag">Cổng Thông Tin Tài Xế</span>
+        </div>
+      </div>
+
+      <!-- MỤC LỤC ĐIỀU HƯỚNG CÁ NHÂN HÓA CHO TÀI XẾ MỞ VÀO IFRAME -->
+      <nav class="nav-menu">
+        <!-- Tổng quan thông tin cá nhân / ca làm việc -->
+        <a href="driver-overview.html" target="content-frame" class="nav-link">
+          <i class="fa-solid fa-house-chimney"></i><span>Tổng Quan</span>
+        </a>
+        
+        <!-- Xem & Sửa hồ sơ cá nhân, đổi mật khẩu -->
+        <a href="driver-profile.html" target="content-frame" class="nav-link">
+          <i class="fa-solid fa-user-pen"></i><span>Hồ Sơ</span>
+        </a>
+
+        <!-- Xe mà tài xế đang đảm nhận / phân công -->
+        <a href="driver-assigned-vehicle.html" target="content-frame" class="nav-link">
+          <i class="fa-solid fa-bus-simple"></i><span>Xe Đảm Nhận</span>
+        </a>
+
+        <!-- Xem bảng lương cá nhân -->
+        <a href="driver-payroll.html" target="content-frame" class="nav-link">
+          <i class="fa-solid fa-file-invoice-dollar"></i><span>Bảng Lương Của Tôi</span>
+        </a>
+
+        <!-- Xem lỗi vi phạm / điểm trừ cá nhân -->
+        <a href="driver-demerits.html" target="content-frame" class="nav-link">
+          <i class="fa-solid fa-triangle-exclamation"></i><span>Lỗi Vi Phạm</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- ĐĂNG XUẤT -->
+    <div class="sidebar-footer">
+      <a href="../login/login.html" target="_top" class="btn-logout">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Đăng Xuất</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- KHUNG HIỂN THỊ NỘI DUNG TRANG CON (MẶC ĐỊNH LÀ TỔNG QUAN) -->
+  <main class="main-content">
+    <iframe name="content-frame" id="content-frame" src="driver-overview.html" class="content-frame"></iframe>
+  </main>
+
+</body>
+</html>

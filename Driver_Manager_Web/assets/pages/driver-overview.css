@@ -1,0 +1,142 @@
+/* ==========================================================================
+   DRIVER-OVERVIEW.CSS - Dành riêng cho Cổng thông tin tài xế (Chuẩn mẫu Admin)
+   ========================================================================== */
+
+.driver-overview-page {
+  background-color: var(--brand-surface);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--color-text-main);
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .driver-overview-page { padding: 2rem; }
+}
+
+/* Khối Thẻ Thống Kê KPI (4 cột) */
+.driver-kpi {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .driver-kpi { grid-template-columns: repeat(4, 1fr); }
+}
+
+.driver-kpi__card {
+  background-color: #ffffff;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--brand-border);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.driver-kpi__card:hover { border-color: var(--color-primary); }
+
+.driver-kpi__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.driver-kpi__value {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--brand-dark);
+  margin-top: 0.25rem;
+}
+
+.driver-kpi__link {
+  font-size: 0.75rem;
+  color: var(--color-primary);
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.driver-kpi__link--emerald { color: var(--color-success); }
+.driver-kpi__link--indigo  { color: #4f46e5; }
+.driver-kpi__link--rose    { color: var(--color-danger); }
+
+/* Khối Biểu tượng KPI */
+.driver-kpi__icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.driver-kpi__icon--blue    { background-color: #eff6ff; color: var(--color-primary); }
+.driver-kpi__icon--emerald { background-color: #ecfdf5; color: var(--color-success); }
+.driver-kpi__icon--indigo  { background-color: #eef2ff; color: #4f46e5; }
+.driver-kpi__icon--rose    { background-color: #fff1f2; color: var(--color-danger); }
+
+/* Khung Radar / Thẻ thông tin lớn tối màu */
+.driver-radar {
+  background-color: var(--brand-dark);
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid #1e293b;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.driver-radar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.driver-radar__title {
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #1e293b;
+}
+
+.driver-radar__dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 9999px;
+  background-color: #34d399;
+}
+
+.driver-radar__subtitle {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.125rem;
+}
+
+.driver-radar__screen {
+  background-color: rgba(2, 6, 23, 0.8);
+  border-radius: 0.75rem;
+  border: 1px solid #1e293b;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #cbd5e1;
+  font-size: 0.75rem;
+}
+
+.badge--success { 
+  color: #2acb75;   
+  font-size: 13px;
+}
+
+.page-header__subtitle {
+    font-style: italic;
+}

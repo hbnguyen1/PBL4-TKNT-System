@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điểm trừ của tôi</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="../../assets/base.css">
+    <link rel="stylesheet" href="../../assets/pages/driver-demerits.css">
+</head>
+
+<body class="driver-demerits-page">
+
+    <main class="driver-demerits-container">
+
+        <!-- Tiêu đề trang -->
+        <div class="page-header driver-demerits-page__header">
+            <div>
+                <h1>Lịch sử điểm trừ</h1>
+                <p>Theo dõi các lần vi phạm và điểm trừ trong quá trình làm việc</p>
+            </div>
+        </div>
+
+        <!-- Tổng quan điểm trừ -->
+        <section class="driver-demerits-summary">
+
+            <article class="driver-demerits-summary__card">
+                <div class="driver-demerits-summary__icon driver-demerits-summary__icon--total">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+                <div class="driver-demerits-summary__content">
+                    <p class="driver-demerits-summary__label">Tổng số lần vi phạm</p>
+                    <h2 id="totalViolations">---</h2>
+                </div>
+            </article>
+
+            <article class="driver-demerits-summary__card">
+                <div class="driver-demerits-summary__icon driver-demerits-summary__icon--points">
+                    <i class="fa-solid fa-circle-minus"></i>
+                </div>
+                <div class="driver-demerits-summary__content">
+                    <p class="driver-demerits-summary__label">Tổng điểm đã trừ</p>
+                    <h2 id="totalDemeritPoints">---</h2>
+                </div>
+            </article>
+
+            <article class="driver-demerits-summary__card">
+                <div class="driver-demerits-summary__icon driver-demerits-summary__icon--latest">
+                    <i class="fa-solid fa-calendar-day"></i>
+                </div>
+                <div class="driver-demerits-summary__content">
+                    <p class="driver-demerits-summary__label">Lần vi phạm gần nhất</p>
+                    <h2 id="latestViolationDate">---</h2>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- Bộ lọc lịch sử -->
+        <section class="driver-demerits-filter">
+
+            <div class="driver-demerits-filter__header">
+                <i class="fa-solid fa-filter"></i>
+                <h2>Lọc lịch sử vi phạm</h2>
+            </div>
+
+            <div class="driver-demerits-filter__fields">
+
+                <div class="driver-demerits-group">
+                    <label for="demeritMonth" class="driver-demerits-label">
+                        Tháng
+                    </label>
+                    <select id="demeritMonth" name="month" class="form-control">
+                        <option value="">Tất cả các tháng</option>
+                        <option value="1">Tháng 1</option>
+                        <option value="2">Tháng 2</option>
+                        <option value="3">Tháng 3</option>
+                        <option value="4">Tháng 4</option>
+                        <option value="5">Tháng 5</option>
+                        <option value="6">Tháng 6</option>
+                        <option value="7">Tháng 7</option>
+                        <option value="8">Tháng 8</option>
+                        <option value="9">Tháng 9</option>
+                        <option value="10">Tháng 10</option>
+                        <option value="11">Tháng 11</option>
+                        <option value="12">Tháng 12</option>
+                    </select>
+                </div>
+
+                <div class="driver-demerits-group">
+                    <label for="demeritYear" class="driver-demerits-label">
+                        Năm
+                    </label>
+                    <select id="demeritYear" name="year" class="form-control">
+                        <option value="">Tất cả các năm</option>
+                    </select>
+                </div>
+
+                <div class="driver-demerits-group">
+                    <label for="demeritStatus" class="driver-demerits-label">
+                        Trạng thái
+                    </label>
+                    <select id="demeritStatus" name="status" class="form-control">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="confirmed">Đã xác nhận</option>
+                        <option value="pending">Đang xử lý</option>
+                        <option value="rejected">Đã hủy</option>
+                    </select>
+                </div>
+
+                <button type="button" class="btn btn--primary" id="filterDemeritsButton">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Lọc kết quả
+                </button>
+
+            </div>
+        </section>
+
+        <!-- Danh sách vi phạm -->
+        <section class="driver-demerits-section">
+
+            <div class="driver-demerits-section__header">
+                <div>
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <h2>Chi tiết lịch sử điểm trừ</h2>
+                </div>
+
+                <span class="driver-demerits-count" id="demeritRecordCount">
+                    0 bản ghi
+                </span>
+            </div>
+
+            <div class="driver-demerits-table-wrapper">
+                <table class="driver-demerits-table">
+                    <thead>
+                        <tr>
+                            <th>Ngày vi phạm</th>
+                            <th>Nội dung vi phạm</th>
+                            <th>Biển số xe</th>
+                            <th class="text-center">Điểm trừ</th>
+                            <th>Trạng thái</th>
+                            <th>Ghi chú</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="demeritsTableBody">
+                        <tr>
+                            <td colspan="6" class="driver-demerits-empty">
+                                <i class="fa-regular fa-folder-open"></i>
+                                <span>Chưa có dữ liệu điểm trừ</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <!-- Ghi chú -->
+        <section class="driver-demerits-note">
+            <div class="driver-demerits-note__icon">
+                <i class="fa-solid fa-circle-info"></i>
+            </div>
+
+            <div>
+                <h3>Lưu ý</h3>
+                <p>
+                    Thông tin điểm trừ được ghi nhận theo các lần vi phạm đã được
+                    hệ thống cập nhật. Nếu phát hiện thông tin chưa chính xác,
+                    vui lòng liên hệ quản trị viên để được kiểm tra.
+                </p>
+            </div>
+        </section>
+
+        <p class="driver-demerits-message" id="demeritsMessage"></p>
+
+    </main>
+
+</body>
+</html>
