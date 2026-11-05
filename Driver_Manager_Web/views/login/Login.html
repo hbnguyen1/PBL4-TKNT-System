@@ -124,32 +124,6 @@
 
             <span>Ghi nhớ tài khoản</span>
           </label>
-
-          <div class="relative">
-
-            <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-
-            <input
-              id="password"
-              type="password"
-              name="password"
-              autocomplete="current-password"
-              required
-              placeholder="Nhập mật khẩu..."
-              class="w-full pl-10 pr-11 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
-            >
-
-            <!-- HIỆN / ẨN MẬT KHẨU -->
-            <button
-              type="button"
-              id="toggle-password"
-              aria-label="Hiện mật khẩu"
-              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600"
-            >
-              <i id="eye-icon" class="fa-regular fa-eye"></i>
-            </button>
-
-          </div>
         </div>
 
         <!-- ERROR MESSAGE -->
@@ -219,18 +193,17 @@
             );
           }
 
-          if (data.role === "Admin") {
-            window.location.replace("/index.html");
-          }
-          else if (data.role === "Driver") {
-            window.location.replace("/driver/index.html");
-          }
-          else {
-            throw new Error(
-              "Tài khoản chưa được phân quyền truy cập."
-            );
+          if (data.role !== "Admin" && data.role !== "Driver") {
+              throw new Error(
+                  "Tài khoản chưa được phân quyền truy cập."
+              );
           }
 
+          if (!data.redirectUrl) {
+              throw new Error("Không tìm thấy đường dẫn chuyển trang.");
+          }
+
+          window.location.replace(data.redirectUrl);
         } catch (error) {
           message.textContent = error.message;
           message.classList.remove("hidden");

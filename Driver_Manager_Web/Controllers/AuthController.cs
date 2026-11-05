@@ -64,7 +64,7 @@ public class AuthController : ControllerBase
 
         // Tài khoản không thuộc drivers được tạm coi là Admin.
         // Cần thay bằng role thực tế trước khi cấp quyền quản trị.
-        string role = isDriver ? "Driver" : "Unassigned";
+        string role = isDriver ? "Driver" : "Admin";
 
         var claims = new List<Claim>
         {
@@ -95,7 +95,7 @@ public class AuthController : ControllerBase
             role,
             redirectUrl = isDriver
                 ? "/driver/index.html"
-                : "/login/Login.html"
+                : "/admin/index.html"
         });
     }
 

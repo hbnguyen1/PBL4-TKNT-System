@@ -53,7 +53,7 @@
           <i class="fa-solid fa-file-invoice-dollar"></i><span>Quản Lý Bảng Lương</span>
         </a>
 
-        <a href="/admin-detail.html"
+        <a href="admin-detail.html"
            target="content-frame"
            class="nav-link">
           <i class="fa-solid fa-user-gear"></i>
@@ -98,7 +98,7 @@
       </div>
 
       <!-- ĐĂNG XUẤT -->
-      <a href="#"
+      <a href="../login/Login.html"
          id="btn-logout"
          class="btn-logout">
 
@@ -150,7 +150,7 @@
         });
 
         if (response.status === 401) {
-          window.location.replace("/login.html");
+          window.location.replace("../login/Login.html");
           return;
         }
 
@@ -171,7 +171,7 @@
 
         // Chỉ tải nội dung sau khi xác thực
         document.getElementById("content-frame")
-          .src = "/overview.html";
+          .src = "/admin/overview.html";
 
       } catch (error) {
 
@@ -179,7 +179,7 @@
 
         alert("Không thể xác thực tài khoản. Vui lòng đăng nhập lại.");
 
-        window.location.replace("/login.html");
+        window.location.replace("../login/Login.html");
 
       }
     }
@@ -207,7 +207,7 @@
         }
 
         // Chuyển toàn bộ trang về Login
-        window.top.location.replace("/login.html");
+        window.top.location.replace("../login/Login.html");
 
       } catch (error) {
 

@@ -34,7 +34,7 @@ document.getElementById("form-login")
             }
 
             // Chuyển trang theo quyền
-            window.location.replace(data.redirect);
+            window.location.replace(data.redirectUrl);
 
         } catch (error) {
             message.textContent = error.message;

@@ -2,9 +2,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.FileProviders;
 using Driver_Manager_Web.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.FileProviders;
 using MySqlConnector;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -68,28 +65,36 @@ app.MapGet("/", () =>
 
 // Trang đăng nhập
 app.MapGet("/login/{page}.html", (string page) =>
+    {
+        if (!ValidPage(page))
+            return Results.NotFound();
+
+        var path = Path.Combine(root, "views", "login", page + ".html");
+
+        return HtmlFile(path);
+    });
+
+// =====================================
+// ADMIN ROUTES
+// =====================================
+
+app.MapGet("/admin/{page}.html", (string page) =>
 {
     if (!ValidPage(page))
         return Results.NotFound();
 
-    var path = Path.Combine(root, "views", "login", page + ".html");
+    var path = Path.Combine(
+        root,
+        "views",
+        "admin",
+        page + ".html"
+    );
 
     return HtmlFile(path);
-});
-
-// Trang Admin: giữ đường dẫn cũ
-app.MapGet("/{page}.html", (string page) =>
-{
-    if (!ValidPage(page))
-        return Results.NotFound();
-
-    if (page.Equals("index", StringComparison.OrdinalIgnoreCase))
-        return Results.Redirect("/");
-
-    var path = Path.Combine(root, "views", "admin", page + ".html");
-
-    return HtmlFile(path);
-});
+})
+.RequireAuthorization(
+    new AuthorizeAttribute { Roles = "Admin" }
+);
 
 // Trang Driver: yêu cầu đăng nhập đúng vai trò
 app.MapGet("/driver/{page}.html",
@@ -106,33 +111,6 @@ app.MapGet("/driver/{page}.html",
 
 app.MapGet("/db-test", async () =>
 {
-    if (ctx.User.Identity?.IsAuthenticated != true)
-        return Results.Redirect("/login.html");
-
-    if (!ctx.User.IsInRole("Admin"))
-        return Results.Redirect("/driver.html");
-
-    if (page.Contains('/') ||
-        page.Contains('\\') ||
-        page.Contains("..") ||
-        page == "index")
-        return Results.NotFound();
-
-    var file = Path.Combine(
-        env.ContentRootPath,
-        "views", "admin", page + ".html");
-
-    return File.Exists(file)
-        ? Results.File(file, "text/html")
-        : Results.NotFound();
-});
-
-// Kiểm tra kết nối database
-app.MapGet("/db-test", async (HttpContext ctx) =>
-{
-    if (!ctx.User.IsInRole("Admin"))
-        return Results.StatusCode(403);
-
     try
     {
         var db = new Database();
@@ -154,9 +132,13 @@ app.MapGet("/db-test", async (HttpContext ctx) =>
     catch
     {
         return Results.Problem(
-            "Không thể kết nối MySQL. Kiểm tra cấu hình database.");
+            "Không thể kết nối MySQL. Kiểm tra cấu hình database."
+        );
     }
-});
+})
+.RequireAuthorization(
+    new AuthorizeAttribute { Roles = "Admin" }
+);
 
 app.Run();
 
