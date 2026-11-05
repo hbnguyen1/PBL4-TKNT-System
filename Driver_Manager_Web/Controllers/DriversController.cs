@@ -26,6 +26,11 @@ public class DriversController : ControllerBase
         public IFormFile? Avatar { get; set; }
     }
 
+    public class ChangeDriverPasswordRequest
+    {
+        public string NewPassword { get; set; } = "";
+    }
+
     // Kiểm tra chữ ký thực tế của ảnh
     private static string? GetImageContentType(byte[] data)
     {
@@ -113,23 +118,55 @@ public class DriversController : ControllerBase
         return Ok(result);
     }
 
+    
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(string id)
     {
         await using var conn = _db.GetConnection();
         await conn.OpenAsync();
 
-        await using var cmd = new MySqlCommand(
-            "SELECT * FROM drivers WHERE id = @id", conn);
+        const string sql = """
+            SELECT
+                d.*,
+                a.username
+            FROM drivers d
+            LEFT JOIN accounts a ON d.id = a.id
+            WHERE d.id = @id
+            """;
 
+        await using var cmd = new MySqlCommand(sql, conn);
         cmd.Parameters.AddWithValue("@id", id);
 
         await using var reader = await cmd.ExecuteReaderAsync();
 
         if (!await reader.ReadAsync())
-            return NotFound(new { message = "Không tìm thấy tài xế" });
+        {
+            return NotFound(new
+            {
+                message = "Không tìm thấy tài xế"
+            });
+        }
 
-        return Ok(ReadDriver(reader));
+        // Đọc thông tin tài xế
+        var driver = ReadDriver(reader);
+
+        // Đọc username từ bảng Accounts
+        string? username = reader["username"] == DBNull.Value
+            ? null
+            : Convert.ToString(reader["username"]);
+
+        return Ok(new
+        {
+            id = driver.Id,
+            fullName = driver.FullName,
+            dateOfBirth = driver.DateOfBirth,
+            address = driver.Address,
+            avatarUrl = driver.AvatarUrl,
+            phone = driver.Phone,
+            licenseType = driver.LicenseType,
+            isSuspended = driver.IsSuspended,
+            username = username
+        });
     }
 
     // GET /api/drivers/TX-001/avatar
@@ -488,6 +525,111 @@ public class DriversController : ControllerBase
             return Problem("Không thể xóa tài xế");
         }
     }
+
+    
+// =====================================
+// PUT /api/drivers/{id}/password
+// Admin đổi mật khẩu tài khoản tài xế
+// =====================================
+
+    [HttpPut("{id}/password")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
+    public async Task<IActionResult> ChangeDriverPassword(
+        string id,
+        [FromBody] ChangeDriverPasswordRequest request)
+    {
+        // 1. Kiểm tra dữ liệu
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            return BadRequest(new
+            {
+                message = "Mã tài xế không hợp lệ!"
+            });
+        }
+
+        if (string.IsNullOrEmpty(request.NewPassword))
+        {
+            return BadRequest(new
+            {
+                message = "Vui lòng nhập mật khẩu mới!"
+            });
+        }
+
+        if (request.NewPassword.Length < 8 ||
+            request.NewPassword.Length > 128)
+        {
+            return BadRequest(new
+            {
+                message = "Mật khẩu phải có từ 8 đến 128 ký tự!"
+            });
+        }
+
+        try
+        {
+            await using var conn = _db.GetConnection();
+            await conn.OpenAsync();
+
+            // 2. Kiểm tra tài khoản có tồn tại không
+            const string checkSql = """
+                SELECT COUNT(*)
+                FROM accounts
+                WHERE id = @id
+                """;
+
+            await using (var checkCmd = new MySqlCommand(checkSql, conn))
+            {
+                checkCmd.Parameters.AddWithValue("@id", id);
+
+                long count = Convert.ToInt64(
+                    await checkCmd.ExecuteScalarAsync());
+
+                if (count == 0)
+                {
+                    return NotFound(new
+                    {
+                        message = "Không tìm thấy tài khoản tài xế!"
+                    });
+                }
+            }
+
+            // 3. Mã hóa mật khẩu bằng BCrypt
+            string passwordHash =
+                BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
+            // 4. Cập nhật mật khẩu trong database
+            const string updateSql = """
+                UPDATE accounts
+                SET password_hash = @passwordHash
+                WHERE id = @id
+                """;
+
+            await using var updateCmd =
+                new MySqlCommand(updateSql, conn);
+
+            updateCmd.Parameters.AddWithValue("@id", id);
+            updateCmd.Parameters.AddWithValue(
+                "@passwordHash", passwordHash);
+
+            await updateCmd.ExecuteNonQueryAsync();
+
+            // 5. Trả kết quả
+            return Ok(new
+            {
+                message = "Đổi mật khẩu tài xế thành công!"
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(
+                "Lỗi đổi mật khẩu tài xế: " + ex.Message);
+
+            return StatusCode(500, new
+            {
+                message = "Lỗi máy chủ khi đổi mật khẩu!"
+            });
+        }
+    }
+
 
     // Đọc dữ liệu tài xế
     private static Driver ReadDriver(MySqlDataReader r)

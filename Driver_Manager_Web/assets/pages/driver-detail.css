@@ -279,3 +279,47 @@
 .driver-avatar__edit:hover {
     background: #1d4ed8;
 }
+
+.driver-identity__password-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+
+    min-height: 2.875rem;
+    padding: 0.45rem 0.85rem;
+
+    color: #ffffff;
+    background: #4b61e8;
+
+    border: 1px solid #4b61e8;
+    border-radius: 0.625rem;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.driver-identity__password-btn:hover {
+    color: #ffffff;
+    background: #3b50d5;
+    border-color: #3b50d5;
+    box-shadow: 0 4px 12px rgba(75, 97, 232, 0.2);
+    transform: translateY(-2px);
+}
+
+.driver-identity__password-btn:active {
+    transform: translateY(0);
+}
+
+.driver-identity__password-btn i {
+    font-size: 0.9rem;
+}
+
+.driver-identity__password-btn i:last-child {
+    font-size: 0.75rem;
+}

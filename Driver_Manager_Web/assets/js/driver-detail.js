@@ -11,6 +11,15 @@ const driverId = new URLSearchParams(
     window.location.search
 ).get("id");
 
+const changePasswordLink = document.querySelector(
+    ".driver-identity__password-btn"
+);
+
+if (changePasswordLink && driverId) {
+    changePasswordLink.href =
+        `driver-password.html?id=${encodeURIComponent(driverId)}`;
+}
+
 const form = document.getElementById("form-driver-detail");
 const saveBtn = document.getElementById("btn-save-driver");
 const deleteBtn = document.getElementById("btn-delete-driver");
@@ -206,7 +215,7 @@ async function loadDriver() {
         setText("view-id", d.id);
 
         // API hiện tại chưa trả username
-        setText("view-username", "Chưa có trong API");
+        setText("view-username", d.username ?? "Chưa có tài khoản");
 
         // Đổ dữ liệu vào form
         el("inp-fullname").value = d.fullName ?? "";
