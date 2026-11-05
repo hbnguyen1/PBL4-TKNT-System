@@ -1,229 +1,502 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hồ Sơ Tài Xế - DriverWebDb</title>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../../assets/base.css">
-    <link rel="stylesheet" href="../../assets/pages/driver-profile.css">
+  <title>Hồ Sơ Tài Xế - DriverWebDb</title>
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/base.css">
+  <link rel="stylesheet"
+        href="/assets/pages/driver-profile.css">
+
+  <style>
+    /* Chỉ bổ sung định dạng con mắt */
+    .password-input-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .password-input-wrapper .form-control {
+      width: 100%;
+      padding-right: 48px;
+      box-sizing: border-box;
+    }
+
+    .password-eye {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .password-eye:hover {
+      color: #2563eb;
+    }
+
+    .password-eye:focus-visible {
+      outline: 2px solid #2563eb;
+      border-radius: 6px;
+    }
+  </style>
 </head>
 
 <body class="driver-profile-page">
 
-    <div class="page-header driver-profile-page__header">
-        <div>
-            <h1 class="page-header__title">Hồ Sơ Tài Xế</h1>
-            <p class="page-header__subtitle">
-                Xem và cập nhật thông tin tài khoản, hồ sơ cá nhân và trạng thái hoạt động
-            </p>
-        </div>
+  <!-- TIÊU ĐỀ -->
+  <div class="page-header driver-profile-page__header">
+    <div>
+      <h1 class="page-header__title">
+        Hồ Sơ Tài Xế
+      </h1>
+
+      <p class="page-header__subtitle">
+        Xem và cập nhật thông tin tài khoản,
+        hồ sơ cá nhân và trạng thái hoạt động
+      </p>
     </div>
+  </div>
 
-    <form id="driverProfileForm"
-          class="driver-profile-card"
-          action="driver-overview.html"
-          method="POST"
-          enctype="multipart/form-data">
+  <div class="driver-profile-card">
+    <div class="driver-profile-card__body">
 
-        <!-- THÔNG TIN ĐỊNH DANH -->
-        <section class="driver-profile-card__body">
+      <!-- THÔNG TIN TÀI XẾ -->
+      <section class="driver-profile-identity">
 
-            <div class="driver-profile-identity">
-                <div class="driver-profile-identity__info">
-                    <div class="driver-profile-group driver-profile-group--full">
-                        <label class="driver-profile__label" for="avatar">
-                            Ảnh đại diện
-                        </label>
+        <div class="driver-profile-identity__info">
 
-                        <div class="driver-profile-avatar-upload">
-                            <div class="driver-profile-avatar-upload__preview">
-                                <img
-                                    id="avatarUploadPreview"
-                                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=160"
-                                    alt="Ảnh đại diện hiện tại">
-                            </div>
+          <div class="driver-profile-group">
+            <div class="driver-profile-avatar-upload">
 
-                            <div class="driver-profile-avatar-upload__content">
-                                <label for="avatar" class="btn btn--secondary">
-                                    <i class="fa-solid fa-camera"></i>
-                                    Chọn ảnh mới
-                                </label>
-                                <input
-                                    type="file"
-                                    id="avatar"
-                                    name="avatar"
-                                    accept="image/png, image/jpeg, image/webp"
-                                    hidden>
-                            </div>
-                        </div>
-                    </div>
+              <div class="driver-profile-avatar-upload__preview">
+                <img
+                  id="avatarUploadPreview"
+                  alt="Ảnh đại diện tài xế"
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Crect width='160' height='160' fill='%23e2e8f0'/%3E%3Ccircle cx='80' cy='57' r='26' fill='%2394a3b8'/%3E%3Cellipse cx='80' cy='143' rx='53' ry='43' fill='%2394a3b8'/%3E%3C/svg%3E">
+              </div>
 
-                    <div class="driver-profile-identity__content">
-                        <h2 class="driver-profile-identity__name">Nguyễn Văn An</h2>
-                        <p class="driver-profile-identity__sub">
-                            Mã tài xế:
-                            <strong>TX-101</strong>
-                        </p>
-                        <p class="driver-profile-identity__sub">
-                            Tên đăng nhập:
-                            <strong>vana_tx101</strong>
-                        </p>
-                        <p class="driver-profile-identity__sub">
-                            Phương tiện phụ trách:
-                            <strong>43B-012.34</strong>
-                        </p>
-                    </div>
+              <div class="driver-profile-avatar-upload__content">
+                <div class="profile-avatar-actions">
+
+                  <label for="avatar"
+                         class="btn btn--secondary">
+                    <i class="fa-solid fa-camera"></i>
+                    Chọn ảnh
+                  </label>
+
+                  <button
+                    type="button"
+                    id="openPasswordModal"
+                    class="btn btn--primary">
+                    <i class="fa-solid fa-key"></i>
+                    Đổi mật khẩu
+                  </button>
                 </div>
+
+                <input
+                  type="file"
+                  id="avatar"
+                  name="avatar"
+                  accept="image/jpeg,image/png,image/webp"
+                  hidden>
+
+                <small id="avatarHint">
+                  Ảnh JPG, PNG hoặc WEBP, tối đa 2MB.
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="driver-profile-identity__content">
+
+            <h2
+              id="displayFullName"
+              class="driver-profile-identity__name">
+              Đang tải...
+            </h2>
+
+            <p class="driver-profile-identity__sub">
+              Mã tài xế:
+              <strong id="displayDriverId">—</strong>
+            </p>
+
+            <p class="driver-profile-identity__sub">
+              Tên đăng nhập:
+              <strong id="displayUsername">—</strong>
+            </p>
+
+            <p class="driver-profile-identity__sub">
+              Phương tiện phụ trách:
+              <strong id="displayVehicle">—</strong>
+            </p>
+
+            <p class="driver-profile-identity__sub">
+              Trạng thái:
+              <strong id="displayStatus">—</strong>
+            </p>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- FORM HỒ SƠ -->
+      <form id="driverProfileForm">
+
+        <section class="driver-profile-section">
+
+          <div class="driver-profile-section__header">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h2>1. Thông tin tài khoản đăng nhập</h2>
+          </div>
+
+          <div class="driver-profile-grid">
+
+            <div class="driver-profile-group">
+              <label for="username"
+                     class="driver-profile__label">
+                Tên đăng nhập (Username)
+              </label>
+
+              <input
+                type="text"
+                id="username"
+                class="form-control"
+                readonly>
+
+              <small class="driver-profile__hint">
+                Tên đăng nhập được quản lý bởi hệ thống.
+              </small>
             </div>
 
-            <!-- THÔNG TIN TÀI KHOẢN -->
-            <section class="driver-profile-section">
-                <div class="driver-profile-section__header">
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <h2>1. Thông tin tài khoản đăng nhập</h2>
-                </div>
+            <div class="driver-profile-group">
+              <label class="driver-profile__label">
+                Mật khẩu
+              </label>
 
-                <div class="driver-profile-grid">
-                    <div class="driver-profile-group">
-                        <label class="driver-profile__label" for="username">
-                            Tên đăng nhập (Username)
-                            <span class="required-mark">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            value="vana_tx101"
-                            maxlength="50"
-                            required
-                            class="form-control"
-                            placeholder="Nhập tên đăng nhập">
-                        <small class="driver-profile__hint">
-                            Tên đăng nhập phải là duy nhất trên hệ thống.
-                        </small>
-                    </div>
+              <input
+                type="password"
+                value="********"
+                class="form-control"
+                aria-label="Mật khẩu được bảo vệ"
+                readonly>
 
-                    <div class="driver-profile-group">
-                        <label for="driverPassword" class="driver-profile-label">
-                            Mật khẩu
-                        </label>
+              <small class="driver-profile__hint">
+                Nhấn Đổi mật khẩu bên cạnh ảnh đại diện.
+              </small>
+            </div>
 
-                        <div class="driver-profile-password">
-                            <input
-                                type="password"
-                                id="driverPassword"
-                                name="password"
-                                class="form-control"
-                                value="mật khẩu..."
-                            >
-                            <button
-                                type="button"
-                                class="driver-profile-password__toggle"
-                                id="togglePassword"
-                                aria-label="Hiện mật khẩu"
-                                title="Hiện mật khẩu"
-                            >
-                                <i class="fa-solid fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- THÔNG TIN CÁ NHÂN -->
-            <section class="driver-profile-section">
-                <div class="driver-profile-section__header">
-                    <i class="fa-solid fa-address-card"></i>
-                    <h2>2. Thông tin hồ sơ cá nhân</h2>
-                </div>
-
-                <div class="driver-profile-grid">
-                    <div class="driver-profile-group">
-                        <label class="driver-profile__label" for="fullName">
-                            Họ và tên tài xế
-                            <span class="required-mark">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="fullName"
-                            name="full_name"
-                            value="Nguyễn Văn An"
-                            maxlength="100"
-                            required
-                            class="form-control"
-                            placeholder="Nhập họ và tên">
-                    </div>
-
-                    <div class="driver-profile-group">
-                        <label class="driver-profile__label" for="licenseType">
-                            Hạng bằng lái
-                            <span class="required-mark">*</span>
-                        </label>
-                        <select
-                            id="licenseType"
-                            name="license_type"
-                            required
-                            class="form-control">
-                            <option value="Hạng B2">Hạng B2 - Xe du lịch</option>
-                            <option value="Hạng C">Hạng C - Xe tải nặng</option>
-                            <option value="Hạng D">Hạng D - Xe chở khách 16 - 30 chỗ</option>
-                            <option value="Hạng E" selected>Hạng E - Xe chở khách trên 30 chỗ</option>
-                        </select>
-                    </div>
-
-                    <div class="driver-profile-group">
-                        <label class="driver-profile__label" for="phone">
-                            Số điện thoại
-                            <span class="required-mark">*</span>
-                        </label>
-                        <input
-                            type="tel"
-                            id="phone"
-                            name="phone"
-                            value="0905 123 456"
-                            required
-                            class="form-control"
-                            placeholder="VD: 0905 xxx xxx">
-                    </div>
-
-                    <div class="driver-profile-group">
-                        <label class="driver-profile__label" for="dateOfBirth">
-                            Ngày sinh
-                        </label>
-                        <input
-                            type="date"
-                            id="dateOfBirth"
-                            name="date_of_birth"
-                            value="1988-08-15"
-                            class="form-control">
-                    </div>
-
-                    <div class="driver-profile-group driver-profile-group--full">
-                        <label class="driver-profile__label" for="address">
-                            Địa chỉ thường trú
-                        </label>
-                        <textarea
-                            id="address"
-                            name="address"
-                            rows="3"
-                            maxlength="255"
-                            class="form-control"
-                            placeholder="Nhập địa chỉ thường trú...">123 Đường Hải Phòng, Quận Thanh Khê, TP. Đà Nẵng</textarea>
-                    </div>
-                </div>
-            </section>
-            <p id="formMessage" class="driver-profile-message" role="status" aria-live="polite"></p>
+          </div>
         </section>
 
-        <!-- FOOTER -->
-        <footer class="driver-profile-card__footer">
-            <button type="submit" id="saveButton" class="btn btn--primary">
-                <i class="fa-solid fa-floppy-disk"></i>
-                <span>Lưu hồ sơ</span>
-            </button>
-        </footer>
-    </form>
+        <!-- THÔNG TIN CÁ NHÂN -->
+        <section class="driver-profile-section">
+
+          <div class="driver-profile-section__header">
+            <i class="fa-solid fa-address-card"></i>
+            <h2>2. Thông tin hồ sơ cá nhân</h2>
+          </div>
+
+          <div class="driver-profile-grid">
+
+            <div class="driver-profile-group">
+              <label for="fullName"
+                     class="driver-profile__label">
+                Họ và tên tài xế
+                <span class="required-mark">*</span>
+              </label>
+
+              <input
+                type="text"
+                id="fullName"
+                class="form-control"
+                maxlength="100"
+                placeholder="Nhập họ và tên"
+                required>
+            </div>
+
+            <div class="driver-profile-group">
+              <label for="licenseType"
+                     class="driver-profile__label">
+                Hạng bằng lái
+              </label>
+
+              <input
+                type="text"
+                id="licenseType"
+                class="form-control"
+                readonly>
+
+              <small class="driver-profile__hint">
+                Liên hệ Admin để thay đổi hạng bằng lái.
+              </small>
+            </div>
+
+            <div class="driver-profile-group">
+              <label for="phone"
+                     class="driver-profile__label">
+                Số điện thoại
+              </label>
+
+              <input
+                type="tel"
+                id="phone"
+                class="form-control"
+                maxlength="15"
+                placeholder="Nhập số điện thoại">
+            </div>
+
+            <div class="driver-profile-group">
+              <label for="dateOfBirth"
+                     class="driver-profile__label">
+                Ngày sinh
+              </label>
+
+              <input
+                type="date"
+                id="dateOfBirth"
+                class="form-control">
+            </div>
+
+            <div class="driver-profile-group driver-profile-group--full">
+              <label for="address"
+                     class="driver-profile__label">
+                Địa chỉ thường trú
+              </label>
+
+              <textarea
+                id="address"
+                class="form-control"
+                rows="3"
+                maxlength="255"
+                placeholder="Nhập địa chỉ thường trú"></textarea>
+            </div>
+
+          </div>
+        </section>
+
+        <p
+          id="formMessage"
+          class="driver-profile-message"
+          role="status"
+          aria-live="polite"></p>
+
+        <div class="driver-profile-card__footer">
+          <button
+            type="submit"
+            id="saveButton"
+            class="btn btn--primary">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Lưu hồ sơ
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- POPUP ĐỔI MẬT KHẨU -->
+  <div
+    id="passwordModal"
+    class="password-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="passwordModalTitle"
+    hidden>
+
+    <div class="password-modal__overlay"></div>
+
+    <div class="password-modal__content">
+
+      <div class="password-modal__header">
+        <div>
+          <h2 id="passwordModalTitle">
+            <i class="fa-solid fa-key"></i>
+            Đổi mật khẩu
+          </h2>
+
+          <p>
+            Cập nhật mật khẩu đăng nhập tài khoản tài xế
+          </p>
+        </div>
+
+        <button
+          type="button"
+          id="closePasswordModal"
+          class="password-modal__close"
+          aria-label="Đóng">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="changePasswordForm">
+
+        <div class="password-modal__body">
+
+          <!-- MẬT KHẨU HIỆN TẠI -->
+          <div class="driver-profile-group">
+            <label for="currentPassword"
+                   class="driver-profile__label">
+              Mật khẩu hiện tại
+            </label>
+
+            <div class="password-input-wrapper">
+              <input
+                type="password"
+                id="currentPassword"
+                class="form-control"
+                autocomplete="current-password"
+                required>
+
+              <button
+                type="button"
+                class="password-eye"
+                data-password-target="currentPassword"
+                aria-label="Hiện mật khẩu hiện tại"
+                aria-pressed="false">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- MẬT KHẨU MỚI -->
+          <div class="driver-profile-group">
+            <label for="newPassword"
+                   class="driver-profile__label">
+              Mật khẩu mới
+            </label>
+
+            <div class="password-input-wrapper">
+              <input
+                type="password"
+                id="newPassword"
+                class="form-control"
+                autocomplete="new-password"
+                minlength="8"
+                required>
+
+              <button
+                type="button"
+                class="password-eye"
+                data-password-target="newPassword"
+                aria-label="Hiện mật khẩu mới"
+                aria-pressed="false">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- XÁC NHẬN MẬT KHẨU -->
+          <div class="driver-profile-group">
+            <label for="confirmPassword"
+                   class="driver-profile__label">
+              Xác nhận mật khẩu mới
+            </label>
+
+            <div class="password-input-wrapper">
+              <input
+                type="password"
+                id="confirmPassword"
+                class="form-control"
+                autocomplete="new-password"
+                minlength="8"
+                required>
+
+              <button
+                type="button"
+                class="password-eye"
+                data-password-target="confirmPassword"
+                aria-label="Hiện mật khẩu xác nhận"
+                aria-pressed="false">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <p
+            id="passwordMessage"
+            class="password-modal__message"
+            role="status"
+            aria-live="polite"></p>
+
+        </div>
+
+        <div class="password-modal__footer">
+
+          <button
+            type="button"
+            id="cancelPasswordModal"
+            class="btn btn--secondary">
+            Hủy
+          </button>
+
+          <button
+            type="submit"
+            id="changePasswordButton"
+            class="btn btn--primary">
+            <i class="fa-solid fa-lock"></i>
+            Cập nhật mật khẩu
+          </button>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- THÔNG BÁO -->
+  <div
+    id="profileToast"
+    class="profile-toast"
+    role="status"
+    aria-live="polite"
+    hidden></div>
+
+  <script src="/assets/js/driver-profile.js"></script>
+
+  <!-- XỬ LÝ CON MẮT -->
+  <script>
+    document.querySelectorAll(".password-eye")
+      .forEach(button => {
+        button.addEventListener("click", function () {
+          const inputId = this.dataset.passwordTarget;
+          const input = document.getElementById(inputId);
+          if (!input) return;
+
+          const isVisible = input.type === "text";
+
+          input.type = isVisible ? "password" : "text";
+
+          const icon = this.querySelector("i");
+
+          icon.className = isVisible
+            ? "fa-solid fa-eye"
+            : "fa-solid fa-eye-slash";
+
+          this.setAttribute(
+            "aria-pressed",
+            String(!isVisible)
+          );
+
+          this.setAttribute(
+            "aria-label",
+            isVisible ? "Hiện mật khẩu" : "Ẩn mật khẩu"
+          );
+        });
+      });
+  </script>
+
 </body>
 </html>

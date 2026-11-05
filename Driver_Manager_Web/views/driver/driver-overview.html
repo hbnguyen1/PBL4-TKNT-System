@@ -4,68 +4,118 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tổng Quan - Cổng Thông Tin Tài Xế</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Chỉ gọi base.css chung và file CSS riêng của driver -->
-  <link rel="stylesheet" href="../../assets/pages/base.css">
-  <link rel="stylesheet" href="../../assets/pages/driver-overview.css">
+
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/base.css">
+  <link rel="stylesheet" href="/assets/pages/driver-overview.css">
 </head>
+
 <body class="driver-overview-page">
 
-  <!-- TIÊU ĐỀ TRANG -->
+  <!-- TIÊU ĐỀ -->
   <div class="page-header">
     <div>
-      <h1 class="page-header__title">Trung Tâm Điều Hành Cá Nhân</h1>
-      <p class="page-header__subtitle">Xin chào Nguyễn Văn A — Chúc bạn một ngày lái xe an toàn và thuận lợi!</p>
+      <h1 class="page-header__title">
+        Trung Tâm Điều Hành Cá Nhân
+      </h1>
+
+      <p class="page-header__subtitle">
+        Xin chào <span id="driver-name">Đang tải...</span>
+        — Chúc bạn một ngày lái xe an toàn và thuận lợi!
+      </p>
     </div>
   </div>
 
-  <!-- CÁC THẺ KPI THỐNG KÊ (4 Cột chuẩn mẫu) -->
+  <!-- THỐNG KÊ -->
   <section class="driver-kpi">
-    
-    <!-- Thẻ 1: Chuyến trong tuần -->
+
+    <!-- CHUYẾN TRONG TUẦN -->
     <div class="driver-kpi__card">
       <div>
-        <div class="driver-kpi__label">Chuyến trong tuần</div>
-        <div class="driver-kpi__value">14</div>
-        <span class="driver-kpi__link driver-kpi__link--indigo">Đang hoàn thành tốt →</span>
+        <div class="driver-kpi__label">
+          Chuyến trong tuần
+        </div>
+
+        <div class="driver-kpi__value" id="weekly-trips">
+          —
+        </div>
+
+        <span class="driver-kpi__link driver-kpi__link--indigo"
+              id="trips-status">
+          Chưa có dữ liệu chuyến
+        </span>
       </div>
+
       <div class="driver-kpi__icon driver-kpi__icon--blue">
         <i class="fa-solid fa-route"></i>
       </div>
     </div>
 
-    <!-- Thẻ 2: Số giờ vận hành -->
+    <!-- SỐ GIỜ VẬN HÀNH -->
     <div class="driver-kpi__card">
       <div>
-        <div class="driver-kpi__label">Số giờ vận hành</div>
-        <div class="driver-kpi__value">38.5</div>
-        <span class="driver-kpi__link driver-kpi__link--emerald">Đúng định mức ca →</span>
+        <div class="driver-kpi__label">
+          Số giờ vận hành
+        </div>
+
+        <div class="driver-kpi__value" id="operating-hours">
+          —
+        </div>
+
+        <span class="driver-kpi__link driver-kpi__link--emerald"
+              id="hours-status">
+          Chưa có dữ liệu vận hành
+        </span>
       </div>
+
       <div class="driver-kpi__icon driver-kpi__icon--emerald">
         <i class="fa-solid fa-clock"></i>
       </div>
     </div>
 
-    <!-- Thẻ 3: Điểm trừ vi phạm -->
+    <!-- ĐIỂM VI PHẠM -->
     <div class="driver-kpi__card">
       <div>
-        <div class="driver-kpi__label">Điểm trừ vi phạm</div>
-        <div class="driver-kpi__value">0</div>
-        <span class="driver-kpi__link driver-kpi__link--emerald">Hồ sơ an toàn tuyệt đối →</span>
+        <div class="driver-kpi__label">
+          Điểm trừ vi phạm
+        </div>
+
+        <div class="driver-kpi__value" id="total-demerits">
+          —
+        </div>
+
+        <span class="driver-kpi__link driver-kpi__link--emerald"
+              id="demerits-status">
+          Đang tải dữ liệu...
+        </span>
       </div>
+
       <div class="driver-kpi__icon driver-kpi__icon--indigo">
         <i class="fa-solid fa-shield-halved"></i>
       </div>
     </div>
 
-    <!-- Thẻ 4: Lương tạm tính -->
+    <!-- LƯƠNG -->
     <div class="driver-kpi__card">
       <div>
-        <div class="driver-kpi__label">Lương tạm tính</div>
-        <div class="driver-kpi__value" style="font-size: 1.25rem; margin-top: 0.35rem;">8,500,000đ</div>
-        <span class="driver-kpi__link driver-kpi__link--rose">Kỳ lương tháng này →</span>
+        <div class="driver-kpi__label">
+          Lương tạm tính
+        </div>
+
+        <div class="driver-kpi__value"
+             id="current-salary"
+             style="font-size:1.25rem;margin-top:0.35rem;">
+          —
+        </div>
+
+        <span class="driver-kpi__link driver-kpi__link--rose"
+              id="salary-status">
+          Kỳ lương tháng này
+        </span>
       </div>
+
       <div class="driver-kpi__icon driver-kpi__icon--rose">
         <i class="fa-solid fa-wallet"></i>
       </div>
@@ -73,25 +123,62 @@
 
   </section>
 
-  <!-- KHUNG HIỂN THỊ LỊCH TRÌNH CA LÀM VIỆC (Giao diện tối màu sang trọng) -->
+  <!-- LỊCH TRÌNH -->
   <div class="driver-radar">
+
     <div class="driver-radar__header">
       <div>
         <div class="driver-radar__title">
-          <span class="driver-radar__dot"></span> Lịch Trình & Giám Sát Ca Làm Việc Hôm Nay
+          <span class="driver-radar__dot"></span>
+          Lịch Trình & Giám Sát Ca Làm Việc Hôm Nay
         </div>
-        <div class="driver-radar__subtitle">Cập nhật trực tuyến qua hệ thống Telemetry và Camera AI</div>
+
+        <div class="driver-radar__subtitle">
+          Thông tin phương tiện được phân công
+        </div>
       </div>
-      <span class="badge badge--success">Đang thực hiện</span>
+
+      <span class="badge badge--success"
+            id="work-status">
+        Đang tải...
+      </span>
     </div>
 
     <div class="driver-radar__screen">
-      <p style="margin: 0;"><strong style="color: #38bdf8;">Mã tuyến / Chuyến:</strong> #TR-9023 (Đà Nẵng - Huế)</p>
-      <p style="margin: 0;"><strong style="color: #38bdf8;">Phương tiện đảm nhận:</strong> Xe Bus 29 chỗ (Biển số: 43B-123.45)</p>
-      <p style="margin: 0;"><strong style="color: #38bdf8;">Thời gian xuất phát:</strong> 08:00 AM - Dự kiến kết thúc: 12:30 PM</p>
-      <p style="margin: 0;"><strong style="color: #38bdf8;">Trạng thái hệ thống:</strong> <span style="color: #34d399;">✓ AI giám sát buồn ngủ hoạt động bình thường, thông số an toàn tuyệt đối</span></p>
+
+      <p style="margin:0;">
+        <strong style="color:#38bdf8;">
+          Mã tuyến / Chuyến:
+        </strong>
+        <span id="current-route">Đang tải...</span>
+      </p>
+
+      <p style="margin:0;">
+        <strong style="color:#38bdf8;">
+          Phương tiện đảm nhận:
+        </strong>
+        <span id="assigned-vehicle">Đang tải...</span>
+      </p>
+
+      <p style="margin:0;">
+        <strong style="color:#38bdf8;">
+          Thời gian xuất phát:
+        </strong>
+        <span id="departure-time">Chưa có lịch trình</span>
+      </p>
+
+      <p style="margin:0;">
+        <strong style="color:#38bdf8;">
+          Trạng thái hệ thống:
+        </strong>
+        <span id="system-status">
+          Chưa có dữ liệu giám sát trực tuyến
+        </span>
+      </p>
+
     </div>
   </div>
 
+  <script src="/assets/js/driver-overview.js"></script>
 </body>
 </html>

@@ -140,3 +140,11 @@
 .page-header__subtitle {
     font-style: italic;
 }
+
+.driver-radar__title {
+    color: #ffffff !important;
+}
+
+.driver-radar__subtitle {
+    color: #94a3b8;
+}

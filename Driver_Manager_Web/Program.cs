@@ -1,30 +1,50 @@
-using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.FileProviders;
 using Driver_Manager_Web.Models;
 using MySqlConnector;
-using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Đăng ký API Controllers
 builder.Services.AddControllers();
-
-// OpenAPI
 builder.Services.AddOpenApi();
+
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "DriverWebAuth";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+
+        options.Events.OnRedirectToLogin = context =>
+        {
+            context.Response.StatusCode = 401;
+            return Task.CompletedTask;
+        };
+
+        options.Events.OnRedirectToAccessDenied = context =>
+        {
+            context.Response.StatusCode = 403;
+            return Task.CompletedTask;
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// OpenAPI trong môi trường Development
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-// Phục vụ CSS, JavaScript và hình ảnh từ thư mục assets
-var assetsPath = Path.Combine(
-    app.Environment.ContentRootPath,
-    "assets"
-);
+var root = app.Environment.ContentRootPath;
+
+var assetsPath = Path.Combine(root, "assets");
 
 if (Directory.Exists(assetsPath))
 {
@@ -35,99 +55,94 @@ if (Directory.Exists(assetsPath))
     });
 }
 
-// Đăng ký tất cả API Controllers
-// Bao gồm PayrollController và FinanceController
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
-// Trang chủ: views/admin/index.html
-app.MapGet("/", (IWebHostEnvironment env) =>
+app.MapGet("/", () =>
+    Results.Redirect("/login/Login.html"));
+
+// Trang đăng nhập
+app.MapGet("/login/{page}.html", (string page) =>
 {
-    var path = Path.Combine(
-        env.ContentRootPath,
-        "views",
-        "admin",
-        "index.html"
-    );
-
-    if (!File.Exists(path))
-    {
-        return Results.NotFound(
-            $"Không tìm thấy trang chủ: {path}"
-        );
-    }
-
-    return Results.File(path, "text/html");
-});
-
-// Tự động phục vụ các trang HTML trong views/admin
-// Ví dụ: /finance.html, /payroll.html, /drivers.html
-app.MapGet("/{page}.html", (
-    string page,
-    IWebHostEnvironment env) =>
-{
-    if (string.IsNullOrWhiteSpace(page) ||
-        page.Contains('/') ||
-        page.Contains('\\') ||
-        page.Contains(".."))
-    {
+    if (!ValidPage(page))
         return Results.NotFound();
-    }
 
-    if (page.Equals(
-        "index",
-        StringComparison.OrdinalIgnoreCase))
-    {
-        return Results.Redirect("/");
-    }
+    var path = Path.Combine(root, "views", "login", page + ".html");
 
-    var path = Path.Combine(
-        env.ContentRootPath,
-        "views",
-        "admin",
-        page + ".html"
-    );
-
-    if (!File.Exists(path))
-    {
-        return Results.NotFound(
-            $"Không tìm thấy trang HTML: {path}"
-        );
-    }
-
-    return Results.File(path, "text/html");
+    return HtmlFile(path);
 });
 
-// Kiểm tra kết nối MySQL/XAMPP
+// Trang Admin: giữ đường dẫn cũ
+app.MapGet("/{page}.html", (string page) =>
+{
+    if (!ValidPage(page))
+        return Results.NotFound();
+
+    if (page.Equals("index", StringComparison.OrdinalIgnoreCase))
+        return Results.Redirect("/");
+
+    var path = Path.Combine(root, "views", "admin", page + ".html");
+
+    return HtmlFile(path);
+});
+
+// Trang Driver: yêu cầu đăng nhập đúng vai trò
+app.MapGet("/driver/{page}.html",
+    (string page, HttpContext context) =>
+{
+    if (!ValidPage(page))
+        return Results.NotFound();
+
+    var path = Path.Combine(root, "views", "driver", page + ".html");
+
+    return HtmlFile(path);
+})
+.RequireAuthorization(new AuthorizeAttribute { Roles = "Driver" });
+
 app.MapGet("/db-test", async () =>
 {
     try
     {
         var db = new Database();
 
-        await using var connection = db.GetConnection();
-        await connection.OpenAsync();
+        await using var conn = db.GetConnection();
+        await conn.OpenAsync();
 
-        await using var command = new MySqlCommand(
-            "SELECT DATABASE()",
-            connection
-        );
+        await using var cmd =
+            new MySqlCommand("SELECT DATABASE()", conn);
 
-        var databaseName = await command.ExecuteScalarAsync();
+        var name = await cmd.ExecuteScalarAsync();
 
         return Results.Ok(new
         {
             success = true,
-            message = "Kết nối MySQL thành công!",
-            database = databaseName
+            database = name
         });
     }
-    catch (Exception ex)
+    catch
     {
         return Results.Problem(
-            title: "Kết nối database thất bại",
-            detail: ex.Message
-        );
+            "Không thể kết nối MySQL. Kiểm tra cấu hình database.");
     }
 });
 
 app.Run();
+
+static bool ValidPage(string page)
+{
+    return !string.IsNullOrWhiteSpace(page)
+        && page != "."
+        && page != ".."
+        && page.All(c =>
+            char.IsLetterOrDigit(c) || c == '-' || c == '_');
+}
+
+static IResult HtmlFile(string path)
+{
+    if (!File.Exists(path))
+        return Results.NotFound("Không tìm thấy trang HTML.");
+
+    return Results.File(path, "text/html");
+}

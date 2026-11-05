@@ -56,8 +56,16 @@
                 <div class="driver-payroll-group">
                     <label for="payrollYear" class="driver-payroll-label">Năm</label>
                     <select id="payrollYear" class="form-control" name="year">
-                        <option value="">Chọn năm</option>
-                    </select>
+    <option value="">Chọn năm</option>
+    <option value="2027">Năm 2027</option>
+    <option value="2026" selected>Năm 2026</option>
+    <option value="2025">Năm 2025</option>
+    <option value="2024">Năm 2024</option>
+    <option value="2023">Năm 2023</option>
+    <option value="2022">Năm 2022</option>
+    <option value="2021">Năm 2021</option>
+    <option value="2020">Năm 2020</option>
+</select>
                 </div>
 
                 <button type="button" class="btn btn--primary" id="filterPayrollButton">
@@ -198,6 +206,6 @@
         <p class="driver-payroll-message" id="payrollMessage"></p>
 
     </main>
-
+    <script src="/assets/js/driver-payroll.js"></script>
 </body>
 </html>
