@@ -2,6 +2,7 @@
 
 (() => {
     const API_URL = "/api/driver/me/demerits";
+    let requestNumber = 0;
 
     function byId(id) {
         return document.getElementById(id);
@@ -131,6 +132,8 @@
             }
 
             const row = document.createElement("tr");
+            row.dataset.violationSource = record.source === "ai" ? "ai" : "demerit";
+            row.dataset.violationId = String(record.id);
 
             createCell(row, formatDate(record.violatedAt));
             createCell(row, record.violation || "---");
@@ -159,6 +162,7 @@
     }
 
     async function loadDemerits() {
+        const request = ++requestNumber;
         const month = byId("demeritMonth").value;
         const year = byId("demeritYear").value;
         const status = byId("demeritStatus").value;
@@ -206,6 +210,7 @@
             }
 
             const data = await response.json();
+            if (request !== requestNumber) return;
 
             if (!Array.isArray(data)) {
                 throw new Error("Dữ liệu API không đúng định dạng.");
@@ -240,6 +245,7 @@
             showMessage("");
 
         } catch (error) {
+            if (request !== requestNumber) return;
             console.error("Lỗi tải điểm trừ:", error);
 
             resetSummary();
@@ -247,7 +253,7 @@
             showMessage(error.message, true);
 
         } finally {
-            button.disabled = false;
+            if (request === requestNumber) button.disabled = false;
         }
     }
 
@@ -258,6 +264,15 @@
 
         byId("filterDemeritsButton")
             .addEventListener("click", loadDemerits);
+        window.addEventListener("pbl4:driving-event-deleted", ({ detail }) => {
+            const row = Array.from(byId("demeritsTableBody").rows).find(item =>
+                item.dataset.violationSource === detail?.source && item.dataset.violationId === detail?.id);
+            row?.remove();
+            loadDemerits();
+        });
+        window.addEventListener("pageshow", event => {
+            if (event.persisted) loadDemerits();
+        });
 
         loadDemerits();
     }

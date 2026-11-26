@@ -98,9 +98,9 @@ async function api(path, options = {}) {
                 ? result.message || result.detail || result.title
                 : result;
 
-        throw new Error(
-            errorMessage || `HTTP ${response.status}`
-        );
+        const failure = new Error(errorMessage || `HTTP ${response.status}`);
+        failure.status = response.status;
+        throw failure;
     }
 
     return result;
@@ -316,89 +316,163 @@ async function loadVehicle() {
 // 8. TẢI LỊCH SỬ VI PHẠM
 // ======================================
 
-async function loadDemerits() {
-    const body = el("demerits-table-body");
+const demeritHistoryPath = `/api/drivers/${encodeURIComponent(driverId)}/demerits`;
+const demeritBody = el("demerits-table-body");
+const demeritPrevious = el("demerit-previous");
+const demeritNext = el("demerit-next");
+const demeritSummary = el("demerit-page-summary");
+const demeritStatus = el("demerit-action-status");
+const demeritTime = new Intl.DateTimeFormat("vi-VN", {
+    dateStyle: "short",
+    timeStyle: "short",
+    timeZone: "Asia/Ho_Chi_Minh"
+});
+
+let demeritPage = 1;
+let demeritRequest = 0;
+
+function demeritCell(row, content, centered = false) {
+    const cell = row.insertCell();
+    cell.className = centered
+        ? "data-table__td driver-history-card__center"
+        : "data-table__td";
+    cell.append(content);
+}
+
+function showDemeritMessage(message) {
+    demeritBody.replaceChildren();
+    const row = demeritBody.insertRow();
+    demeritCell(row, message, true);
+    row.cells[0].colSpan = 5;
+}
+
+function createDemeritRow(item) {
+    const row = document.createElement("tr");
+    const isAi = item.source === "ai";
+    row.dataset.violationSource = isAi ? "ai" : "demerit";
+    row.dataset.violationId = String(item.id);
+    const recordCode = isAi ? String(item.id).padStart(3, "0") : String(item.id);
+    const points = Math.abs(Number(item.pointsDeducted) || 0);
+    const badge = document.createElement("span");
+    badge.className = points ? "badge badge--warning" : "badge badge--info";
+    badge.textContent = points ? `-${points} điểm` : "0 điểm";
+
+    const recordedAt = item.violatedAt || "";
+    const timestamp = new Date(recordedAt);
+    const formattedTime = isAi && !Number.isNaN(timestamp.getTime())
+        ? demeritTime.format(timestamp)
+        : recordedAt.replace("T", " ").slice(0, 16);
+
+    const actions = document.createElement("div");
+    actions.className = "driver-history-card__actions";
+    if (item.imageUrl) {
+        const evidence = document.createElement("a");
+        evidence.href = item.imageUrl;
+        evidence.target = "_blank";
+        evidence.rel = "noopener";
+        evidence.className = "btn btn--secondary";
+        evidence.textContent = "Xem ảnh";
+        actions.append(evidence);
+    }
+
+    if (item.canDelete === true) {
+        addDemeritDeleteButton(actions, item, isAi, recordCode);
+    } else {
+        const locked = document.createElement("span");
+        locked.className = "badge badge--info";
+        locked.textContent = "Đã khóa xóa";
+        actions.append(locked);
+    }
+
+    demeritCell(row, `#DP-${recordCode}`);
+    demeritCell(row, item.violation);
+    demeritCell(row, badge, true);
+    demeritCell(row, formattedTime);
+    demeritCell(row, actions, true);
+    return row;
+}
+
+function addDemeritDeleteButton(actions, item, isAi, recordCode) {
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "btn btn--danger";
+    remove.textContent = "Xóa";
+    remove.setAttribute("aria-label", `Xóa biên bản #DP-${recordCode}`);
+    remove.addEventListener("click", async () => {
+        if (!confirm(`Bạn có chắc muốn xóa biên bản #DP-${recordCode}?`)) return;
+        remove.disabled = true;
+        try {
+            const id = encodeURIComponent(item.id);
+            const path = isAi ? `/api/ai-driving-events/${id}` : `${demeritHistoryPath}/${id}`;
+            await api(path, { method: "DELETE" });
+            demeritStatus.textContent = `Đã xóa biên bản #DP-${recordCode}.`;
+            window.pbl4NotifyViolationDeleted(isAi ? "ai" : "demerit", item.id);
+        } catch (error) {
+            if (error.status === 404 || error.status === 409) {
+                demeritStatus.textContent = error.status === 409
+                    ? error.message
+                    : "Không tìm thấy biên bản để xóa.";
+                await loadDemerits(demeritPage);
+                return;
+            }
+            console.error("Lỗi xóa vi phạm:", error);
+            demeritStatus.textContent = "Không xóa được biên bản. Hãy thử lại.";
+            remove.disabled = false;
+        }
+    });
+    actions.append(remove);
+}
+
+async function loadDemerits(page = 1) {
+    const request = ++demeritRequest;
+    demeritPrevious.disabled = true;
+    demeritNext.disabled = true;
+    demeritBody.setAttribute("aria-busy", "true");
 
     try {
-        const items = await api(
-            `/api/drivers/${encodeURIComponent(driverId)}/demerits`
-        );
+        const data = await api(`${demeritHistoryPath}?page=${page}`, {
+            cache: "no-store"
+        });
+        if (request !== demeritRequest) return;
+        if (!Array.isArray(data?.items)) throw new Error("Dữ liệu vi phạm không hợp lệ.");
 
-        if (!Array.isArray(items)) {
-            throw new Error("Dữ liệu vi phạm không hợp lệ");
+        const totalPoints = Math.abs(Number(data.totalPoints) || 0);
+        const points = totalPoints ? `-${totalPoints}` : "0";
+        setText("demerit-total-badge", `Lũy kế điểm trừ: ${points} điểm`);
+        demeritPage = data.page;
+        demeritSummary.textContent = data.totalCount
+            ? `Trang ${data.page}/${data.totalPages} · ${data.totalCount} vi phạm`
+            : "";
+
+        if (data.items.length) {
+            demeritBody.replaceChildren(...data.items.map(createDemeritRow));
+        } else {
+            showDemeritMessage("Chưa có vi phạm.");
         }
-
-        const total = items.reduce(
-            (sum, x) =>
-                sum + Math.abs(Number(x.pointsDeducted) || 0),
-            0
-        );
-
-        setText(
-            "demerit-total-badge",
-            `Lũy kế điểm trừ: -${total} Điểm`
-        );
-
-        if (!items.length) {
-            body.innerHTML = `
-                <tr>
-                    <td colspan="4"
-                        class="data-table__td"
-                        style="text-align:center;">
-                        Chưa có vi phạm
-                    </td>
-                </tr>
-            `;
-
-            return;
-        }
-
-        body.innerHTML = items.map(x => `
-            <tr>
-                <td class="data-table__td">
-                    #DP-${escapeHTML(x.id)}
-                </td>
-
-                <td class="data-table__td">
-                    ${escapeHTML(x.violation)}
-                </td>
-
-                <td class="data-table__td"
-                    style="text-align:center;">
-                    <span class="badge badge--warning">
-                        -${escapeHTML(
-                            Math.abs(Number(x.pointsDeducted) || 0)
-                        )} Điểm
-                    </span>
-                </td>
-
-                <td class="data-table__td">
-                    ${escapeHTML(
-                        String(x.violatedAt ?? "").replace("T", " ")
-                    )}
-                </td>
-            </tr>
-        `).join("");
-
+        demeritPrevious.disabled = data.page <= 1;
+        demeritNext.disabled = data.page >= data.totalPages;
     } catch (error) {
+        if (request !== demeritRequest) return;
         console.error("Lỗi lịch sử vi phạm:", error);
-
-        setText(
-            "demerit-total-badge",
-            "Không tải được điểm trừ"
-        );
-
-        body.innerHTML = `
-            <tr>
-                <td colspan="4"
-                    class="data-table__td"
-                    style="text-align:center;">
-                    Không tải được lịch sử vi phạm
-                </td>
-            </tr>
-        `;
+        setText("demerit-total-badge", "Không tải được điểm trừ");
+        demeritSummary.textContent = "";
+        showDemeritMessage("Không tải được lịch sử vi phạm.");
+    } finally {
+        if (request === demeritRequest) demeritBody.removeAttribute("aria-busy");
     }
 }
+
+demeritPrevious.addEventListener("click", () => loadDemerits(demeritPage - 1));
+demeritNext.addEventListener("click", () => loadDemerits(demeritPage + 1));
+window.addEventListener("pbl4:driving-event-deleted", ({ detail }) => {
+    const row = Array.from(demeritBody.rows).find(item =>
+        item.dataset.violationSource === detail?.source && item.dataset.violationId === detail?.id);
+    row?.remove();
+    loadDemerits(demeritPage);
+});
+window.addEventListener("pageshow", event => {
+    if (event.persisted) loadDemerits(demeritPage);
+});
 
 
 // ======================================

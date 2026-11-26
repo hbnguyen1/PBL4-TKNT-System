@@ -8,6 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddHttpClient("AiStream", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["AiStream:BaseUrl"] ?? "http://127.0.0.1:8001/");
+    client.Timeout = TimeSpan.FromSeconds(15);
+});
 
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -78,7 +83,7 @@ app.MapGet("/login/{page}.html", (string page) =>
 // ADMIN ROUTES
 // =====================================
 
-app.MapGet("/admin/{page}.html", (string page) =>
+app.MapGet("/admin/{page}.html", (string page, HttpContext context) =>
 {
     if (!ValidPage(page))
         return Results.NotFound();
@@ -89,6 +94,13 @@ app.MapGet("/admin/{page}.html", (string page) =>
         "admin",
         page + ".html"
     );
+
+    if (string.Equals(page, "demerits", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(page, "overview", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(page, "driver-detail", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(page, "vehicle-detail", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(page, "payroll", StringComparison.OrdinalIgnoreCase))
+        context.Response.Headers.CacheControl = "private, no-store";
 
     return HtmlFile(path);
 })
@@ -104,6 +116,8 @@ app.MapGet("/driver/{page}.html",
         return Results.NotFound();
 
     var path = Path.Combine(root, "views", "driver", page + ".html");
+    if (string.Equals(page, "driver-demerits", StringComparison.OrdinalIgnoreCase))
+        context.Response.Headers.CacheControl = "private, no-store";
 
     return HtmlFile(path);
 })
@@ -139,6 +153,7 @@ app.MapGet("/db-test", async () =>
 .RequireAuthorization(
     new AuthorizeAttribute { Roles = "Admin" }
 );
+
 
 app.Run();
 

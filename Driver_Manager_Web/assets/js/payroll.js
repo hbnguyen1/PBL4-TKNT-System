@@ -127,12 +127,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const routeAllowance = Number(item.routeAllowance ?? 0);
         const shiftBonus = Number(item.shiftBonus ?? 0);
         const deduction = Number(item.deduction ?? 0);
+        const disciplinaryPenalty = Number(item.disciplinaryPenalty ?? 0);
         const netSalary = Number(item.netSalary ?? 0);
 
         if (
             ![
                 baseSalary, routeAllowance, shiftBonus,
-                deduction, netSalary
+                deduction, disciplinaryPenalty, netSalary
             ].every(Number.isFinite)
         ) {
             throw new Error("Dữ liệu lương trả về không hợp lệ.");
@@ -165,6 +166,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 </td>
                 <td class="data-table__td payroll-table__currency payroll-table__currency--deduct">
                     -${formatMoney(deduction)}
+                    ${disciplinaryPenalty > 0
+                        ? `<span class="payroll-table__driver-id">Vi phạm: ${formatMoney(disciplinaryPenalty)}</span>`
+                        : "" }
                 </td>
                 <td class="data-table__td payroll-table__net">
                     ${formatMoney(netSalary)}

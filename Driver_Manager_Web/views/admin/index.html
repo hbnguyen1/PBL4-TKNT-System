@@ -34,7 +34,7 @@
 
       <!-- MENU -->
       <nav class="nav-menu">
-        <a href="overview.html" target="content-frame" class="nav-link">
+        <a href="overview.html?v=phone-review" target="content-frame" class="nav-link">
           <i class="fa-solid fa-chart-pie"></i><span>Tổng Quan</span>
         </a>
         <a href="drivers.html" target="content-frame" class="nav-link">
@@ -46,7 +46,7 @@
         <a href="finance.html" target="content-frame" class="nav-link">
           <i class="fa-solid fa-chart-column"></i><span>Thống Kê Tài Chính</span>
         </a>
-        <a href="demerits.html" target="content-frame" class="nav-link">
+        <a href="demerits.html?v=phone-review" target="content-frame" class="nav-link">
           <i class="fa-solid fa-triangle-exclamation"></i><span>Điểm Trừ Vi Phạm</span>
         </a>
         <a href="payroll.html" target="content-frame" class="nav-link">
@@ -171,7 +171,7 @@
 
         // Chỉ tải nội dung sau khi xác thực
         document.getElementById("content-frame")
-          .src = "/admin/overview.html";
+          .src = "/admin/overview.html?v=phone-review";
 
       } catch (error) {
 

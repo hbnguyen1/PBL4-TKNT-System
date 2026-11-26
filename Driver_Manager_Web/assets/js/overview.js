@@ -1,10 +1,8 @@
-document.addEventListener("DOMContentLoaded", function () {
-    fetchOverviewStats();
-});
+window.addEventListener("pageshow", fetchOverviewStats);
 
 async function fetchOverviewStats() {
     try {
-        const response = await fetch('/api/overview/stats');
+        const response = await fetch('/api/overview/stats', { cache: 'no-store' });
         
         if (!response.ok) {
             console.error("Lỗi gọi API Overview:", response.statusText);

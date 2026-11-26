@@ -52,7 +52,7 @@ public class DriverOverviewController : ControllerBase
             await using (var cmd = new MySqlCommand("""
                 SELECT COALESCE(SUM(points_deducted), 0)
                 FROM demeritpoints
-                WHERE driver_id=@id
+                WHERE driver_id=@id AND deleted_utc IS NULL
                 """, conn))
             {
                 cmd.Parameters.AddWithValue("@id", driverId);
@@ -64,15 +64,14 @@ public class DriverOverviewController : ControllerBase
             // 3. Lương tháng hiện tại
             decimal? salary = null;
 
-            await using (var cmd = new MySqlCommand("""
-                SELECT
-                    base_salary + route_allowance
-                    + bonus - penalty
-                FROM salarystructures
-                WHERE driver_id=@id
-                  AND period_month=MONTH(CURRENT_DATE())
-                  AND period_year=YEAR(CURRENT_DATE())
-                ORDER BY id DESC
+            await using (var cmd = new MySqlCommand($$"""
+                SELECT s.base_salary + s.route_allowance + s.bonus - {{PayrollDeductions.TotalPenalty}}
+                FROM salarystructures s
+                {{PayrollDeductions.PaymentJoin}}
+                WHERE s.driver_id = @id
+                  AND s.period_month = MONTH(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 7 HOUR))
+                  AND s.period_year = YEAR(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 7 HOUR))
+                ORDER BY s.id DESC
                 LIMIT 1
                 """, conn))
             {

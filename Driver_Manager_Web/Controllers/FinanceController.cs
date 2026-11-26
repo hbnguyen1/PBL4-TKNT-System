@@ -46,13 +46,13 @@ namespace Driver_Manager_Web.Controllers
                         "Loại thống kê phải là tháng hoặc năm.");
             }
 
-            const string sql = @"
+            var sql = $$"""
                 SELECT
                     COUNT(DISTINCT s.driver_id) AS driver_count,
                     COALESCE(SUM(s.base_salary), 0) AS base_salary,
                     COALESCE(SUM(s.route_allowance), 0) AS allowance,
                     COALESCE(SUM(s.bonus), 0) AS bonus,
-                    COALESCE(SUM(s.penalty), 0) AS penalty,
+                    COALESCE(SUM({{PayrollDeductions.TotalPenalty}}), 0) AS penalty,
 
                     COALESCE(SUM(
                         CASE
@@ -60,7 +60,7 @@ namespace Driver_Manager_Web.Controllers
                             THEN s.base_salary
                                + s.route_allowance
                                + s.bonus
-                               - s.penalty
+                               - {{PayrollDeductions.TotalPenalty}}
                             ELSE 0
                         END
                     ), 0) AS total_paid,
@@ -81,11 +81,10 @@ namespace Driver_Manager_Web.Controllers
                     ), 0) AS unpaid_records
 
                 FROM salarystructures s
-                LEFT JOIN salarypayments p
-                    ON p.salary_id = s.id
+                {{PayrollDeductions.PaymentJoin}}
                 WHERE s.period_year = @year
                   AND s.period_month BETWEEN @startMonth AND @endMonth;
-            ";
+            """;
 
             try
             {
@@ -156,29 +155,26 @@ namespace Driver_Manager_Web.Controllers
                 message = "Tháng không hợp lệ."
             });
 
-        const string sql = @"
+        var sql = $$"""
             SELECT
                 COALESCE(SUM(
                     CASE
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM salarypayments p
-                            WHERE p.salary_id = s.id
-                            AND p.payment_status = 'Đã thanh toán'
-                        )
+                        WHEN p.payment_status = 'Đã thanh toán'
                         THEN s.base_salary
                         + s.route_allowance
                         + s.bonus
-                        - s.penalty
+                        - {{PayrollDeductions.TotalPenalty}}
                         ELSE 0
                     END
                 ), 0) AS total_paid,
 
-                COALESCE(SUM(s.penalty), 0) AS total_penalty
+                COALESCE(SUM({{PayrollDeductions.TotalPenalty}}), 0) AS total_penalty
 
             FROM salarystructures s
+            {{PayrollDeductions.PaymentJoin}}
             WHERE s.period_year = @year
-            AND s.period_month = @month;";
+            AND s.period_month = @month;
+        """;
 
         try
         {
@@ -233,7 +229,7 @@ namespace Driver_Manager_Web.Controllers
                 message = "Năm không hợp lệ."
             });
 
-        const string sql = @"
+        var sql = $$"""
             SELECT
             s.period_month AS month,
             COALESCE(SUM(s.base_salary), 0) AS base_salary,
@@ -241,26 +237,23 @@ namespace Driver_Manager_Web.Controllers
 
             COALESCE(SUM(
                 CASE
-                    WHEN EXISTS (
-                        SELECT 1
-                        FROM salarypayments p
-                        WHERE p.salary_id = s.id
-                        AND p.payment_status = 'Đã thanh toán'
-                    )
+                    WHEN p.payment_status = 'Đã thanh toán'
                     THEN s.base_salary
                     + s.route_allowance
                     + s.bonus
-                    - s.penalty
+                    - {{PayrollDeductions.TotalPenalty}}
                     ELSE 0
                 END
             ), 0) AS total_paid,
 
-            COALESCE(SUM(s.penalty), 0) AS total_penalty
+            COALESCE(SUM({{PayrollDeductions.TotalPenalty}}), 0) AS total_penalty
 
         FROM salarystructures s
+        {{PayrollDeductions.PaymentJoin}}
         WHERE s.period_year = @year
         GROUP BY s.period_month
-        ORDER BY s.period_month";
+        ORDER BY s.period_month
+        """;
 
         try
         {

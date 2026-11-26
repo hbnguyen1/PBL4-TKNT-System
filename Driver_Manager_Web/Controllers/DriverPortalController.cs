@@ -149,53 +149,20 @@ public class DriverPortalController : ControllerBase
     [HttpGet("demerits")]
     public async Task<IActionResult> Demerits(
         [FromQuery] int? month,
-        [FromQuery] int? year)
+        [FromQuery] int? year,
+        CancellationToken ct)
     {
+        Response.Headers.CacheControl = "private, no-store";
         if (month is < 1 or > 12 || year is < 1 or > 9999)
-            return BadRequest(new {
-                message = "Tháng hoặc năm không hợp lệ."
-            });
+            return BadRequest(new { message = "Tháng hoặc năm không hợp lệ." });
 
-        if (string.IsNullOrWhiteSpace(DriverId))
+        var driverId = DriverId;
+        if (string.IsNullOrWhiteSpace(driverId))
             return Unauthorized();
 
         await using var conn = _db.GetConnection();
-        await conn.OpenAsync();
-
-        const string sql = """
-            SELECT id, violation, points_deducted, violated_at
-            FROM demeritpoints
-            WHERE driver_id = @id
-              AND (@month IS NULL OR MONTH(violated_at) = @month)
-              AND (@year IS NULL OR YEAR(violated_at) = @year)
-            ORDER BY violated_at DESC
-            """;
-
-        await using var cmd = new MySqlCommand(sql, conn);
-        cmd.Parameters.AddWithValue("@id", DriverId);
-        cmd.Parameters.AddWithValue(
-            "@month", (object?)month ?? DBNull.Value);
-        cmd.Parameters.AddWithValue(
-            "@year", (object?)year ?? DBNull.Value);
-
-        var records = new List<object>();
-
-        await using var r = await cmd.ExecuteReaderAsync();
-
-        while (await r.ReadAsync())
-        {
-            records.Add(new
-            {
-                id = Convert.ToInt32(r["id"]),
-                violation = r["violation"].ToString(),
-                pointsDeducted =
-                    Convert.ToInt32(r["points_deducted"]),
-                violatedAt =
-                    Convert.ToDateTime(r["violated_at"])
-            });
-        }
-
-        return Ok(records);
+        await conn.OpenAsync(ct);
+        return Ok(await DisciplinaryHistory.ReadAll(conn, driverId, month, year, ct));
     }
 
     // 4. XEM BẢNG LƯƠNG
@@ -216,19 +183,18 @@ public class DriverPortalController : ControllerBase
         await using var conn = _db.GetConnection();
         await conn.OpenAsync();
 
-        const string sql = """
+        var sql = $$"""
             SELECT s.id, s.period_month, s.period_year,
-                   s.base_salary, s.route_allowance,
-                   s.bonus, s.penalty,
-                   (s.base_salary + s.route_allowance
-                    + s.bonus - s.penalty) AS net_salary,
+                   s.base_salary, s.route_allowance, s.bonus,
+                   {{PayrollDeductions.TotalPenalty}} AS penalty,
+                   {{PayrollDeductions.DisciplinaryPenalty}} AS disciplinary_penalty,
+                   s.base_salary + s.route_allowance + s.bonus - {{PayrollDeductions.TotalPenalty}} AS net_salary,
                    p.payment_status, p.payment_time, p.note
             FROM salarystructures s
-            LEFT JOIN salarypayments p ON p.salary_id = s.id
+            {{PayrollDeductions.PaymentJoin}}
             WHERE s.driver_id = @id
               AND s.period_month = @month
               AND s.period_year = @year
-            ORDER BY p.id DESC
             LIMIT 1
             """;
 
@@ -253,6 +219,7 @@ public class DriverPortalController : ControllerBase
             allowance = Convert.ToDecimal(r["route_allowance"]),
             bonus = Convert.ToDecimal(r["bonus"]),
             penalty = Convert.ToDecimal(r["penalty"]),
+            disciplinaryPenalty = Convert.ToDecimal(r["disciplinary_penalty"]),
             netSalary = Convert.ToDecimal(r["net_salary"]),
             paymentStatus = r["payment_status"] == DBNull.Value
                 ? "Chưa thanh toán"

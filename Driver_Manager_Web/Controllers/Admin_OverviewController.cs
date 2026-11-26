@@ -13,6 +13,7 @@ namespace Driver_Manager_Web.Controllers
         [HttpGet("stats")]
         public async Task<IActionResult> GetStats()
         {
+            Response.Headers.CacheControl = "private, no-store";
             try
             {
                 await using var conn = _db.GetConnection();
@@ -42,15 +43,21 @@ namespace Driver_Manager_Web.Controllers
                 await readerVehicles.CloseAsync();
 
                 // 3. Quỹ lương kỳ này (Bảng SalaryStructures)
-                const string sqlPayroll = @"
-                    SELECT COALESCE(SUM(base_salary + route_allowance + bonus - penalty), 0)
-                    FROM salarystructures
-                    WHERE period_month = MONTH(CURRENT_DATE()) AND period_year = YEAR(CURRENT_DATE());";
+                var sqlPayroll = $$"""
+                    SELECT COALESCE(SUM(s.base_salary + s.route_allowance + s.bonus - {{PayrollDeductions.TotalPenalty}}), 0)
+                    FROM salarystructures s
+                    {{PayrollDeductions.PaymentJoin}}
+                    WHERE s.period_month = MONTH(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 7 HOUR))
+                      AND s.period_year = YEAR(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 7 HOUR));
+                    """;
                 await using var cmdPayroll = new MySqlCommand(sqlPayroll, conn);
                 var payrollAmount = Convert.ToDecimal(await cmdPayroll.ExecuteScalarAsync());
 
-                // 4. Vi phạm chờ duyệt (Bảng DemeritPoints)
-                const string sqlDemerits = "SELECT COUNT(*) FROM demeritpoints;";
+                // Count the same pending cases shown on the admin review page.
+                const string sqlDemerits = """
+                    SELECT COUNT(*) FROM ai_driving_events
+                    WHERE event_type IN ('phone_use', 'drowsy') AND review_status = 'pending' AND deleted_utc IS NULL
+                    """;
                 await using var cmdDemerits = new MySqlCommand(sqlDemerits, conn);
                 var pendingDemerits = Convert.ToInt32(await cmdDemerits.ExecuteScalarAsync());
 

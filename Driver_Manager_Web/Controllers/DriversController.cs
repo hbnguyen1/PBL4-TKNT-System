@@ -1,4 +1,7 @@
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using MySqlConnector;
 using Driver_Manager_Web.Models;
 using System.Text.Json;
@@ -724,39 +727,64 @@ public class DriversController : ControllerBase
             driver.IsSuspended);
     }
 
-    // GET /api/drivers/TX-001/demerits
+    // GET /api/drivers/TX-001/demerits?page=1
+    [Authorize(Roles = "Admin")]
     [HttpGet("{id}/demerits")]
-    public async Task<IActionResult> GetDemerits(string id)
+    public async Task<IActionResult> GetDemerits(string id, int? page, CancellationToken ct)
     {
-        var result = new List<object>();
-
+        Response.Headers.CacheControl = "private, no-store";
+        if (page is < 1) return BadRequest();
         await using var conn = _db.GetConnection();
-        await conn.OpenAsync();
+        await conn.OpenAsync(ct);
+        if (page is null)
+            return Ok(await DisciplinaryHistory.ReadAll(conn, id, null, null, ct, canManage: true));
 
-        const string sql = """
-            SELECT id, violation, points_deducted, violated_at
-            FROM demeritpoints
-            WHERE driver_id = @id
-            ORDER BY violated_at DESC, id DESC
-            """;
-
-        await using var cmd = new MySqlCommand(sql, conn);
-        cmd.Parameters.AddWithValue("@id", id);
-
-        await using var reader = await cmd.ExecuteReaderAsync();
-
-        while (await reader.ReadAsync())
+        var history = await DisciplinaryHistory.ReadPage(conn, id, page.Value, ct);
+        return Ok(new
         {
-            result.Add(new
-            {
-                id = reader.GetInt32("id"),
-                violation = reader.GetString("violation"),
-                pointsDeducted = reader.GetInt32("points_deducted"),
-                violatedAt = reader.GetDateTime("violated_at")
-                    .ToString("yyyy-MM-ddTHH:mm")
-            });
-        }
+            history.Items,
+            history.TotalPoints,
+            page = history.PageNumber,
+            history.TotalPages,
+            history.TotalCount
+        });
+    }
 
-        return Ok(result);
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("{driverId}/demerits/{id:int}")]
+    public async Task<IActionResult> DeleteDemerit(string driverId, int id, CancellationToken ct)
+    {
+        var actor = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(actor)) return Forbid();
+        await using var conn = _db.GetConnection();
+        await conn.OpenAsync(ct);
+        await using var tx = await conn.BeginTransactionAsync(IsolationLevel.ReadCommitted, ct);
+        if (!await ViolationPeriod.LockDriver(conn, tx, driverId, ct)) return NotFound();
+        const string lookup = """
+            SELECT violated_at, deleted_utc FROM demeritpoints WHERE driver_id = @driver AND id = @id
+            """;
+        await using var cmd = new MySqlCommand(lookup, conn, tx);
+        cmd.Parameters.AddWithValue("@driver", driverId);
+        cmd.Parameters.AddWithValue("@id", id);
+        DateTime occurredLocal;
+        await using (var reader = await cmd.ExecuteReaderAsync(ct))
+        {
+            if (!await reader.ReadAsync(ct)) return NotFound();
+            if (!reader.IsDBNull(1)) return NoContent();
+            occurredLocal = reader.GetDateTime(0);
+        }
+        if (!ViolationPeriod.IsCurrentMonth(occurredLocal) ||
+            await ViolationPeriod.IsPaid(conn, tx, driverId, occurredLocal, ct))
+            return Conflict(new { message = ViolationPeriod.LockedMessage });
+
+        cmd.CommandText = """
+            UPDATE demeritpoints
+            SET deleted_utc = UTC_TIMESTAMP(6), deleted_by = @actor
+            WHERE driver_id = @driver AND id = @id AND deleted_utc IS NULL
+            """;
+        cmd.Parameters.AddWithValue("@actor", actor);
+        if (await cmd.ExecuteNonQueryAsync(ct) != 1) return Conflict();
+        await tx.CommitAsync(ct);
+        return NoContent();
     }
 }

@@ -79,9 +79,6 @@ async function loadVehicle() {
     document.getElementById("inp-route").value =
       vehicle.route ?? "";
 
-    document.getElementById("inp-device").value =
-      vehicle.deviceInfo ?? "";
-
     await loadDrivers(vehicle.driverId);
 
     saveBtn.disabled = false;
@@ -209,7 +206,7 @@ form.addEventListener("submit", async function(event) {
     licensePlate: currentVehicle.licensePlate,
     vehicleName: document.getElementById("inp-name").value.trim(),
     route: document.getElementById("inp-route").value.trim() || null,
-    deviceInfo: document.getElementById("inp-device").value.trim() || null,
+    deviceInfo: currentVehicle.deviceInfo ?? null,
     driverId: newDriverId
   };
 
@@ -318,31 +315,157 @@ deleteBtn.addEventListener("click", async () => {
 
 
 // ======================================
-// 6. ESP32-CAM
+// 6. AI STREAM (qua ASP.NET proxy)
 // ======================================
-
 const camera = document.getElementById("esp32-camera");
 const camStatus = document.getElementById("cam-status");
-const camMessage = document.getElementById("cam-message");
+let cameraController = null;
+let cameraLoopRunning = false;
+let cameraPageActive = true;
+let currentImageUrl = null;
 
-// Địa chỉ stream camera
-const CAMERA_URL = "http://172.31.99.200:81/stream";
+function setCameraStatus(label, fps = null) {
+  if (camStatus.textContent.trim() !== label) camStatus.textContent = label;
+  camStatus.classList.toggle("vehicle-detail-iot-card__status--live", fps !== null);
+  camStatus.title = fps === null ? "" : `${fps.toFixed(1)} FPS`;
+}
 
-// Khi nhận được hình ảnh
-camera.onload = function() {
-  camStatus.textContent = "ĐANG NHẬN HÌNH";
-  camMessage.textContent = "Đã nhận dữ liệu hình ảnh";
-};
+function clearStream() {
+  camera.hidden = true;
+  camera.removeAttribute("src");
+  if (currentImageUrl) URL.revokeObjectURL(currentImageUrl);
+  currentImageUrl = null;
+}
 
-// Khi không kết nối được
-camera.onerror = function() {
-  camStatus.textContent = "KHÔNG KẾT NỐI";
-  camMessage.textContent =
-    "Không tải được stream. Kiểm tra Wi-Fi, IP và cổng 81.";
-};
+// StreamHub sends a Content-Length for each JPEG. Read complete parts so an
+// ended HTTP response is visible even if the last image decoded successfully.
+async function* readJpegs(body, boundary) {
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let pending = new Uint8Array();
+  let imageLength = null;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) return;
+      const bytes = new Uint8Array(pending.length + value.length);
+      bytes.set(pending);
+      bytes.set(value, pending.length);
+      pending = bytes;
+      while (pending.length) {
+        if (imageLength === null) {
+          const header = decoder.decode(pending.subarray(0, 2048));
+          const end = header.indexOf("\r\n\r\n");
+          if (end < 0) {
+            if (pending.length >= 2048) throw new Error("Invalid MJPEG header");
+            break;
+          }
+          const fields = header.slice(0, end).trimStart();
+          const length = fields.match(/^Content-Length:\s*(\d+)\s*$/im);
+          imageLength = length ? Number(length[1]) : 0;
+          if (!fields.startsWith(`--${boundary}\r\n`) || imageLength < 1 || imageLength > 2 * 1024 * 1024)
+            throw new Error("Invalid MJPEG part");
+          pending = pending.subarray(end + 4);
+        }
+        if (pending.length < imageLength) break;
+        yield pending.slice(0, imageLength);
+        pending = pending.subarray(imageLength);
+        imageLength = null;
+      }
+    }
+  } finally {
+    await reader.cancel().catch(() => {});
+    reader.releaseLock();
+  }
+}
 
-// Bắt đầu tải stream
-camera.src = CAMERA_URL;
+async function watchCamera() {
+  if (cameraLoopRunning || !cameraPageActive || document.hidden || !plate) return;
+  cameraLoopRunning = true;
+  const vehicleUrl = `/api/ai-stream/vehicles/${encodeURIComponent(plate)}`;
+  try {
+    while (cameraPageActive && !document.hidden) {
+      const controller = new AbortController();
+      cameraController = controller;
+      const options = { cache: "no-store", credentials: "same-origin", signal: controller.signal };
+      let timeout = setTimeout(() => controller.abort(), 4000);
+      let waiting;
+      let retryDelay = 1000;
+      const frameTimes = [];
+      function watchForFrame() {
+        clearTimeout(timeout);
+        clearTimeout(waiting);
+        waiting = setTimeout(() => {
+          clearStream();
+          setCameraStatus("ĐANG CHỜ HÌNH");
+        }, 2500);
+        timeout = setTimeout(() => controller.abort(), 9000);
+      }
+      try {
+        const response = await fetch(`${vehicleUrl}/status`, options);
+        if (response.status === 401 || response.status === 403) {
+          setCameraStatus("CẦN ĐĂNG NHẬP");
+          return;
+        }
+        const data = response.ok ? await response.json() : null;
+        if (!data?.ready || !data.sessionId) {
+          setCameraStatus("ĐANG CHỜ HÌNH");
+          retryDelay = 3000;
+        } else {
+          const stream = await fetch(`${vehicleUrl}/stream?sessionId=${encodeURIComponent(data.sessionId)}`, options);
+          const boundary = /boundary="?([^";\s]+)/i.exec(stream.headers.get("Content-Type") || "")?.[1];
+          if (!stream.ok || !stream.body || !boundary) throw new Error("AI stream unavailable");
+          watchForFrame();
+          for await (const jpeg of readJpegs(stream.body, boundary)) {
+            if (controller.signal.aborted) break;
+            const previousUrl = currentImageUrl;
+            currentImageUrl = URL.createObjectURL(new Blob([jpeg], { type: "image/jpeg" }));
+            camera.src = currentImageUrl;
+            if (previousUrl) URL.revokeObjectURL(previousUrl);
+            await camera.decode();
+            if (controller.signal.aborted) break;
+            camera.hidden = false;
+            watchForFrame();
+            const now = performance.now();
+            frameTimes.push(now);
+            while (frameTimes.length > 1 && now - frameTimes[0] > 5000) frameTimes.shift();
+            const elapsed = now - frameTimes[0];
+            const fps = elapsed > 0 ? (frameTimes.length - 1) * 1000 / elapsed : 0;
+            setCameraStatus("ĐANG NHẬN HÌNH", fps);
+          }
+          setCameraStatus("ĐANG KẾT NỐI LẠI");
+        }
+      } catch {
+        setCameraStatus("ĐANG KẾT NỐI LẠI");
+      } finally {
+        clearTimeout(timeout);
+        clearTimeout(waiting);
+        controller.abort();
+        cameraController = null;
+        clearStream();
+      }
+      if (cameraPageActive && !document.hidden)
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+    }
+  } finally {
+    cameraLoopRunning = false;
+  }
+}
+
+window.addEventListener("pagehide", () => {
+  cameraPageActive = false;
+  cameraController?.abort();
+  clearStream();
+});
+window.addEventListener("pageshow", () => {
+  cameraPageActive = true;
+  watchCamera();
+});
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) cameraController?.abort();
+  else watchCamera();
+});
+watchCamera();
 
 
 // ======================================
