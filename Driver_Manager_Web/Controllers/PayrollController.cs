@@ -268,6 +268,54 @@ namespace Driver_Manager_Web.Controllers
                 return Problem(title: "Lỗi cập nhật thanh toán", statusCode: 500);
             }
         }
+
+        // PUT: /api/payroll/deduction
+        // Cập nhật khoản khấu trừ phạt trực tiếp từ bảng lương
+        [HttpPut("deduction")]
+        public async Task<IActionResult> UpdateDeduction([FromBody] UpdateDeductionRequest request)
+        {
+            if (request == null || request.SalaryId <= 0 || request.Deduction < 0)
+            {
+                return BadRequest(new { message = "Số tiền khấu trừ phạt không hợp lệ." });
+            }
+
+            const string sql = @"
+                UPDATE salarystructures ss
+                LEFT JOIN salarypayments sp ON sp.salary_id = ss.id
+                SET ss.penalty = @deduction
+                WHERE ss.id = @salaryId
+                AND COALESCE(sp.payment_status, 'Chưa thanh toán') <> 'Đã thanh toán';
+            ";
+
+            try
+            {
+                var db = new Database();
+                await using var conn = db.GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@deduction", request.Deduction);
+                cmd.Parameters.AddWithValue("@salaryId", request.SalaryId);
+
+                int count = await cmd.ExecuteNonQueryAsync();
+                if (count == 0)
+                {
+                    return Conflict(new { message = "Không thể cập nhật (bản ghi không tồn tại hoặc lương đã thanh toán)." });
+                }
+
+                return Ok(new { success = true, message = "Đã cập nhật khấu trừ phạt." });
+            }
+            catch (Exception ex)
+            {
+                return Problem(title: "Lỗi cập nhật khấu trừ phạt", detail: ex.Message, statusCode: 500);
+            }
+        }
+    }
+
+    public class UpdateDeductionRequest
+    {
+        public int SalaryId { get; set; }
+        public decimal Deduction { get; set; }
     }
 
     public class PayrollPeriod
@@ -281,3 +329,4 @@ namespace Driver_Manager_Web.Controllers
         public string DriverId { get; set; } = "";
     }
 }
+

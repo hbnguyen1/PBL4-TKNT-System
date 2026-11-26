@@ -113,3 +113,36 @@
   width: 100%;
   overflow-x: auto;
 }
+
+.payroll-deduct-input {
+    width: 110px;
+    text-align: right;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 600;
+    color: var(--color-danger);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 4px 8px;
+    transition: all 0.15s ease;
+    cursor: pointer;
+}
+
+.payroll-deduct-input:hover:not(:disabled) {
+    background-color: #fff1f2;
+    border-color: #fecdd3;
+}
+
+.payroll-deduct-input:focus {
+    outline: none;
+    background-color: #ffffff;
+    border-color: var(--color-primary, #2563eb);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    cursor: text;
+}
+
+.payroll-deduct-input:disabled {
+    cursor: not-allowed;
+    opacity: 0.85;
+}
