@@ -75,52 +75,401 @@
 .overview-kpi__icon--indigo { background-color: #eef2ff; color: #4f46e5; }
 .overview-kpi__icon--rose { background-color: #fff1f2; color: var(--color-danger); }
 
-.overview-radar {
-  background-color: var(--brand-dark);
-  color: #ffffff;
+/* ==========================================================================
+   THỐNG KÊ ĐIỂM TRỪ VI PHẠM (thay thế Radar giám sát)
+   ========================================================================== */
+.vstats {
+  background-color: #ffffff;
+  border: 1px solid var(--brand-border);
   border-radius: 1rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   padding: 1.5rem;
-  border: 1px solid #1e293b;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
-.overview-radar__header {
+.vstats__header {
   display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
 }
 
-.overview-radar__title {
-  font-size: 1rem;
-  font-weight: 700;
+.vstats__title {
   display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--brand-dark);
+}
+
+.vstats__title-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  background-color: #fff1f2;
+  color: var(--color-danger);
+}
+
+.vstats__subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+.vstats__period {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
 }
 
-.overview-radar__dot {
-  width: 0.625rem;
-  height: 0.625rem;
-  border-radius: 9999px;
-  background-color: #34d399;
+.vstats__period .form-control { width: auto; min-width: 7.5rem; }
+.vstats__period input[name="year"] { min-width: 5.5rem; width: 5.5rem; }
+
+/* ---- Thẻ tổng hợp ---- */
+.vstats__summary {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 0.875rem;
+  margin-bottom: 1.25rem;
 }
 
-.overview-radar__subtitle {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  margin-top: 0.125rem;
-}
+@media (min-width: 640px) { .vstats__summary { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .vstats__summary { grid-template-columns: repeat(4, 1fr); } }
 
-.overview-radar__screen {
-  background-color: rgba(2, 6, 23, 0.8);
+.vstats__tile {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  background-color: var(--brand-surface);
+  border: 1px solid var(--brand-border);
   border-radius: 0.75rem;
-  border: 1px solid #1e293b;
-  height: 11rem;
+}
+
+.vstats__tile-icon {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.625rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #64748b;
+  font-size: 1rem;
+}
+
+.vstats__tile-icon--rose { background-color: #fff1f2; color: var(--color-danger); }
+.vstats__tile-icon--amber { background-color: #fffbeb; color: var(--color-warning); }
+.vstats__tile-icon--blue { background-color: #eff6ff; color: var(--color-primary); }
+.vstats__tile-icon--indigo { background-color: #eef2ff; color: #4f46e5; }
+
+.vstats__tile-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.vstats__tile-value {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--brand-dark);
+  margin-top: 0.125rem;
+}
+
+/* ---- Bố cục 2 cột ---- */
+.vstats__body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .vstats__body { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+}
+
+.vstats__panel {
+  border: 1px solid var(--brand-border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  min-width: 0;
+}
+
+.vstats__panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.875rem;
+}
+
+.vstats__panel-title {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--brand-dark);
+}
+
+.vstats__hint { font-size: 0.6875rem; color: var(--color-text-muted); }
+
+/* ---- Thanh theo loại vi phạm ---- */
+.vstats__types {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.vstats__type {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  background-color: #ffffff;
+  border: 1px solid var(--brand-border);
+  border-radius: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.vstats__type:hover { border-color: #fda4af; }
+
+.vstats__type--active {
+  border-color: var(--color-danger);
+  background-color: #fff1f2;
+}
+
+.vstats__type-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.vstats__type-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
   font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.vstats__type-name span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vstats__source {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.375rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+}
+
+.vstats__source--ai { background-color: #dbeafe; color: #1e40af; }
+.vstats__source--manual { background-color: #fef3c7; color: #92400e; }
+
+.vstats__type-points {
+  flex: none;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-danger);
+}
+
+.vstats__bar {
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: #f1f5f9;
+  overflow: hidden;
+}
+
+.vstats__bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #fb7185, #f43f5e);
+  transition: width 0.4s ease;
+}
+
+.vstats__type-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.375rem;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+/* ---- Bộ lọc tài xế ---- */
+.vstats__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.vstats__search {
+  position: relative;
+  flex: 1 1 11rem;
+}
+
+.vstats__search i {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.vstats__search .form-control { padding-left: 2.125rem; }
+.vstats__filters > .form-control { flex: 1 1 11rem; width: auto; }
+
+/* ---- Danh sách tài xế ---- */
+.vstats__drivers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.vstats__driver {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--brand-border);
+  border-radius: 0.625rem;
+  background-color: #ffffff;
+}
+
+.vstats__rank {
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.vstats__rank--1 { background-color: #fef3c7; color: #92400e; }
+.vstats__rank--2 { background-color: #e2e8f0; color: #334155; }
+.vstats__rank--3 { background-color: #ffedd5; color: #9a3412; }
+
+.vstats__driver-info { flex: 1 1 auto; min-width: 0; }
+
+.vstats__driver-name {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--brand-dark);
+}
+
+.vstats__driver-id {
+  margin-left: 0.375rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
   font-family: monospace;
+  color: var(--color-text-muted);
+}
+
+.vstats__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.375rem;
+}
+
+.vstats__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  border: 1px solid var(--brand-border);
+  background-color: var(--brand-surface);
+  color: var(--color-text-main);
+}
+
+.vstats__chip b { color: var(--color-danger); font-weight: 800; }
+
+.vstats__driver-score { flex: none; text-align: right; }
+
+.vstats__driver-points {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  background-color: #ffe4e6;
+  color: #9f1239;
+}
+
+.vstats__driver-fine {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+/* ---- Trạng thái rỗng / lỗi / skeleton ---- */
+.vstats__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.vstats__empty i { font-size: 1.5rem; color: #cbd5e1; }
+.vstats__empty--error i { color: var(--color-danger); }
+
+.vstats__skeleton {
+  height: 3.5rem;
+  border-radius: 0.625rem;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 37%, #f1f5f9 63%);
+  background-size: 400% 100%;
+  animation: vstats-shimmer 1.4s ease infinite;
+}
+
+@keyframes vstats-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+.vstats__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+.vstats__footer:has(#vs-status:empty):has(#vs-more[hidden]) { display: none; }
+
+#vs-more[hidden] {
+  display: none !important;
 }

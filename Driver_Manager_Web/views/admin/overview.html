@@ -6,7 +6,7 @@
   <title>Tổng Quan - DriverWebDb</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../../assets/base.css">
-  <link rel="stylesheet" href="../../assets/pages/overview.css">
+  <link rel="stylesheet" href="../../assets/pages/overview.css?v=vstats">
 </head>
 <body class="overview-page">
 
@@ -63,22 +63,121 @@
     </a>
   </section>
 
-  <!-- Khung Radar Giám Sát IoT -->
-  <section class="overview-radar">
-    <div class="overview-radar__header">
+  <!-- Thống Kê Điểm Trừ Vi Phạm (Thay thế Radar giám sát) -->
+  <section class="vstats" aria-label="Thống kê điểm trừ vi phạm">
+    <div class="vstats__header">
       <div>
-        <h3 class="overview-radar__title">
-          <span class="overview-radar__dot"></span> Radar Giám Sát Hành Trình Trực Tuyến
+        <h3 class="vstats__title">
+          <span class="vstats__title-icon"><i class="fa-solid fa-chart-column"></i></span>
+          Thống Kê Điểm Trừ Vi Phạm
         </h3>
-        <p class="overview-radar__subtitle">Kết nối thời gian thực qua Gateway ESP32-CAM và GPS NEO-6M</p>
+        <p class="vstats__subtitle">Tổng hợp biên bản thủ công & sự kiện AI đã duyệt (tự động đồng bộ tính lương)</p>
       </div>
-      <a href="vehicles.html" class="btn btn--primary">Quản lý đội xe</a>
+
+      <form id="vs-period-form" class="vstats__period">
+        <select id="vs-month" name="month" class="form-control" aria-label="Chọn tháng">
+          <option value="0">Cả năm</option>
+          <option value="1">Tháng 1</option>
+          <option value="2">Tháng 2</option>
+          <option value="3">Tháng 3</option>
+          <option value="4">Tháng 4</option>
+          <option value="5">Tháng 5</option>
+          <option value="6">Tháng 6</option>
+          <option value="7">Tháng 7</option>
+          <option value="8">Tháng 8</option>
+          <option value="9">Tháng 9</option>
+          <option value="10">Tháng 10</option>
+          <option value="11">Tháng 11</option>
+          <option value="12">Tháng 12</option>
+        </select>
+        <input id="vs-year" name="year" type="number" min="2000" max="2999" class="form-control" aria-label="Năm">
+        <button type="button" id="vs-reset" class="btn btn--secondary" title="Đặt lại bộ lọc">
+          <i class="fa-solid fa-rotate-left"></i> Đặt lại
+        </button>
+      </form>
     </div>
-    <div class="overview-radar__screen">
-      [IoT Map Simulation: 32 xe đang vận hành trên tuyến Quốc lộ 1A và Đà Nẵng - Huế]
+
+    <!-- 4 Thẻ tổng hợp nhanh -->
+    <div class="vstats__summary">
+      <div class="vstats__tile">
+        <div class="vstats__tile-icon vstats__tile-icon--rose">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div>
+          <span class="vstats__tile-label">Tổng Điểm Trừ</span>
+          <strong id="vs-total-points" class="vstats__tile-value">0 điểm</strong>
+        </div>
+      </div>
+
+      <div class="vstats__tile">
+        <div class="vstats__tile-icon vstats__tile-icon--amber">
+          <i class="fa-solid fa-file-circle-exclamation"></i>
+        </div>
+        <div>
+          <span class="vstats__tile-label">Số Lượt Vi Phạm</span>
+          <strong id="vs-total-cases" class="vstats__tile-value">0 lượt</strong>
+        </div>
+      </div>
+
+      <div class="vstats__tile">
+        <div class="vstats__tile-icon vstats__tile-icon--blue">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <div>
+          <span class="vstats__tile-label">Tài Xế Bị Trừ</span>
+          <strong id="vs-total-drivers" class="vstats__tile-value">0 người</strong>
+        </div>
+      </div>
+
+      <div class="vstats__tile">
+        <div class="vstats__tile-icon vstats__tile-icon--indigo">
+          <i class="fa-solid fa-coins"></i>
+        </div>
+        <div>
+          <span class="vstats__tile-label">Tổng Tiền Phạt Quy Đổi</span>
+          <strong id="vs-total-fine" class="vstats__tile-value">0 ₫</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nội dung 2 cột: Trái (Loại vi phạm) - Phải (Chi tiết theo tài xế) -->
+    <div class="vstats__body">
+      <!-- Cột trái: Phân bổ theo loại vi phạm -->
+      <div class="vstats__panel">
+        <div class="vstats__panel-head">
+          <h4 class="vstats__panel-title">Phân Bổ Theo Loại Vi Phạm</h4>
+          <span class="vstats__hint">Nhấn vào lỗi để lọc nhanh</span>
+        </div>
+        <div id="vs-types" class="vstats__types"></div>
+      </div>
+
+      <!-- Cột phải: Xếp hạng & Bộ lọc tài xế -->
+      <div class="vstats__panel">
+        <div class="vstats__panel-head">
+          <h4 class="vstats__panel-title">Chi Tiết Điểm Trừ Theo Tài Xế</h4>
+          <span id="vs-driver-count" class="vstats__hint"></span>
+        </div>
+
+        <div class="vstats__filters">
+          <div class="vstats__search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="vs-search" type="search" class="form-control" placeholder="Tìm theo tên hoặc mã tài xế...">
+          </div>
+          <select id="vs-type-filter" class="form-control" aria-label="Lọc theo loại vi phạm">
+            <option value="">Tất cả loại vi phạm</option>
+          </select>
+        </div>
+
+        <div id="vs-drivers" class="vstats__drivers"></div>
+
+        <div class="vstats__footer">
+          <span id="vs-status"></span>
+          <button type="button" id="vs-more" class="btn btn--secondary btn--sm" hidden>Xem thêm</button>
+        </div>
+      </div>
     </div>
   </section>
-  <script src="/assets/js/overview.js?v=phone-review"></script>
 
+  <script src="/assets/js/overview.js?v=vstats"></script>
 </body>
 </html>
