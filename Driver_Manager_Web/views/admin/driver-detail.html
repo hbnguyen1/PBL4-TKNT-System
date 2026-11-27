@@ -8,7 +8,8 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../../assets/base.css">
-  <link rel="stylesheet" href="../../assets/pages/driver-detail.css">
+  <link rel="stylesheet" href="../../assets/pages/driver-detail.css?v=violation-history">
+  <link rel="stylesheet" href="/assets/pages/ai-driving-events.css?v=evidence-table">
 </head>
 
 <body class="driver-detail-page">
@@ -207,59 +208,77 @@
       </section>
 
       <!-- Khối 3: Lịch sử vi phạm -->
-      <section class="driver-history-card">
-
+      <section class="driver-history-card" aria-labelledby="demerit-title">
         <div class="driver-history-card__header">
-          <h3 class="driver-history-card__title">
-            <i class="fa-solid fa-triangle-exclamation"
+          <h3 id="demerit-title" class="driver-history-card__title">
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"
                style="color:var(--color-danger);"></i>
-            Lịch Sử Vi Phạm Kỷ Luật (DemeritPoints)
+            Lịch sử vi phạm kỷ luật
           </h3>
-
-          <span id="demerit-total-badge"
-                class="driver-history-card__badge">
+          <span id="demerit-total-badge" class="driver-history-card__badge">
             Lũy kế điểm trừ: Đang tải...
           </span>
         </div>
 
-        <div class="table-wrapper">
+        <div class="driver-history-card__table">
           <table class="data-table">
-
             <thead class="data-table__head">
               <tr>
-                <th class="data-table__th">
-                  Mã Biên Bản
-                </th>
-                <th class="data-table__th">
-                  Nội Dung Lỗi Vi Phạm Quy Chuẩn
-                </th>
-                <th class="data-table__th"
-                    style="text-align:center;">
-                  Điểm Trừ
-                </th>
-                <th class="data-table__th">
-                  Thời Gian Ghi Nhận
-                </th>
+                <th class="data-table__th" scope="col">Mã biên bản</th>
+                <th class="data-table__th" scope="col">Nội dung vi phạm</th>
+                <th class="data-table__th driver-history-card__center" scope="col">Điểm trừ</th>
+                <th class="data-table__th" scope="col">Thời gian ghi nhận</th>
+                <th class="data-table__th driver-history-card__center" scope="col">Thao tác</th>
               </tr>
             </thead>
-
-            <tbody id="demerits-table-body"
-                   class="data-table__body">
+            <tbody id="demerits-table-body" class="data-table__body">
               <tr>
-                <td colspan="4"
-                    class="data-table__td"
-                    style="text-align:center;">
+                <td colspan="5" class="data-table__td driver-history-card__center">
                   Đang tải lịch sử vi phạm...
                 </td>
               </tr>
             </tbody>
-
           </table>
         </div>
 
+        <div class="driver-history-card__footer">
+          <span id="demerit-page-summary" aria-live="polite"></span>
+          <nav aria-label="Phân trang lịch sử vi phạm" class="driver-history-card__actions">
+            <button type="button" class="btn btn--secondary" id="demerit-previous" disabled>Trang trước</button>
+            <button type="button" class="btn btn--secondary" id="demerit-next" disabled>Trang sau</button>
+          </nav>
+        </div>
+        <p id="demerit-action-status" class="driver-history-card__message" role="status"></p>
       </section>
 
     </form>
+
+    <section class="data-card ai-driving-events" data-ai-driving-events="admin" aria-labelledby="ai-driving-events-heading">
+      <header class="ai-driving-events__header">
+        <h2 id="ai-driving-events-heading"><i class="fa-solid fa-camera" aria-hidden="true"></i> Sự kiện cần xem lại</h2>
+      </header>
+      <div class="ai-driving-events__scroll">
+        <table class="data-table" aria-labelledby="ai-driving-events-heading">
+          <thead class="data-table__head">
+            <tr>
+              <th class="data-table__th" scope="col">Mã sự kiện</th>
+              <th class="data-table__th" scope="col">Nội dung</th>
+              <th class="data-table__th" scope="col">Biển số xe</th>
+              <th class="data-table__th" scope="col">Thời gian</th>
+              <th class="data-table__th" scope="col">Trạng thái</th>
+              <th class="data-table__th" scope="col">Điểm trừ</th>
+              <th class="data-table__th" scope="col">Ảnh bằng chứng</th>
+              <th class="data-table__th" scope="col">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody class="data-table__body"></tbody>
+        </table>
+      </div>
+      <footer class="ai-driving-events__footer">
+        <p role="status"></p>
+        <button class="btn btn--secondary" type="button" data-events-more hidden>Xem thêm</button>
+      </footer>
+    </section>
 
     <!-- Footer Nút Thao Tác -->
     <footer class="driver-detail-card__footer">
@@ -284,7 +303,9 @@
     </footer>
 
   </div>
-  <script src="/assets/js/driver-detail.js"></script>
+  <script src="/assets/js/violation-deletion-sync.js?v=violation-sync"></script>
+  <script src="/assets/js/driver-detail.js?v=violation-sync"></script>
+  <script src="/assets/js/ai-driving-events.js?v=violation-sync"></script>
 
 </body>
 </html>

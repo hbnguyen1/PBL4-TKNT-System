@@ -8,7 +8,7 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../../assets/base.css">
-  <link rel="stylesheet" href="../../assets/pages/vehicle-detail.css">
+  <link rel="stylesheet" href="../../assets/pages/vehicle-detail.css?v=esp32-only">
 </head>
 
 <body class="vehicle-detail-page">
@@ -33,8 +33,7 @@
           </h1>
 
           <p class="vehicle-detail-card__subtitle">
-            Cấu hình tuyến hành trình, phân bổ tài xế và
-            kiểm tra kết nối thiết bị phần cứng IoT
+            Cấu hình tuyến hành trình, phân bổ tài xế và xem camera trực tiếp
           </p>
         </div>
       </div>
@@ -133,132 +132,24 @@
         </div>
       </section>
 
-      <!-- PHẦN 3: IOT -->
-      <section class="vehicle-detail-form__section">
+      <!-- PHẦN 3: CAMERA -->
+      <section class="vehicle-detail-form__section" aria-labelledby="camera-title">
         <div class="vehicle-detail-form__section-header">
-          <i class="fa-solid fa-microchip vehicle-detail-form__section-icon"></i>
-          <h2 class="vehicle-detail-form__section-title">
-            3. Cấu Hình Chuỗi Thông Số IoT Phần Cứng
-          </h2>
+          <i class="fa-solid fa-video vehicle-detail-form__section-icon" aria-hidden="true"></i>
+          <h2 id="camera-title" class="vehicle-detail-form__section-title">3. ESP32-CAM Trực Tiếp</h2>
         </div>
 
-        <div class="vehicle-detail-form__group">
-          <label class="vehicle-detail-form__label">
-            Thông Số Cấu Hình ESP32 & GPS (device_info)
-          </label>
-
-          <input
-            type="text"
-            id="inp-device"
-            maxlength="150"
-            class="vehicle-detail-form__control"
-            style="font-family:monospace;"
-          >
-
-          <span class="vehicle-detail-form__hint">
-            Thông tin thiết bị gắn trên xe.
-            Trường này được lưu vào MySQL.
-          </span>
+        <div class="vehicle-detail-iot-card">
+          <div class="vehicle-detail-iot-card__head">
+            <span id="cam-status" class="vehicle-detail-iot-card__status" role="status">
+              ĐANG KẾT NỐI
+            </span>
+          </div>
+          <div class="vehicle-detail-iot-card__viewport">
+            <img id="esp32-camera" alt="Video từ ESP32-CAM" hidden>
+          </div>
         </div>
       </section>
-
-      <!-- PHẦN 4: CAMERA VÀ GPS -->
-      <section class="vehicle-detail-form__section">
-        <div class="vehicle-detail-form__section-header">
-          <i class="fa-solid fa-satellite-dish vehicle-detail-form__section-icon"></i>
-          <h2 class="vehicle-detail-form__section-title">
-            4. Khung Tín Hiệu Kết Nối Trực Tiếp
-          </h2>
-        </div>
-
-        <div class="vehicle-detail-iot-grid">
-
-          <!-- ESP32-CAM -->
-          <div class="vehicle-detail-iot-card">
-            <div>
-              <div class="vehicle-detail-iot-card__head">
-                <span class="vehicle-detail-iot-card__title">
-                  <i class="fa-solid fa-video"></i>
-                  ESP32-CAM Stream
-                </span>
-
-                <span
-                  id="cam-status"
-                  class="vehicle-detail-iot-card__status"
-                >
-                  ĐANG KẾT NỐI
-                </span>
-              </div>
-
-              <div class="vehicle-detail-iot-card__viewport">
-                <img
-                  id="esp32-camera"
-                  alt="ESP32-CAM"
-                  style="width:100%;height:240px;object-fit:contain;"
-                >
-              </div>
-            </div>
-
-            <div style="font-size:12px;margin-top:10px;">
-              <span>ESP32-CAM: 10.10.48.203</span>
-              <span id="cam-message">
-                Đang tải camera...
-              </span>
-            </div>
-          </div>
-
-          <!-- GPS -->
-          <div class="vehicle-detail-iot-card">
-            <div>
-              <div class="vehicle-detail-iot-card__head">
-                <span class="vehicle-detail-iot-card__title">
-                  <i class="fa-solid fa-location-crosshairs"
-                     style="color:#60a5fa;"></i>
-                  GPS NEO-6M
-                </span>
-
-                <span
-                  class="vehicle-detail-iot-card__status"
-                  style="background:#334155;color:#cbd5e1;"
-                >
-                  CHƯA CÓ DỮ LIỆU
-                </span>
-              </div>
-
-              <div class="vehicle-detail-iot-card__gps-box">
-                <div style="display:flex;flex-direction:column;gap:0.25rem;">
-                  <p style="margin:0;color:#94a3b8;">
-                    Tọa độ:
-                    <span style="color:#fff;font-weight:700;">
-                      Chưa cập nhật
-                    </span>
-                  </p>
-
-                  <p style="margin:0;color:#94a3b8;">
-                    Vị trí:
-                    <span style="color:#fff;">
-                      Chưa cập nhật
-                    </span>
-                  </p>
-                </div>
-
-                <p style="margin:0;color:#94a3b8;padding-top:0.375rem;border-top:1px solid #0f172a;">
-                  Vận tốc:
-                  <span style="color:#fff;font-weight:700;">
-                    Chưa cập nhật
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            <div style="font-size:0.625rem;color:#94a3b8;margin-top:0.5rem;">
-              Module: GPS-NEO6M-01
-            </div>
-          </div>
-
-        </div>
-      </section>
-
     </form>
 
     <!-- THÔNG BÁO -->
@@ -294,6 +185,6 @@
     </footer>
 
   </div>
-  <script src="/assets/js/vehicle-detail.js"></script>
+  <script src="/assets/js/vehicle-detail.js?v=esp32-only"></script>
 </body>
 </html>

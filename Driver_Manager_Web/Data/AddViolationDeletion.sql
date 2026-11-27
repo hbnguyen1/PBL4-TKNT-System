@@ -1,0 +1,7 @@
+ALTER TABLE ai_driving_events
+    ADD COLUMN IF NOT EXISTS deleted_utc DATETIME(6) NULL,
+    ADD COLUMN IF NOT EXISTS deleted_by VARCHAR(20) NULL;
+
+ALTER TABLE demeritpoints
+    ADD COLUMN IF NOT EXISTS deleted_utc DATETIME(6) NULL,
+    ADD COLUMN IF NOT EXISTS deleted_by VARCHAR(20) NULL;

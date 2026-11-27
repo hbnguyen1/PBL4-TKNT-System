@@ -122,17 +122,25 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
+    function formatNumberInput(value) {
+        return new Intl.NumberFormat("vi-VN", {
+            maximumFractionDigits: 0
+        }).format(Number(value ?? 0));
+    }
+
     function renderRow(item) {
+        const salaryId = Number(item.salaryId ?? 0);
         const baseSalary = Number(item.baseSalary ?? 0);
         const routeAllowance = Number(item.routeAllowance ?? 0);
         const shiftBonus = Number(item.shiftBonus ?? 0);
-        const deduction = Number(item.deduction ?? 0);
+        const deduction = Number(item.deduction ?? 0); // Mặc định là 0 nếu chưa có
+        const disciplinaryPenalty = Number(item.disciplinaryPenalty ?? 0);
         const netSalary = Number(item.netSalary ?? 0);
 
         if (
             ![
                 baseSalary, routeAllowance, shiftBonus,
-                deduction, netSalary
+                deduction, disciplinaryPenalty, netSalary
             ].every(Number.isFinite)
         ) {
             throw new Error("Dữ liệu lương trả về không hợp lệ.");
@@ -140,9 +148,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const driverId = item.driverId ?? "";
         const driverName = item.driverName || driverId;
+        const paid = isPaid(item.status);
 
         return `
-            <tr>
+            <tr data-salary-id="${salaryId}"
+                data-base="${baseSalary}"
+                data-allowance="${routeAllowance}"
+                data-bonus="${shiftBonus}">
                 <td class="data-table__td">
                     <a
                         href="/driver-detail.html?id=${encodeURIComponent(driverId)}"
@@ -164,8 +176,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     +${formatMoney(shiftBonus)}
                 </td>
                 <td class="data-table__td payroll-table__currency payroll-table__currency--deduct">
-                    -${formatMoney(deduction)}
+                    <input
+                        type="text"
+                        inputmode="numeric"
+                        class="payroll-deduct-input"
+                        value="${formatNumberInput(deduction)}"
+                        data-old-value="${deduction}"
+                        ${paid ? "disabled" : ""}
+                    />
+                    ${disciplinaryPenalty > 0
+                        ? `<span class="payroll-table__driver-id">Vi phạm: ${formatMoney(disciplinaryPenalty)}</span>`
+                        : "" }
                 </td>
+
                 <td class="data-table__td payroll-table__net">
                     ${formatMoney(netSalary)}
                 </td>
@@ -175,6 +198,92 @@ document.addEventListener("DOMContentLoaded", () => {
             </tr>
         `;
     }
+
+    // =========================================================================
+    // XỬ LÝ NHẬP TRỰC TIẾP CỘT KHẤU TRỪ PHẠT (Mặc định = 0)
+    // =========================================================================
+
+    // 1. Khi nhấn vào ô input: Bỏ dấu chấm/phẩy để dễ sửa, nếu đang là 0 thì làm trống
+    tableBody.addEventListener("focusin", event => {
+        const input = event.target.closest(".payroll-deduct-input");
+        if (!input || input.disabled) return;
+
+        const currentVal = input.value.replace(/\D/g, "") || "0";
+        input.dataset.oldValue = currentVal;
+        input.value = currentVal === "0" ? "" : currentVal;
+        input.select();
+    });
+
+    // 2. Xử lý phím Enter (lưu) và Escape (hủy)
+    tableBody.addEventListener("keydown", event => {
+        const input = event.target.closest(".payroll-deduct-input");
+        if (!input || input.disabled) return;
+
+        if (event.key === "Enter") {
+            event.preventDefault();
+            input.blur(); // Kích hoạt sự kiện focusout bên dưới
+        } else if (event.key === "Escape") {
+            input.value = input.dataset.oldValue || "0";
+            input.blur();
+        }
+    });
+
+    // 3. Khi nhấn ra ngoài (focusout): Tính toán lại Thực Lĩnh và gọi API lưu
+    tableBody.addEventListener("focusout", async event => {
+        const input = event.target.closest(".payroll-deduct-input");
+        if (!input || input.disabled) return;
+
+        // Nếu người dùng không nhập gì -> tự động về 0
+        const rawPenalty = parseInt(input.value.replace(/\D/g, ""), 10) || 0;
+        const oldPenalty = parseInt(input.dataset.oldValue || "0", 10);
+
+        // Định dạng lại hiển thị trong ô (nếu 0 thì hiện đúng số "0")
+        input.value = formatNumberInput(rawPenalty);
+
+        // Nếu không có thay đổi (ví dụ đang 0, nhấn vào rồi nhấn ra vẫn là 0) -> dừng lại
+        if (rawPenalty === oldPenalty) return;
+
+        const row = input.closest("tr");
+        const salaryId = Number(row.dataset.salaryId);
+        const base = Number(row.dataset.base) || 0;
+        const allowance = Number(row.dataset.allowance) || 0;
+        const bonus = Number(row.dataset.bonus) || 0;
+
+        // Công thức: Thực lĩnh = Cơ bản + Phụ cấp + Thưởng - Phạt
+        const newNetSalary = Math.max(0, base + allowance + bonus - rawPenalty);
+
+        const netCell = row.querySelector(".payroll-table__net");
+        if (netCell) {
+            netCell.textContent = formatMoney(newNetSalary);
+        }
+
+        input.disabled = true;
+
+        try {
+            await apiRequest(`${API}/deduction`, {
+                method: "PUT",
+                body: JSON.stringify({
+                    salaryId,
+                    deduction: rawPenalty
+                })
+            });
+
+            input.dataset.oldValue = String(rawPenalty);
+        } catch (error) {
+            console.error("Lỗi cập nhật khấu trừ phạt:", error);
+            alert(`Không thể lưu tiền phạt: ${error.message}`);
+
+            // Hoàn tác lại giá trị cũ trên giao diện nếu lưu thất bại
+            input.value = formatNumberInput(oldPenalty);
+            if (netCell) {
+                netCell.textContent = formatMoney(
+                    Math.max(0, base + allowance + bonus - oldPenalty)
+                );
+            }
+        } finally {
+            input.disabled = false;
+        }
+    });
 
     // Đọc bảng lương thật từ PayrollController
     async function loadPayroll() {

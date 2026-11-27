@@ -1,0 +1,86 @@
+.ai-driving-events {
+    margin-top: 1.5rem;
+}
+
+.driver-detail-page .ai-driving-events {
+    margin: 0 1.5rem 1.5rem;
+}
+
+.ai-driving-events__header {
+    padding: 1rem;
+    background-color: var(--brand-surface);
+    border-bottom: 1px solid var(--brand-border);
+}
+
+.ai-driving-events__header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.ai-driving-events__header i {
+    color: var(--color-primary);
+}
+
+.ai-driving-events__scroll {
+    overflow-x: auto;
+}
+
+.ai-driving-events .data-table {
+    min-width: 40rem;
+}
+
+.ai-driving-events[data-ai-driving-events="admin"] .data-table {
+    min-width: 45rem;
+}
+
+.ai-driving-events .data-table__td {
+    vertical-align: middle;
+}
+
+.ai-driving-events__reference {
+    font-family: monospace;
+    overflow-wrap: anywhere;
+}
+
+.ai-driving-events time {
+    white-space: nowrap;
+}
+
+.ai-driving-events__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+}
+
+.ai-driving-events .btn {
+    padding: 0.375rem 0.625rem;
+    white-space: nowrap;
+}
+
+.ai-driving-events .badge {
+    white-space: nowrap;
+}
+
+.ai-driving-events__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--brand-border);
+    color: var(--color-text-main);
+    font-size: 0.75rem;
+}
+
+.ai-driving-events__footer:has([role="status"]:empty):has(button[hidden]) {
+    display: none;
+}
+
+.ai-driving-events [hidden] {
+    display: none;
+}

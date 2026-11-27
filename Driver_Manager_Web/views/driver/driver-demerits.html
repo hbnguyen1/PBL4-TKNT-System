@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="../../assets/base.css">
     <link rel="stylesheet" href="../../assets/pages/driver-demerits.css">
+    <link rel="stylesheet" href="/assets/pages/ai-driving-events.css?v=evidence-table">
 </head>
 
 <body class="driver-demerits-page">
@@ -171,7 +172,8 @@
                 <h3>Lưu ý</h3>
                 <p>
                     Thông tin điểm trừ được ghi nhận theo các lần vi phạm đã được
-                    hệ thống cập nhật. Nếu phát hiện thông tin chưa chính xác,
+                    hệ thống cập nhật. Mỗi điểm tương ứng 100.000 đồng trừ vào lương.
+                    Nếu phát hiện thông tin chưa chính xác,
                     vui lòng liên hệ quản trị viên để được kiểm tra.
                 </p>
             </div>
@@ -179,7 +181,34 @@
 
         <p class="driver-demerits-message" id="demeritsMessage"></p>
 
+        <section class="data-card ai-driving-events" data-ai-driving-events="driver" aria-labelledby="ai-driving-events-heading">
+          <header class="ai-driving-events__header">
+            <h2 id="ai-driving-events-heading"><i class="fa-solid fa-camera" aria-hidden="true"></i> Sự kiện cần xem lại</h2>
+          </header>
+          <div class="ai-driving-events__scroll">
+            <table class="data-table" aria-labelledby="ai-driving-events-heading">
+              <thead class="data-table__head">
+                <tr>
+                  <th class="data-table__th" scope="col">Mã sự kiện</th>
+                  <th class="data-table__th" scope="col">Nội dung</th>
+                  <th class="data-table__th" scope="col">Biển số xe</th>
+                  <th class="data-table__th" scope="col">Thời gian</th>
+                  <th class="data-table__th" scope="col">Trạng thái</th>
+                  <th class="data-table__th" scope="col">Điểm trừ</th>
+                  <th class="data-table__th" scope="col">Ảnh bằng chứng</th>
+                </tr>
+              </thead>
+              <tbody class="data-table__body"></tbody>
+            </table>
+          </div>
+          <footer class="ai-driving-events__footer">
+            <p role="status"></p>
+            <button class="btn btn--secondary" type="button" data-events-more hidden>Xem thêm</button>
+          </footer>
+        </section>
     </main>
-    <script src="/assets/js/driver-demerits.js"></script>
+    <script src="/assets/js/violation-deletion-sync.js?v=violation-sync"></script>
+    <script src="/assets/js/driver-demerits.js?v=violation-sync"></script>
+    <script src="/assets/js/ai-driving-events.js?v=violation-sync"></script>
 </body>
 </html>

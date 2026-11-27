@@ -7,10 +7,10 @@ namespace Driver_Manager_Web.Models
     {
         private readonly string connectionString =
             "Server=127.0.0.1;" +
-            "Port=3307;" +
+            "Port=3306;" +
             "Database=driverwebdb;" +
             "User ID=root;" +
-            "Password=z;" +
+            "Password=;" +
             "CharSet=utf8mb4;";
 
         public MySqlConnection GetConnection()
